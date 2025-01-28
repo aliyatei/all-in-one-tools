@@ -1,26 +1,36 @@
 <tv>
   <!-- JUQ-943 -->
   <channel id="juq943">
-    <display-name>JUQ-943 - Model Telanjang NTR</display-name>
+    <display-name>JUQ-943</display-name>
+    <icon src="https://pics.dmm.co.jp/digital/video/juq00943/juq00943pl.jpg"/>
+    <language>ja</language>
   </channel>
   
   <!-- CAWD-507 -->
   <channel id="cawd507">
-    <display-name>CAWD-507 - Frustasi Dalam Situasi</display-name>
+    <display-name>CAWD-507</display-name>
+    <icon src="https://pics.dmm.co.jp/digital/video/cawd00507/cawd00507pl.jpg"/>
+    <language>ja</language>
   </channel>
   
   <!-- ABF-109 -->
   <channel id="abf109">
-    <display-name>ABF-109 - Seorang Gadis Cantik Iblis</display-name>
+    <display-name>ABF-109</display-name>
+    <icon src="https://image.mgstage.com/images/prestige/abf/109/pb_e_abf-109.jpg"/>
+    <language>ja</language>
   </channel>
   
   <!-- STAR-849 -->
   <channel id="star849">
-    <display-name>STAR-849 - Pelatihan Eksibisionis</display-name>
+    <display-name>STAR-849</display-name>
+    <icon src="https://pics.dmm.co.jp/digital/video/1star00849/1star00849pl.jpg"/>
+    <language>ja</language>
   </channel>
   
   <!-- START-090 -->
   <channel id="start090">
-    <display-name>START-090 - Dukungan untuk Hikikomori</display-name>
+    <display-name>START-090</display-name>
+    <icon src="https://pics.dmm.co.jp/mono/movie/adult/1start090/1start090pl.jpg"/>
+    <language>ja</language>
   </channel>
 </tv>
