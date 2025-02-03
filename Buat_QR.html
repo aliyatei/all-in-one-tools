@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pembuatan QR Code</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            margin: 0;
+            color: #fff;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            font-size: 1.1em;
+            border-radius: 8px;
+            border: none;
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .button-group {
+            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        button {
+            padding: 12px;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #fff;
+            background: #007bff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .download-btn {
+            background: #28a745;
+        }
+
+        .download-btn:hover {
+            background: #218838;
+        }
+
+        #qrcode {
+            margin-top: 20px;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+                max-width: 90%;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            input {
+                font-size: 1em;
+            }
+
+            button {
+                font-size: 1em;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Pembuatan QR Code</h1>
+
+        <input type="text" id="textInput" placeholder="Masukkan teks atau link...">
+
+        <div class="button-group">
+            <button onclick="generateQRCode()">Generate QR Code</button>
+            <button class="download-btn" onclick="downloadQRCode()">Download QR</button>
+        </div>
+
+        <div id="qrcode"></div>
+
+        <div class="footer">Dibuat dengan ❤️ oleh Anda</div>
+    </div>
+
+    <script>
+        let qr;
+
+        function generateQRCode() {
+            const text = document.getElementById("textInput").value.trim();
+            const qrContainer = document.getElementById("qrcode");
+
+            if (text === "") {
+                alert("Masukkan teks atau link terlebih dahulu!");
+                return;
+            }
+
+            // Hapus QR lama sebelum membuat yang baru
+            qrContainer.innerHTML = "";
+
+            qr = new QRCode(qrContainer, {
+                text: text,
+                width: 200,
+                height: 200
+            });
+        }
+
+        function downloadQRCode() {
+            if (!qr) {
+                alert("Buat QR Code dulu!");
+                return;
+            }
+
+            const qrCanvas = document.querySelector("#qrcode canvas");
+            const qrImage = qrCanvas.toDataURL("image/png");
+            const downloadLink = document.createElement("a");
+
+            downloadLink.href = qrImage;
+            downloadLink.download = "qrcode.png";
+            downloadLink.click();
+        }
+    </script>
+</body>
+</html>
