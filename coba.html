@@ -228,19 +228,23 @@
             const uniqueNumbers = document.getElementById('uniqueNumbers').checked;
             const resultElement = document.getElementById('result');
 
-            if (uniqueNumbers && jumlahVariabel > (maxAngka - minAngka + 1)) {
-                alert("Jumlah variabel lebih besar dari rentang angka yang tersedia!");
-                return;
-            }
-
             resultElement.innerHTML = '<div class="spinner"></div>';
 
             setTimeout(() => {
-                let hasil = new Set();
-                while (hasil.size < jumlahVariabel) {
-                    hasil.add(Math.floor(Math.random() * (maxAngka - minAngka + 1)) + minAngka);
+                let hasil = [];
+                if (uniqueNumbers) {
+                    let angkaTersedia = [];
+                    for (let i = minAngka; i <= maxAngka; i++) angkaTersedia.push(i);
+                    for (let i = 0; i < jumlahVariabel && angkaTersedia.length; i++) {
+                        let index = Math.floor(Math.random() * angkaTersedia.length);
+                        hasil.push(angkaTersedia.splice(index, 1)[0]);
+                    }
+                } else {
+                    for (let i = 0; i < jumlahVariabel; i++) {
+                        hasil.push(Math.floor(Math.random() * (maxAngka - minAngka + 1)) + minAngka);
+                    }
                 }
-                resultElement.textContent = Array.from(hasil).join(', ');
+                resultElement.textContent = hasil.join(', ');
             }, 1200);
         }
     </script>
