@@ -61,8 +61,8 @@
         }
 
         button {
-            padding: 12px 18px;
-            font-size: 1.2em;
+            padding: 10px 18px;
+            font-size: 1em;
             font-weight: bold;
             color: #fff;
             background: #007bff;
@@ -99,8 +99,8 @@
             }
 
             button {
-                font-size: 1.1em;
-                padding: 12px;
+                font-size: 1em;
+                padding: 10px;
                 width: 100%;
             }
         }
@@ -113,9 +113,13 @@
         <textarea id="textInput" placeholder="Masukkan teks di sini..."></textarea>
 
         <div class="button-group">
-            <button onclick="convertText('uppercase')">🔠 Kapital Semua</button>
-            <button onclick="convertText('lowercase')">🔡 Kecil Semua</button>
-            <button onclick="convertText('titlecase')">🔤 Kapital Awal Kata</button>
+            <button onclick="convertText('sentence')">📝 Sentence Case</button>
+            <button onclick="convertText('lowercase')">🔡 lower case</button>
+            <button onclick="convertText('uppercase')">🔠 UPPER CASE</button>
+            <button onclick="convertText('capitalized')">🔤 Capitalized Case</button>
+            <button onclick="convertText('alternating')">🎭 aLtErNaTiNg cAsE</button>
+            <button onclick="convertText('title')">📖 Title Case</button>
+            <button onclick="convertText('inverse')">🔄 InVeRsE CaSe</button>
         </div>
 
         <div class="footer">Dibuat dengan ❤️ oleh Anda</div>
@@ -131,16 +135,44 @@
                 return;
             }
 
-            if (format === "uppercase") {
-                textArea.value = text.toUpperCase();
-            } else if (format === "lowercase") {
-                textArea.value = text.toLowerCase();
-            } else if (format === "titlecase") {
-                textArea.value = text
-                    .toLowerCase()
-                    .split(" ")
-                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                    .join(" ");
+            switch (format) {
+                case "sentence":
+                    textArea.value = text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+                    break;
+                case "lowercase":
+                    textArea.value = text.toLowerCase();
+                    break;
+                case "uppercase":
+                    textArea.value = text.toUpperCase();
+                    break;
+                case "capitalized":
+                    textArea.value = text
+                        .toLowerCase()
+                        .split(" ")
+                        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                        .join(" ");
+                    break;
+                case "alternating":
+                    textArea.value = text
+                        .split("")
+                        .map((char, i) => (i % 2 === 0 ? char.toLowerCase() : char.toUpperCase()))
+                        .join("");
+                    break;
+                case "title":
+                    textArea.value = text
+                        .toLowerCase()
+                        .split(" ")
+                        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                        .join(" ");
+                    break;
+                case "inverse":
+                    textArea.value = text
+                        .split("")
+                        .map(char => (char === char.toUpperCase() ? char.toLowerCase() : char.toUpperCase()))
+                        .join("");
+                    break;
+                default:
+                    alert("Format tidak dikenali!");
             }
         }
     </script>
