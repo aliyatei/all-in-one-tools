@@ -82,6 +82,14 @@
             transform: scale(1.05);
         }
 
+        .copy-btn {
+            background: #28a745;
+        }
+
+        .copy-btn:hover {
+            background: #218838;
+        }
+
         .footer {
             margin-top: 20px;
             font-size: 0.9em;
@@ -123,6 +131,7 @@
             <button onclick="formatText('alternating')">aLtErNaTiNg CaSe</button>
             <button onclick="formatText('title')">Title Case</button>
             <button onclick="formatText('inverse')">InVeRsE CaSe</button>
+            <button class="copy-btn" onclick="copyText()">Copy</button>
         </div>
 
         <div class="footer">Dibuat dengan ❤️ oleh Anda</div>
@@ -166,6 +175,20 @@
             }
 
             textInput.value = formattedText;
+        }
+
+        function copyText() {
+            let textInput = document.getElementById('textInput');
+
+            if (textInput.value.trim() === "") {
+                alert("Tidak ada teks untuk disalin!");
+                return;
+            }
+
+            textInput.select();
+            document.execCommand("copy");
+
+            alert("Teks berhasil disalin!");
         }
     </script>
 </body>
