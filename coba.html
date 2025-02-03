@@ -244,7 +244,22 @@
                         hasil.push(Math.floor(Math.random() * (maxAngka - minAngka + 1)) + minAngka);
                     }
                 }
-                resultElement.textContent = hasil.join(', ');
+
+                // Buat label dari z ke a, lalu aa, ab, dst.
+                let labels = [];
+                for (let i = 0; i < jumlahVariabel; i++) {
+                    let label = "";
+                    let index = i;
+                    while (index >= 0) {
+                        label = String.fromCharCode(122 - (index % 26)) + label;
+                        index = Math.floor(index / 26) - 1;
+                    }
+                    labels.push(label);
+                }
+
+                // Gabungkan label & angka
+                let output = hasil.map((angka, index) => `${labels[index]}: ${angka}`);
+                resultElement.textContent = output.join(', ');
             }, 1200);
         }
     </script>
