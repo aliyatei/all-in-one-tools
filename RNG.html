@@ -197,8 +197,8 @@
     <div class="container">
         <h1>Nomor Acak</h1>
         
-        <label for="jumlahVariabel">Jumlah Variabel:</label>
-        <input type="number" id="jumlahVariabel" min="1" value="1">
+        <label for="banyakAngka">Banyak Angka:</label>
+        <input type="number" id="banyakAngka" min="1" value="1">
 
         <label for="minAngka">Nilai Minimum:</label>
         <input type="number" id="minAngka" min="0" value="1">
@@ -222,7 +222,7 @@
 
     <script>
         function spinRoulette() {
-            const jumlahVariabel = parseInt(document.getElementById('jumlahVariabel').value);
+            const banyakAngka = parseInt(document.getElementById('banyakAngka').value);
             const minAngka = parseInt(document.getElementById('minAngka').value);
             const maxAngka = parseInt(document.getElementById('maxAngka').value);
             const uniqueNumbers = document.getElementById('uniqueNumbers').checked;
@@ -235,31 +235,17 @@
                 if (uniqueNumbers) {
                     let angkaTersedia = [];
                     for (let i = minAngka; i <= maxAngka; i++) angkaTersedia.push(i);
-                    for (let i = 0; i < jumlahVariabel && angkaTersedia.length; i++) {
+                    for (let i = 0; i < banyakAngka && angkaTersedia.length; i++) {
                         let index = Math.floor(Math.random() * angkaTersedia.length);
                         hasil.push(angkaTersedia.splice(index, 1)[0]);
                     }
                 } else {
-                    for (let i = 0; i < jumlahVariabel; i++) {
+                    for (let i = 0; i < banyakAngka; i++) {
                         hasil.push(Math.floor(Math.random() * (maxAngka - minAngka + 1)) + minAngka);
                     }
                 }
 
-                // Buat label dari z ke a, lalu aa, ab, dst.
-                let labels = [];
-                for (let i = 0; i < jumlahVariabel; i++) {
-                    let label = "";
-                    let index = i;
-                    while (index >= 0) {
-                        label = String.fromCharCode(122 - (index % 26)) + label;
-                        index = Math.floor(index / 26) - 1;
-                    }
-                    labels.push(label);
-                }
-
-                // Gabungkan label & angka
-                let output = hasil.map((angka, index) => `${labels[index]}: ${angka}`);
-                resultElement.textContent = output.join(', ');
+                resultElement.textContent = hasil.join(', ');
             }, 1200);
         }
     </script>
