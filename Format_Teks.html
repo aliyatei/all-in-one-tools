@@ -11,7 +11,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            background: linear-gradient(135deg, #6a11cb, #2575fc); /* Warna sama dengan index.html */
             margin: 0;
             color: #fff;
             padding: 15px;
@@ -20,12 +20,12 @@
 
         .container {
             text-align: center;
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.1);
             padding: 30px;
             border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             width: 100%;
             max-width: 500px;
             box-sizing: border-box;
@@ -39,7 +39,7 @@
 
         textarea {
             width: 100%;
-            height: 120px;
+            height: 150px;
             padding: 10px;
             font-size: 1.1em;
             border-radius: 8px;
@@ -58,12 +58,13 @@
         .button-group {
             margin-top: 15px;
             display: flex;
-            flex-direction: column;
+            flex-wrap: wrap;
             gap: 10px;
+            justify-content: center;
         }
 
         button {
-            padding: 12px 25px;
+            padding: 12px 20px;
             font-size: 1.1em;
             font-weight: bold;
             color: #fff;
@@ -72,8 +73,8 @@
             border-radius: 8px;
             cursor: pointer;
             transition: background 0.3s ease, transform 0.2s ease;
-            width: 100%;
-            box-sizing: border-box;
+            flex: 1 1 calc(50% - 10px);
+            min-width: 120px;
         }
 
         button:hover {
@@ -124,18 +125,14 @@
             <button onclick="formatText('inverse')">InVeRsE CaSe</button>
         </div>
 
-        <h3>Hasil Format:</h3>
-        <textarea id="output" readonly placeholder="Hasil format akan muncul di sini..."></textarea>
-
         <div class="footer">Dibuat dengan ❤️ oleh Anda</div>
     </div>
 
     <script>
         function formatText(type) {
-            let text = document.getElementById('textInput').value;
-            let output = document.getElementById('output');
+            let textInput = document.getElementById('textInput');
 
-            if (text.trim() === "") {
+            if (textInput.value.trim() === "") {
                 alert("Masukkan teks terlebih dahulu!");
                 return;
             }
@@ -144,31 +141,31 @@
 
             switch (type) {
                 case 'sentence':
-                    formattedText = text.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g, (c) => c.toUpperCase());
+                    formattedText = textInput.value.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g, (c) => c.toUpperCase());
                     break;
                 case 'lower':
-                    formattedText = text.toLowerCase();
+                    formattedText = textInput.value.toLowerCase();
                     break;
                 case 'upper':
-                    formattedText = text.toUpperCase();
+                    formattedText = textInput.value.toUpperCase();
                     break;
                 case 'capitalized':
-                    formattedText = text.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+                    formattedText = textInput.value.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
                     break;
                 case 'alternating':
-                    formattedText = text.split('').map((char, index) => index % 2 === 0 ? char.toLowerCase() : char.toUpperCase()).join('');
+                    formattedText = textInput.value.split('').map((char, index) => index % 2 === 0 ? char.toLowerCase() : char.toUpperCase()).join('');
                     break;
                 case 'title':
-                    formattedText = text.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+                    formattedText = textInput.value.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
                     break;
                 case 'inverse':
-                    formattedText = text.split('').map(char => char === char.toUpperCase() ? char.toLowerCase() : char.toUpperCase()).join('');
+                    formattedText = textInput.value.split('').map(char => char === char.toUpperCase() ? char.toLowerCase() : char.toUpperCase()).join('');
                     break;
                 default:
-                    formattedText = text;
+                    formattedText = textInput.value;
             }
 
-            output.value = formattedText;
+            textInput.value = formattedText;
         }
     </script>
 </body>
