@@ -13,83 +13,60 @@
         body {
             font-family: 'Poppins', sans-serif;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             background: radial-gradient(circle, #6a11cb, #2575fc);
             margin: 0;
             color: #fff;
+            text-align: center;
             padding: 15px;
             box-sizing: border-box;
         }
 
-        .container {
-            text-align: center;
-            background: rgba(255, 255, 255, 0.15);
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            width: 100%;
-            max-width: 400px;
-        }
-
         h1 {
-            margin-bottom: 15px;
-            font-size: 2em;
+            font-size: 2.5em;
             font-weight: bold;
+            margin-bottom: 15px;
         }
 
         label {
-            display: block;
-            margin: 10px 0 5px;
+            font-size: 1.3em;
             font-weight: bold;
-            font-size: 1.1em;
+            margin-bottom: 5px;
+            display: block;
         }
 
         input {
             padding: 12px;
-            width: 100%;
-            max-width: 250px;
-            margin-bottom: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.2);
-            color: #fff;
             font-size: 1.2em;
             text-align: center;
+            border-radius: 10px;
+            border: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
             outline: none;
+            width: 100px;
         }
 
         #result {
-            font-size: 2.5em;
+            font-size: 5em;
             font-weight: bold;
-            margin: 20px 0;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            min-height: 60px;
+            margin: 30px 0;
+            min-height: 80px;
         }
 
         #history, #remaining {
-            font-size: 1.2em;
+            font-size: 1.4em;
             margin-top: 15px;
-            text-align: left;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            max-height: 150px;
-            overflow-y: auto;
         }
 
         .spinner {
             display: inline-block;
-            width: 30px;
-            height: 30px;
-            border: 4px solid rgba(255, 255, 255, 0.5);
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.5);
             border-top-color: #fff;
             border-radius: 50%;
             animation: spin 1s linear infinite;
@@ -97,7 +74,7 @@
 
         button {
             padding: 16px 35px;
-            font-size: 1.3em;
+            font-size: 1.5em;
             font-weight: bold;
             color: #fff;
             background: linear-gradient(135deg, #ff416c, #ff4b2b);
@@ -105,8 +82,6 @@
             border-radius: 10px;
             cursor: pointer;
             transition: transform 0.3s ease, background 0.3s ease;
-            width: 100%;
-            max-width: 300px;
             margin-top: 15px;
         }
 
@@ -119,33 +94,23 @@
             background: gray;
             cursor: not-allowed;
         }
-
-        .footer {
-            margin-top: 20px;
-            font-size: 1em;
-            color: rgba(255, 255, 255, 0.85);
-        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Nomor Undian</h1>
-        
-        <label for="maxAngka">Nilai Maksimum:</label>
-        <input type="number" id="maxAngka" min="1" value="100">
+    <h1>Nomor Undian</h1>
 
-        <div id="result">-</div>
+    <label for="maxAngka">Total Nomor Undian:</label>
+    <input type="number" id="maxAngka" min="1" value="100">
 
-        <button id="drawButton" onclick="generateLotteryNumber()">🎟 Ambil Nomor</button>
+    <div id="result">-</div>
 
-        <h2>Nomor yang Sudah Dapat:</h2>
-        <div id="history">Belum ada nomor undian.</div>
+    <button id="drawButton" onclick="generateLotteryNumber()">🎟 Ambil Nomor</button>
 
-        <h2>Sisa Nomor Undian:</h2>
-        <div id="remaining">Belum ada nomor yang diambil.</div>
+    <h2>Nomor yang Sudah Keluar:</h2>
+    <div id="history">Belum ada nomor undian.</div>
 
-        <div class="footer">Dibuat dengan ❤️ oleh Anda</div>
-    </div>
+    <h2>Sisa Nomor Undian:</h2>
+    <div id="remaining">Belum ada nomor yang diambil.</div>
 
     <script>
         let historyNumbers = [];
@@ -185,14 +150,10 @@
                 let chosenNumber = remainingNumbers.splice(randomIndex, 1)[0];
 
                 historyNumbers.push(chosenNumber);
-                let newNumber = `UND-${String(chosenNumber).padStart(4, '0')}`;
-
-                resultElement.textContent = newNumber;
+                resultElement.textContent = chosenNumber;
 
                 // Update history
-                historyElement.textContent = historyNumbers
-                    .map(num => `UND-${String(num).padStart(4, '0')}`)
-                    .join(', ');
+                historyElement.textContent = historyNumbers.join(', ');
 
                 // Update remaining numbers
                 updateRemainingNumbers();
