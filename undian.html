@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nomor Undian</title>
+    <style>
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: radial-gradient(circle, #6a11cb, #2575fc);
+            margin: 0;
+            color: #fff;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h1 {
+            margin-bottom: 15px;
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        input {
+            padding: 12px;
+            width: 100%;
+            max-width: 250px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 1.2em;
+            text-align: center;
+            outline: none;
+        }
+
+        #result {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            min-height: 80px;
+            word-wrap: break-word;
+            white-space: pre-line;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 4px solid rgba(255, 255, 255, 0.5);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        button {
+            padding: 16px 35px;
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #fff;
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s ease, background 0.3s ease;
+            width: 100%;
+            max-width: 300px;
+            margin-top: 15px;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, #ff4b2b, #ff416c);
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 1em;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+
+        .checkbox-container label {
+            font-size: 1.1em;
+            margin-left: 12px;
+            cursor: pointer;
+        }
+
+        .checkbox-container input {
+            display: none;
+        }
+
+        .checkbox-custom {
+            width: 45px;
+            height: 25px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            position: relative;
+            transition: background 0.3s ease;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .checkbox-custom::before {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            top: 50%;
+            left: 5px;
+            transform: translateY(-50%);
+            transition: 0.3s ease;
+        }
+
+        .checkbox-container input:checked + label .checkbox-custom {
+            background: #ff4b2b;
+        }
+
+        .checkbox-container input:checked + label .checkbox-custom::before {
+            left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Nomor Undian</h1>
+        
+        <label for="banyakAngka">Jumlah Undian:</label>
+        <input type="number" id="banyakAngka" min="1" value="1">
+
+        <label for="minAngka">Nilai Minimum:</label>
+        <input type="number" id="minAngka" min="0" value="1">
+
+        <label for="maxAngka">Nilai Maksimum:</label>
+        <input type="number" id="maxAngka" min="1" value="1000">
+
+        <div class="checkbox-container">
+            <input type="checkbox" id="uniqueNumbers">
+            <label for="uniqueNumbers">
+                <span class="checkbox-custom"></span> Hindari nomor duplikat
+            </label>
+        </div>
+
+        <div id="result">-</div>
+
+        <button onclick="generateLotteryNumbers()">🎟 Buat Nomor</button>
+        
+        <div class="footer">Dibuat dengan ❤️ oleh Anda</div>
+    </div>
+
+    <script>
+        function generateLotteryNumbers() {
+            const banyakAngka = parseInt(document.getElementById('banyakAngka').value);
+            const minAngka = parseInt(document.getElementById('minAngka').value);
+            const maxAngka = parseInt(document.getElementById('maxAngka').value);
+            const uniqueNumbers = document.getElementById('uniqueNumbers').checked;
+            const resultElement = document.getElementById('result');
+
+            resultElement.innerHTML = '<div class="spinner"></div>';
+
+            setTimeout(() => {
+                let hasil = [];
+                if (uniqueNumbers) {
+                    let angkaTersedia = [];
+                    for (let i = minAngka; i <= maxAngka; i++) angkaTersedia.push(i);
+                    for (let i = 0; i < banyakAngka && angkaTersedia.length; i++) {
+                        let index = Math.floor(Math.random() * angkaTersedia.length);
+                        hasil.push(angkaTersedia.splice(index, 1)[0]);
+                    }
+                } else {
+                    for (let i = 0; i < banyakAngka; i++) {
+                        hasil.push(Math.floor(Math.random() * (maxAngka - minAngka + 1)) + minAngka);
+                    }
+                }
+
+                // Format nomor undian UND-0001, UND-0002, dst.
+                let output = hasil.map(num => `UND-${String(num).padStart(4, '0')}`);
+                resultElement.textContent = output.join('\n');
+            }, 1200);
+        }
+    </script>
+</body>
+</html>
