@@ -73,7 +73,7 @@
             min-height: 60px;
         }
 
-        #history {
+        #history, #remaining {
             font-size: 1.2em;
             margin-top: 15px;
             text-align: left;
@@ -115,6 +115,11 @@
             background: linear-gradient(135deg, #ff4b2b, #ff416c);
         }
 
+        button:disabled {
+            background: gray;
+            cursor: not-allowed;
+        }
+
         .footer {
             margin-top: 20px;
             font-size: 1em;
@@ -127,50 +132,89 @@
         <h1>Nomor Undian</h1>
         
         <label for="maxAngka">Nilai Maksimum:</label>
-        <input type="number" id="maxAngka" min="1" value="1000">
+        <input type="number" id="maxAngka" min="1" value="100">
 
         <div id="result">-</div>
 
-        <button onclick="generateLotteryNumber()">🎟 Ambil Nomor</button>
+        <button id="drawButton" onclick="generateLotteryNumber()">🎟 Ambil Nomor</button>
 
         <h2>Nomor yang Sudah Dapat:</h2>
         <div id="history">Belum ada nomor undian.</div>
-        
+
+        <h2>Sisa Nomor Undian:</h2>
+        <div id="remaining">Belum ada nomor yang diambil.</div>
+
         <div class="footer">Dibuat dengan ❤️ oleh Anda</div>
     </div>
 
     <script>
         let historyNumbers = [];
+        let remainingNumbers = [];
+
+        function initializeNumbers() {
+            const maxAngka = parseInt(document.getElementById('maxAngka').value);
+            historyNumbers = [];
+            remainingNumbers = [];
+
+            for (let i = 1; i <= maxAngka; i++) {
+                remainingNumbers.push(i);
+            }
+
+            updateRemainingNumbers();
+            document.getElementById("history").textContent = "Belum ada nomor undian.";
+            document.getElementById("result").textContent = "-";
+            document.getElementById("drawButton").disabled = false;
+        }
 
         function generateLotteryNumber() {
-            const maxAngka = parseInt(document.getElementById('maxAngka').value);
             const resultElement = document.getElementById('result');
             const historyElement = document.getElementById('history');
+            const remainingElement = document.getElementById('remaining');
+            const drawButton = document.getElementById("drawButton");
 
-            if (historyNumbers.length >= maxAngka) {
+            if (remainingNumbers.length === 0) {
                 resultElement.textContent = "Semua nomor sudah diambil!";
+                drawButton.disabled = true;
                 return;
             }
 
             resultElement.innerHTML = '<div class="spinner"></div>';
 
             setTimeout(() => {
-                let randomNum;
-                do {
-                    randomNum = Math.floor(Math.random() * maxAngka) + 1;
-                } while (historyNumbers.includes(randomNum));
+                let randomIndex = Math.floor(Math.random() * remainingNumbers.length);
+                let chosenNumber = remainingNumbers.splice(randomIndex, 1)[0];
 
-                historyNumbers.push(randomNum);
-                let newNumber = `UND-${String(randomNum).padStart(4, '0')}`;
+                historyNumbers.push(chosenNumber);
+                let newNumber = `UND-${String(chosenNumber).padStart(4, '0')}`;
 
                 resultElement.textContent = newNumber;
 
                 // Update history
                 historyElement.textContent = historyNumbers
                     .map(num => `UND-${String(num).padStart(4, '0')}`)
-                    .join('\n');
+                    .join(', ');
+
+                // Update remaining numbers
+                updateRemainingNumbers();
+
+                if (remainingNumbers.length === 0) {
+                    drawButton.disabled = true;
+                }
             }, 1200);
         }
+
+        function updateRemainingNumbers() {
+            const remainingElement = document.getElementById("remaining");
+            if (remainingNumbers.length === 0) {
+                remainingElement.textContent = "Semua nomor sudah diundi!";
+            } else {
+                remainingElement.textContent = `${remainingNumbers.length} nomor tersisa.`;
+            }
+        }
+
+        document.getElementById("maxAngka").addEventListener("change", initializeNumbers);
+
+        initializeNumbers();
     </script>
 </body>
 </html>
