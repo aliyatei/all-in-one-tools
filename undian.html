@@ -63,16 +63,14 @@
         }
 
         #result {
-            font-size: 1.5em;
+            font-size: 2.5em;
             font-weight: bold;
             margin: 20px 0;
             padding: 15px;
             background: rgba(255, 255, 255, 0.2);
             border-radius: 12px;
             border: 2px solid rgba(255, 255, 255, 0.3);
-            min-height: 80px;
-            word-wrap: break-word;
-            white-space: pre-line;
+            min-height: 60px;
         }
 
         #history {
@@ -128,18 +126,12 @@
     <div class="container">
         <h1>Nomor Undian</h1>
         
-        <label for="banyakAngka">Jumlah Undian:</label>
-        <input type="number" id="banyakAngka" min="1" value="1">
-
-        <label for="minAngka">Nilai Minimum:</label>
-        <input type="number" id="minAngka" min="0" value="1">
-
         <label for="maxAngka">Nilai Maksimum:</label>
         <input type="number" id="maxAngka" min="1" value="1000">
 
         <div id="result">-</div>
 
-        <button onclick="generateLotteryNumbers()">🎟 Buat Nomor</button>
+        <button onclick="generateLotteryNumber()">🎟 Ambil Nomor</button>
 
         <h2>Nomor yang Sudah Dapat:</h2>
         <div id="history">Belum ada nomor undian.</div>
@@ -150,29 +142,28 @@
     <script>
         let historyNumbers = [];
 
-        function generateLotteryNumbers() {
-            const banyakAngka = parseInt(document.getElementById('banyakAngka').value);
-            const minAngka = parseInt(document.getElementById('minAngka').value);
+        function generateLotteryNumber() {
             const maxAngka = parseInt(document.getElementById('maxAngka').value);
             const resultElement = document.getElementById('result');
             const historyElement = document.getElementById('history');
 
+            if (historyNumbers.length >= maxAngka) {
+                resultElement.textContent = "Semua nomor sudah diambil!";
+                return;
+            }
+
             resultElement.innerHTML = '<div class="spinner"></div>';
 
             setTimeout(() => {
-                let hasil = [];
+                let randomNum;
+                do {
+                    randomNum = Math.floor(Math.random() * maxAngka) + 1;
+                } while (historyNumbers.includes(randomNum));
 
-                for (let i = 0; i < banyakAngka; i++) {
-                    let randomNum;
-                    do {
-                        randomNum = Math.floor(Math.random() * (maxAngka - minAngka + 1)) + minAngka;
-                    } while (historyNumbers.includes(randomNum));
+                historyNumbers.push(randomNum);
+                let newNumber = `UND-${String(randomNum).padStart(4, '0')}`;
 
-                    historyNumbers.push(randomNum);
-                    hasil.push(`UND-${String(randomNum).padStart(4, '0')}`);
-                }
-
-                resultElement.textContent = hasil.join(', ');
+                resultElement.textContent = newNumber;
 
                 // Update history
                 historyElement.textContent = historyNumbers
