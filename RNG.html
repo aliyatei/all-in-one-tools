@@ -3,35 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎲 Generator Nomor Super Acak!</title>
+    <title>Generator Angka Acak</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body class="rng-page">
     <div class="container">
-        <h1>🎲 Mesin Angka Super Acak! 🎰</h1>
+        <h1>Generator Angka Acak</h1>
         
-        <label for="banyakAngka">Mau Berapa Angka?</label>
+        <label for="banyakAngka">Jumlah Angka:</label>
         <input type="number" id="banyakAngka" min="1" value="1">
 
-        <label for="minAngka">Angka Terkecil?</label>
+        <label for="minAngka">Nilai Minimum:</label>
         <input type="number" id="minAngka" min="0" value="1">
 
-        <label for="maxAngka">Angka Terbesar?</label>
+        <label for="maxAngka">Nilai Maksimum:</label>
         <input type="number" id="maxAngka" min="1" value="100">
 
         <div class="checkbox-container">
-            <input type="checkbox" id="uniqueNumbers" class="custom-checkbox">
-            <label for="uniqueNumbers">
-                <span class="checkbox-custom"></span> Hindari Angka Kembar Biar Seru!
-            </label>
+            <input type="checkbox" id="uniqueNumbers">
+            <label for="uniqueNumbers">Hindari angka duplikat</label>
         </div>
 
         <div id="result">-</div>
 
-        <button onclick="spinRoulette()">🎲 PUTAR RODA ANGKA! 🎲</button>
+        <button onclick="spinRoulette()">Hasilkan Angka</button>
         
-        <div class="footer">Dibuat dengan keajaiban angka ✨ oleh Kamu!</div>
+        <div class="footer">Utilitas Generator Angka Acak</div>
     </div>
 
     <script>
@@ -43,21 +41,20 @@
             const resultElement = document.getElementById('result');
 
             if (minAngka > maxAngka) {
-                alert("Hei! Angka minimum tidak boleh lebih besar dari maksimum ya!");
+                alert("Nilai minimum tidak boleh lebih besar dari nilai maksimum.");
                 return;
             }
             if (banyakAngka <= 0) {
-                alert("Jumlah angka harus lebih dari nol dong!");
+                alert("Jumlah angka harus lebih dari nol.");
                 return;
             }
             if (uniqueNumbers && banyakAngka > (maxAngka - minAngka + 1)) {
-                alert("Tidak cukup angka unik dalam rentang yang diminta!");
+                alert("Jumlah angka yang diminta melebihi rentang angka unik yang tersedia.");
+                resultElement.textContent = "Input tidak valid.";
                 return;
             }
 
-
-            resultElement.innerHTML = '<div class="spinner"></div> <p style="font-size: 0.5em; margin-top: 5px;">Mengocok angka...</p>'; // Added text
-            resultElement.style.animation = 'none'; // Reset animation before starting
+            resultElement.innerHTML = '<div class="spinner"></div>';
 
             setTimeout(() => {
                 let hasil = [];
@@ -65,11 +62,6 @@
                     let angkaTersedia = [];
                     for (let i = minAngka; i <= maxAngka; i++) angkaTersedia.push(i);
                     
-                    if (banyakAngka > angkaTersedia.length) {
-                         resultElement.textContent = "Oops! Kurang angka unik.";
-                         return;
-                    }
-
                     for (let i = 0; i < banyakAngka && angkaTersedia.length; i++) {
                         let index = Math.floor(Math.random() * angkaTersedia.length);
                         hasil.push(angkaTersedia.splice(index, 1)[0]);
@@ -79,14 +71,8 @@
                         hasil.push(Math.floor(Math.random() * (maxAngka - minAngka + 1)) + minAngka);
                     }
                 }
-
-                resultElement.textContent = hasil.join(', ');
-                // Fun animation for the result
-                resultElement.style.transform = 'scale(0.8)';
-                resultElement.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-                setTimeout(() => { resultElement.style.transform = 'scale(1)'; }, 50);
-
-            }, 1500); // Longer spin for more suspense!
+                resultElement.textContent = hasil.length > 0 ? hasil.join(', ') : "Tidak ada hasil";
+            }, 1000); 
         }
     </script>
 </body>

@@ -3,37 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>✍️ Pengubah Format Teks Ajaib</title>
+    <title>Pengubah Format Teks</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body class="format-teks-page">
     <div class="container">
-        <h1>✍️ Sulap Format Teksmu! 🪄</h1>
+        <h1>Pengubah Format Teks</h1>
 
-        <textarea id="textInput" placeholder="Tuliskan mantra... eh, teksmu di sini..."></textarea>
+        <textarea id="textInput" placeholder="Masukkan teks Anda di sini..."></textarea>
 
         <div class="button-group">
-            <button onclick="formatText('sentence')">Kalimat Rapi</button>
-            <button onclick="formatText('lower')">huruf kecil semua</button>
-            <button onclick="formatText('upper')">JADI BESAR SEMUA!</button>
-            <button onclick="formatText('capitalized')">Setiap Kata Besar</button>
-            <button onclick="formatText('alternating')">aLtErNaTiNg sErU</button>
-            <button onclick="formatText('title')">Gaya Judul Kece</button>
-            <button onclick="formatText('inverse')">bAlIkKaN kAsUs</button>
-            <button class="copy-btn" onclick="copyText()">Salin Keajaiban Ini! 📋</button>
+            <button onclick="formatText('sentence')">Sentence case</button>
+            <button onclick="formatText('lower')">lower case</button>
+            <button onclick="formatText('upper')">UPPER CASE</button>
+            <button onclick="formatText('capitalized')">Capitalized Case</button>
+            <button onclick="formatText('alternating')">aLtErNaTiNg cAsE</button>
+            <button onclick="formatText('title')">Title Case</button>
+            <button onclick="formatText('inverse')">InVeRsE CaSe</button>
+            <button class="copy-btn" onclick="copyText()">Salin Teks</button>
         </div>
 
-        <div class="footer">Diciptakan dengan imajinasi ✨ oleh Kamu!</div>
+        <div class="footer">Utilitas Pemformatan Teks</div>
     </div>
 
     <script>
         function formatText(type) {
             let textInput = document.getElementById('textInput');
-            let originalText = textInput.value; // Keep original for some cases
+            let originalText = textInput.value;
 
             if (originalText.trim() === "") {
-                alert("Ups! Tulis sesuatu dulu dong biar bisa disulap!");
+                alert("Silakan masukkan teks terlebih dahulu.");
                 return;
             }
 
@@ -55,7 +55,7 @@
                 case 'alternating':
                     formattedText = originalText.split('').map((char, index) => index % 2 === 0 ? char.toLowerCase() : char.toUpperCase()).join('');
                     break;
-                case 'title': // More robust title case (example, not exhaustive)
+                case 'title':
                     const smallWords = /^(a|an|and|as|at|but|by|en|for|if|in|nor|of|on|or|per|the|to|vs?\.?|via)$/i;
                     formattedText = originalText.toLowerCase().split(' ').map((word, index, array) => {
                         if (index === 0 || index === array.length -1 || !smallWords.test(word)) {
@@ -70,30 +70,25 @@
                 default:
                     formattedText = originalText;
             }
-
             textInput.value = formattedText;
-            // Little visual feedback
-            textInput.style.transition = 'transform 0.2s ease';
-            textInput.style.transform = 'scale(1.02)';
-            setTimeout(() => { textInput.style.transform = 'scale(1)'; }, 200);
         }
 
         function copyText() {
             let textInput = document.getElementById('textInput');
 
             if (textInput.value.trim() === "") {
-                alert("Hehe, belum ada teks ajaib untuk disalin nih!");
+                alert("Tidak ada teks untuk disalin.");
                 return;
             }
 
             textInput.select();
-            textInput.setSelectionRange(0, 99999); // For mobile devices
+            textInput.setSelectionRange(0, 99999);
 
             try {
                 document.execCommand("copy");
-                alert("Voila! Teks ajaib berhasil disalin! ✨");
+                alert("Teks berhasil disalin.");
             } catch (err) {
-                alert("Oops! Gagal menyalin. Coba cara manual ya.");
+                alert("Gagal menyalin teks. Silakan coba secara manual.");
             }
         }
     </script>

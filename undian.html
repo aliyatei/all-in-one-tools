@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎟️ Mesin Undian Super Hoki!</title>
+    <title>Generator Undian</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="undian-page">
     <div class="container">
-        <h1>🎟️ Mesin Undian Super HOKI! 🏆</h1>
+        <h1>Generator Nomor Undian</h1>
 
         <div class="input-group-container">
             <div class="input-group">
@@ -17,7 +17,7 @@
                 <input type="number" id="maxAngka" min="1" value="100">
             </div>
             <div class="input-group">
-                <label for="maxDraw">Berapa Kali Ambil?</label>
+                <label for="maxDraw">Jumlah Pengambilan:</label>
                 <input type="number" id="maxDraw" min="1" value="10">
             </div>
         </div>
@@ -26,16 +26,16 @@
 
         <div class="button-group">
             <button id="drawButton" onclick="generateLotteryNumber()">
-                <span>🎉 AMBIL NOMOR HOKI! 🎉</span>
+                <span>Ambil Nomor</span>
             </button>
             <button id="resetButton" onclick="initializeNumbers()">
-                <span>🔄 Ulangi Keberuntungan!</span>
+                <span>Reset Undian</span>
             </button>
         </div>
 
         <div class="numbers-container">
             <div class="numbers-box">
-                <h2>Nomor Terpilih (<span id="drawCount">0</span>/<span id="maxDrawValue">10</span>):</h2>
+                <h2>Nomor Terambil (<span id="drawCount">0</span>/<span id="maxDrawValue">10</span>):</h2>
                 <div id="history" class="numbers-list"></div>
             </div>
             <div class="numbers-box">
@@ -43,7 +43,7 @@
                 <div id="remaining" class="numbers-list"></div>
             </div>
         </div>
-         <div class="footer">Semoga Beruntung! 🤞 Dibuat oleh Kamu yang Hebat!</div>
+         <div class="footer">Utilitas Generator Undian</div>
     </div>
 
     <script>
@@ -51,8 +51,8 @@
         let remainingNumbers = [];
         let isDrawing = false;
         let maxTotalNumbers = 100;
-        let maxAllowedDraws = 10; // Max times user can click draw
-        let currentDrawCount = 0; // How many times user has clicked draw
+        let maxAllowedDraws = 10;
+        let currentDrawCount = 0;
 
         function initializeNumbers() {
             maxTotalNumbers = Math.max(1, parseInt(document.getElementById('maxAngka').value) || 100);
@@ -68,16 +68,15 @@
             
             updateDisplay();
             const resultElement = document.getElementById("result");
-            resultElement.textContent = "🤞";
-            resultElement.classList.remove('winner-pulse');
+            resultElement.textContent = "-";
             document.getElementById("drawButton").disabled = false;
-            document.getElementById("drawButton").innerHTML = "<span>🎉 AMBIL NOMOR HOKI! 🎉</span>";
+            document.getElementById("drawButton").innerHTML = "<span>Ambil Nomor</span>";
         }
 
         function generateLotteryNumber() {
             if (isDrawing || remainingNumbers.length === 0 || currentDrawCount >= maxAllowedDraws) {
-                if (remainingNumbers.length === 0) alert("Semua nomor sudah terambil!");
-                else if (currentDrawCount >= maxAllowedDraws) alert("Sudah mencapai batas maksimal pengambilan!");
+                if (remainingNumbers.length === 0) alert("Semua nomor telah terambil.");
+                else if (currentDrawCount >= maxAllowedDraws) alert("Telah mencapai batas maksimal pengambilan.");
                 return;
             }
             isDrawing = true;
@@ -88,7 +87,7 @@
 
             resultElement.innerHTML = '<div class="spinner"></div>';
             drawButton.disabled = true;
-            drawButton.innerHTML = "<span>Mengocok...</span>";
+            drawButton.innerHTML = "<span>Memproses...</span>";
             
             setTimeout(() => {
                 const randomIndex = Math.floor(Math.random() * remainingNumbers.length);
@@ -96,26 +95,22 @@
                 historyNumbers.push(chosenNumber);
                 
                 resultElement.textContent = chosenNumber;
-                resultElement.classList.add('winner-pulse');
-                setTimeout(() => resultElement.classList.remove('winner-pulse'), 800); // Match CSS animation
                 
                 updateDisplay();
                 isDrawing = false;
                 
                 if (remainingNumbers.length === 0 || currentDrawCount >= maxAllowedDraws) {
-                    drawButton.innerHTML = "<span>✅ Selesai!</span>";
-                    // document.getElementById("drawButton").disabled = true; No, keep it enabled to show message
+                    drawButton.innerHTML = "<span>Selesai</span>";
                     if (remainingNumbers.length === 0) {
-                         alert("🥳 Semua nomor sudah terpilih! Selamat!");
+                         alert("Semua nomor telah terpilih.");
                     } else if (currentDrawCount >= maxAllowedDraws) {
-                         alert("🏁 Batas pengambilan nomor tercapai!");
+                         alert("Batas pengambilan nomor telah tercapai.");
                     }
-                    createConfettiShower(true); // Big celebration
                 } else {
                     drawButton.disabled = false;
-                    drawButton.innerHTML = "<span>🎉 AMBIL NOMOR HOKI! 🎉</span>";
+                    drawButton.innerHTML = "<span>Ambil Nomor</span>";
                 }
-            }, 1800); // Increased timeout for more dramatic effect
+            }, 1200);
         }
 
         function updateDisplay() {
@@ -124,55 +119,24 @@
             
             historyElement.innerHTML = historyNumbers.map(num => 
                 `<div class="number-chip">${num}</div>`
-            ).reverse().join(''); // Show newest first
+            ).reverse().join('');
             
             remainingElement.innerHTML = remainingNumbers.map(num => 
                 `<div class="number-chip">${num}</div>`
             ).join('');
 
             document.getElementById("drawCount").textContent = historyNumbers.length;
-            document.getElementById("maxDrawValue").textContent = maxAllowedDraws; // Ensure this updates if maxDraw changes
-        }
-
-        function createConfettiShower(isCelebration = false) {
-            const container = document.querySelector('.undian-page .container'); // Target container for better positioning
-            if (!container) return;
-
-            const numConfetti = isCelebration ? 100 : 20; // More for celebration
-            const colors = ['#ffdd57', '#ff6b6b', '#4facfe', '#48cfad', '#f783ac', '#f9a825'];
-
-
-            for (let i = 0; i < numConfetti; i++) {
-                const confetti = document.createElement('div');
-                confetti.className = 'confetti';
-                // Position confetti within the container bounds randomly
-                const startX = Math.random() * container.offsetWidth;
-                const startY = -20; // Start above the container
-
-                confetti.style.left = startX + 'px';
-                confetti.style.top = startY + 'px';
-                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.setProperty('--random-rotate-end', (Math.random() * 720 - 360) + 'deg');
-                confetti.style.animationDuration = (Math.random() * 2 + 2) + 's'; // 2-4 seconds fall time
-                confetti.style.animationDelay = (Math.random() * 1) + 's'; // Stagger start times
-                
-                container.appendChild(confetti);
-                
-                setTimeout(() => confetti.remove(), 4000); // Remove after animation
-            }
+            document.getElementById("maxDrawValue").textContent = maxAllowedDraws;
         }
         
-        // Event listeners for input changes
         document.getElementById("maxAngka").addEventListener("change", () => {
-            const currentMax = parseInt(document.getElementById('maxAngka').value);
             const currentDraws = historyNumbers.length;
             if (currentDraws > 0 && confirm("Mengubah total nomor akan mereset undian yang sedang berjalan. Lanjutkan?")) {
                 initializeNumbers();
             } else if (currentDraws === 0) {
-                 initializeNumbers(); // If no draws yet, just re-init
-            }
-            else {
-                document.getElementById("maxAngka").value = maxTotalNumbers; // Revert if cancelled
+                 initializeNumbers();
+            } else {
+                document.getElementById("maxAngka").value = maxTotalNumbers;
             }
         });
 
@@ -181,21 +145,19 @@
             const totalNumbers = parseInt(document.getElementById('maxAngka').value);
             
             if (newMaxDraw > totalNumbers) {
-                alert("Maksimal pengambilan tidak boleh melebihi total nomor undian!");
-                document.getElementById('maxDraw').value = Math.min(maxAllowedDraws, totalNumbers); // Revert to old valid or new valid
+                alert("Maksimal pengambilan tidak boleh melebihi total nomor undian.");
+                document.getElementById('maxDraw').value = Math.min(maxAllowedDraws, totalNumbers);
                 return;
             }
             if (historyNumbers.length > 0 && confirm("Mengubah maksimal pengambilan akan mereset undian. Lanjutkan?")){
                  initializeNumbers();
             } else if (historyNumbers.length === 0) {
                  initializeNumbers();
-            }
-             else {
-                document.getElementById('maxDraw').value = maxAllowedDraws; // Revert if cancelled
+            } else {
+                document.getElementById('maxDraw').value = maxAllowedDraws;
             }
         });
 
-        // Initialize on load
         initializeNumbers();
     </script>
 </body>

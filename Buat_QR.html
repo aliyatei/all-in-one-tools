@@ -3,25 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📲 Pembuatan QR Code Instan</title>
+    <title>Pembuatan Kode QR</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body class="qr-page">
     <div class="container">
-        <h1>📲 Buat QR Code MANTAP!  маги </h1>
+        <h1>Pembuat Kode QR</h1>
 
-        <input type="text" id="textInput" placeholder="Ketik teks atau link di sini...">
+        <input type="text" id="textInput" placeholder="Masukkan teks atau tautan">
 
         <div class="button-group">
-            <button onclick="generateQRCode()">✨ Generate QR Ajaib! ✨</button>
-            <button class="download-btn" onclick="downloadQRCode()">💾 Unduh QR Keren Ini!</button>
+            <button onclick="generateQRCode()">Buat Kode QR</button>
+            <button class="download-btn" onclick="downloadQRCode()">Unduh Kode QR</button>
         </div>
 
         <div id="qrcode"></div>
 
-        <div class="footer">Dibuat dengan sihir 🪄 oleh Kamu!</div>
+        <div class="footer">Utilitas Pembuatan Kode QR</div>
     </div>
 
     <script>
@@ -32,61 +32,55 @@
             const qrContainer = document.getElementById("qrcode");
 
             if (text === "") {
-                alert("Waduh! Isi dulu teks atau linknya ya!");
+                alert("Silakan masukkan teks atau tautan terlebih dahulu.");
                 return;
             }
 
-            qrContainer.innerHTML = ""; // Clear previous QR
-            qrContainer.style.display = 'flex'; // Ensure it's visible
+            qrContainer.innerHTML = "";
+            qrContainer.style.display = 'inline-flex'; // Ensure visibility and centering
 
             qr = new QRCode(qrContainer, {
                 text: text,
-                width: 200, // Consistent size, can be adjusted in CSS if needed
+                width: 200,
                 height: 200,
                 colorDark : "#000000",
                 colorLight : "#ffffff",
                 correctLevel : QRCode.CorrectLevel.H
             });
-            // Add a little animation/feedback
-            qrContainer.style.animation = 'fadeInScaleUp 0.3s ease-out';
         }
 
         function downloadQRCode() {
             if (!qr) {
-                alert("Eits! Buat dulu QR Code-nya, dong!");
+                alert("Silakan buat Kode QR terlebih dahulu.");
                 return;
             }
 
-            // Find the image element if qrcode.js generates an img tag, or canvas
             const qrImg = document.querySelector("#qrcode img");
             const qrCanvas = document.querySelector("#qrcode canvas");
             let qrImage;
 
             if (qrImg) {
-                 // For image, we can try to create a new canvas to draw it for download if direct download is tricky
                 const canvas = document.createElement('canvas');
                 canvas.width = qrImg.width;
                 canvas.height = qrImg.height;
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(qrImg, 0, 0);
                 qrImage = canvas.toDataURL("image/png");
-
             } else if (qrCanvas) {
                 qrImage = qrCanvas.toDataURL("image/png");
             } else {
-                alert("Tidak bisa menemukan gambar QR untuk diunduh!");
+                alert("Gagal menemukan gambar QR untuk diunduh.");
                 return;
             }
 
-
             const downloadLink = document.createElement("a");
             downloadLink.href = qrImage;
-            downloadLink.download = "qrcode_keren.png"; // Fun filename
-            document.body.appendChild(downloadLink); // Required for Firefox
+            downloadLink.download = "qrcode.png";
+            document.body.appendChild(downloadLink);
             downloadLink.click();
-            document.body.removeChild(downloadLink); // Clean up
+            document.body.removeChild(downloadLink);
             
-            alert("QR Code berhasil diunduh! Keren kan? 😉");
+            alert("Kode QR berhasil diunduh.");
         }
     </script>
 </body>
