@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timer & Stopwatch - Portal Utilitas</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="timer-stopwatch-page">
+    <div class="container">
+        <h1>Timer & Stopwatch</h1>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab('timer')">Timer</button>
+            <button class="tab-button" onclick="showTab('stopwatch')">Stopwatch</button>
+        </div>
+
+        <div id="timer" class="tab-content active">
+            <h2>Timer Hitung Mundur</h2>
+            <div class="timer-inputs">
+                <input type="number" id="timerHours" placeholder="JJ" min="0" value="0"> :
+                <input type="number" id="timerMinutes" placeholder="MM" min="0" max="59" value="5"> :
+                <input type="number" id="timerSeconds" placeholder="DD" min="0" max="59" value="0">
+            </div>
+            <div id="timerDisplay" class="time-display">00:05:00</div>
+            <div class="timer-controls button-group">
+                <button id="startTimerBtn">Mulai</button>
+                <button id="pauseTimerBtn" disabled>Jeda</button>
+                <button id="resetTimerBtn">Reset</button>
+            </div>
+        </div>
+
+        <div id="stopwatch" class="tab-content">
+            <h2>Stopwatch</h2>
+            <div id="stopwatchDisplay" class="time-display">00:00:00.000</div>
+            <div class="stopwatch-controls button-group">
+                <button id="startStopwatchBtn">Mulai</button>
+                <button id="pauseStopwatchBtn" disabled>Jeda</button>
+                <button id="resetStopwatchBtn">Reset</button>
+                <button id="lapStopwatchBtn" disabled>Lap</button>
+            </div>
+            <div class="laps-container">
+                <h3>Laps:</h3>
+                <ul id="lapsList"></ul>
+            </div>
+        </div>
+        <div class="footer"><a href="index.html" class="back-link">Kembali ke Menu Utama</a></div>
+    </div>
+
+    <script>
+        // Tab switching
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // Timer Logic
+        const timerHoursEl = document.getElementById('timerHours');
+        const timerMinutesEl = document.getElementById('timerMinutes');
+        const timerSecondsEl = document.getElementById('timerSeconds');
+        const timerDisplayEl = document.getElementById('timerDisplay');
+        const startTimerBtn = document.getElementById('startTimerBtn');
+        const pauseTimerBtn = document.getElementById('pauseTimerBtn');
+        const resetTimerBtn = document.getElementById('resetTimerBtn');
+        let timerInterval;
+        let totalTimerSeconds = 0;
+
+        function updateTimerDisplay() {
+            const h = Math.floor(totalTimerSeconds / 3600);
+            const m = Math.floor((totalTimerSeconds % 3600) / 60);
+            const s = totalTimerSeconds % 60;
+            timerDisplayEl.textContent = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        }
+        
+        function setTimerFromInputs() {
+            const h = parseInt(timerHoursEl.value) || 0;
+            const m = parseInt(timerMinutesEl.value) || 0;
+            const s = parseInt(timerSecondsEl.value) || 0;
+            totalTimerSeconds = (h * 3600) + (m * 60) + s;
+            if (totalTimerSeconds < 0) totalTimerSeconds = 0;
+            updateTimerDisplay();
+        }
+        [timerHoursEl, timerMinutesEl, timerSecondsEl].forEach(el => el.addEventListener('input', setTimerFromInputs));
+
+
+        startTimerBtn.addEventListener('click', () => {
+            if (totalTimerSeconds <= 0) {
+                setTimerFromInputs(); // Ensure time is set if inputs changed
+                if(totalTimerSeconds <=0) {
+                    alert("Atur waktu timer terlebih dahulu.");
+                    return;
+                }
+            }
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                if (totalTimerSeconds > 0) {
+                    totalTimerSeconds--;
+                    updateTimerDisplay();
+                } else {
+                    clearInterval(timerInterval);
+                    alert("Waktu habis!");
+                    startTimerBtn.disabled = false;
+                    pauseTimerBtn.disabled = true;
+                }
+            }, 1000);
+            startTimerBtn.disabled = true;
+            pauseTimerBtn.disabled = false;
+        });
+
+        pauseTimerBtn.addEventListener('click', () => {
+            clearInterval(timerInterval);
+            startTimerBtn.disabled = false;
+            pauseTimerBtn.disabled = true;
+        });
+
+        resetTimerBtn.addEventListener('click', () => {
+            clearInterval(timerInterval);
+            timerHoursEl.value = "0";
+            timerMinutesEl.value = "5";
+            timerSecondsEl.value = "0";
+            setTimerFromInputs(); // Resets totalTimerSeconds and display
+            startTimerBtn.disabled = false;
+            pauseTimerBtn.disabled = true;
+        });
+
+
+        // Stopwatch Logic
+        const stopwatchDisplayEl = document.getElementById('stopwatchDisplay');
+        const startStopwatchBtn = document.getElementById('startStopwatchBtn');
+        const pauseStopwatchBtn = document.getElementById('pauseStopwatchBtn');
+        const resetStopwatchBtn = document.getElementById('resetStopwatchBtn');
+        const lapStopwatchBtn = document.getElementById('lapStopwatchBtn');
+        const lapsListEl = document.getElementById('lapsList');
+        let stopwatchInterval;
+        let stopwatchMilliseconds = 0;
+        let lapCounter = 1;
+
+        function formatStopwatchTime(ms) {
+            const totalSeconds = Math.floor(ms / 1000);
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+            const milliseconds = String(ms % 1000).padStart(3, '0');
+            return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}.${milliseconds}`;
+        }
+
+        startStopwatchBtn.addEventListener('click', () => {
+            clearInterval(stopwatchInterval);
+            const startTime = Date.now() - stopwatchMilliseconds;
+            stopwatchInterval = setInterval(() => {
+                stopwatchMilliseconds = Date.now() - startTime;
+                stopwatchDisplayEl.textContent = formatStopwatchTime(stopwatchMilliseconds);
+            }, 10); // Update every 10ms for smoother display
+            startStopwatchBtn.disabled = true;
+            pauseStopwatchBtn.disabled = false;
+            lapStopwatchBtn.disabled = false;
+        });
+
+        pauseStopwatchBtn.addEventListener('click', () => {
+            clearInterval(stopwatchInterval);
+            startStopwatchBtn.disabled = false;
+            pauseStopwatchBtn.disabled = true;
+        });
+
+        resetStopwatchBtn.addEventListener('click', () => {
+            clearInterval(stopwatchInterval);
+            stopwatchMilliseconds = 0;
+            stopwatchDisplayEl.textContent = formatStopwatchTime(0);
+            lapsListEl.innerHTML = '';
+            lapCounter = 1;
+            startStopwatchBtn.disabled = false;
+            pauseStopwatchBtn.disabled = true;
+            lapStopwatchBtn.disabled = true;
+        });
+
+        lapStopwatchBtn.addEventListener('click', () => {
+            const lapTime = formatStopwatchTime(stopwatchMilliseconds);
+            const listItem = document.createElement('li');
+            listItem.textContent = `Lap ${lapCounter}: ${lapTime}`;
+            lapsListEl.appendChild(listItem);
+            lapCounter++;
+        });
+        
+        // Initialize displays
+        setTimerFromInputs();
+        stopwatchDisplayEl.textContent = formatStopwatchTime(0);
+    </script>
+</body>
+</html>

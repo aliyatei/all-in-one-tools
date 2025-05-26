@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penghitung Kata & Karakter - Portal Utilitas</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="penghitung-kata-page">
+    <div class="container">
+        <h1>Penghitung Kata & Karakter</h1>
+        <textarea id="textInput" placeholder="Masukkan teks Anda di sini untuk dianalisis..."></textarea>
+        <div class="stats-container">
+            <div class="stat-item">
+                <strong>Jumlah Kata:</strong> <span id="wordCount">0</span>
+            </div>
+            <div class="stat-item">
+                <strong>Jumlah Karakter (dengan spasi):</strong> <span id="charCountWithSpaces">0</span>
+            </div>
+            <div class="stat-item">
+                <strong>Jumlah Karakter (tanpa spasi):</strong> <span id="charCountWithoutSpaces">0</span>
+            </div>
+            <div class="stat-item">
+                <strong>Jumlah Kalimat:</strong> <span id="sentenceCount">0</span>
+            </div>
+            <div class="stat-item">
+                <strong>Jumlah Paragraf:</strong> <span id="paragraphCount">0</span>
+            </div>
+        </div>
+        <div class="footer"><a href="index.html" class="back-link">Kembali ke Menu Utama</a></div>
+    </div>
+
+    <script>
+        const textInput = document.getElementById('textInput');
+        const wordCountEl = document.getElementById('wordCount');
+        const charCountWithSpacesEl = document.getElementById('charCountWithSpaces');
+        const charCountWithoutSpacesEl = document.getElementById('charCountWithoutSpaces');
+        const sentenceCountEl = document.getElementById('sentenceCount');
+        const paragraphCountEl = document.getElementById('paragraphCount');
+
+        textInput.addEventListener('input', analyzeText);
+
+        function analyzeText() {
+            const text = textInput.value;
+
+            // Karakter (dengan spasi)
+            charCountWithSpacesEl.textContent = text.length;
+
+            // Karakter (tanpa spasi)
+            charCountWithoutSpacesEl.textContent = text.replace(/\s/g, '').length;
+
+            // Kata
+            const words = text.trim().split(/\s+/).filter(word => word.length > 0);
+            wordCountEl.textContent = words.length;
+            if (text.trim() === "") wordCountEl.textContent = 0;
+
+
+            // Kalimat (perkiraan berdasarkan tanda baca umum)
+            const sentences = text.split(/[.!?]+/).filter(sentence => sentence.trim().length > 0);
+            sentenceCountEl.textContent = sentences.length;
+             if (text.trim() === "") sentenceCountEl.textContent = 0;
+
+
+            // Paragraf (perkiraan berdasarkan baris baru)
+            const paragraphs = text.split(/\n+/).filter(paragraph => paragraph.trim().length > 0);
+            paragraphCountEl.textContent = paragraphs.length;
+            if (text.trim() === "") paragraphCountEl.textContent = 0;
+
+        }
+        analyzeText(); // Initial call
+    </script>
+</body>
+</html>

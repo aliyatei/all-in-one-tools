@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catatan Sederhana - Portal Utilitas</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="catatan-sederhana-page">
+    <div class="container">
+        <h1>Catatan Sederhana</h1>
+        <div class="note-editor">
+            <input type="text" id="noteTitle" placeholder="Judul Catatan">
+            <textarea id="noteContent" placeholder="Tulis catatan Anda di sini..."></textarea>
+            <input type="hidden" id="noteId"> <button id="saveNoteBtn">Simpan Catatan</button>
+        </div>
+        
+        <h2>Daftar Catatan:</h2>
+        <div id="notesList" class="notes-list-container">
+            </div>
+        <div class="footer"><a href="index.html" class="back-link">Kembali ke Menu Utama</a></div>
+    </div>
+
+    <script>
+        const noteTitleEl = document.getElementById('noteTitle');
+        const noteContentEl = document.getElementById('noteContent');
+        const noteIdEl = document.getElementById('noteId');
+        const saveNoteBtn = document.getElementById('saveNoteBtn');
+        const notesListEl = document.getElementById('notesList');
+
+        function getNotes() {
+            return JSON.parse(localStorage.getItem('simpleNotes')) || [];
+        }
+
+        function saveNotes(notes) {
+            localStorage.setItem('simpleNotes', JSON.stringify(notes));
+        }
+
+        function displayNotes() {
+            const notes = getNotes();
+            notesListEl.innerHTML = '';
+            if (notes.length === 0) {
+                notesListEl.innerHTML = '<p>Belum ada catatan.</p>';
+                return;
+            }
+
+            notes.forEach(note => {
+                const noteDiv = document.createElement('div');
+                noteDiv.classList.add('note-item');
+                noteDiv.innerHTML = `
+                    <h3>${note.title}</h3>
+                    <p>${note.content.substring(0, 100)}${note.content.length > 100 ? '...' : ''}</p>
+                    <small>Dibuat: ${new Date(note.timestamp).toLocaleString()}</small>
+                    <div class="note-actions">
+                        <button onclick="editNote('${note.id}')">Edit</button>
+                        <button onclick="deleteNote('${note.id}')" class="delete-btn">Hapus</button>
+                    </div>
+                `;
+                notesListEl.appendChild(noteDiv);
+            });
+        }
+
+        saveNoteBtn.addEventListener('click', () => {
+            const title = noteTitleEl.value.trim();
+            const content = noteContentEl.value.trim();
+            const id = noteIdEl.value;
+
+            if (!title || !content) {
+                alert("Judul dan isi catatan tidak boleh kosong.");
+                return;
+            }
+
+            let notes = getNotes();
+            if (id) { // Editing existing note
+                const noteIndex = notes.findIndex(note => note.id === id);
+                if (noteIndex > -1) {
+                    notes[noteIndex].title = title;
+                    notes[noteIndex].content = content;
+                    notes[noteIndex].timestamp = Date.now();
+                }
+            } else { // Creating new note
+                const newNote = {
+                    id: 'note_' + Date.now() + Math.random().toString(16).slice(2), // Unique ID
+                    title,
+                    content,
+                    timestamp: Date.now()
+                };
+                notes.unshift(newNote); // Add to the beginning
+            }
+            
+            saveNotes(notes);
+            clearEditor();
+            displayNotes();
+        });
+        
+        function clearEditor() {
+            noteTitleEl.value = '';
+            noteContentEl.value = '';
+            noteIdEl.value = '';
+            saveNoteBtn.textContent = 'Simpan Catatan';
+        }
+
+        window.editNote = function(id) {
+            const notes = getNotes();
+            const noteToEdit = notes.find(note => note.id === id);
+            if (noteToEdit) {
+                noteTitleEl.value = noteToEdit.title;
+                noteContentEl.value = noteToEdit.content;
+                noteIdEl.value = noteToEdit.id;
+                saveNoteBtn.textContent = 'Perbarui Catatan';
+                noteTitleEl.focus();
+            }
+        }
+
+        window.deleteNote = function(id) {
+            if (confirm("Apakah Anda yakin ingin menghapus catatan ini?")) {
+                let notes = getNotes();
+                notes = notes.filter(note => note.id !== id);
+                saveNotes(notes);
+                clearEditor(); // If the deleted note was being edited
+                displayNotes();
+            }
+        }
+
+        // Initial display
+        displayNotes();
+    </script>
+</body>
+</html>
