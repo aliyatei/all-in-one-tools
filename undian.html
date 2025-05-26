@@ -57,18 +57,19 @@
         function initializeNumbers() {
             maxTotalNumbers = Math.max(1, parseInt(document.getElementById('maxAngka').value) || 100);
             maxAllowedDraws = Math.min(maxTotalNumbers, parseInt(document.getElementById('maxDraw').value) || Math.min(10, maxTotalNumbers));
-            
+
             document.getElementById('maxAngka').value = maxTotalNumbers;
             document.getElementById('maxDraw').value = maxAllowedDraws;
             document.getElementById('maxDrawValue').textContent = maxAllowedDraws;
-            
+
             historyNumbers = [];
             remainingNumbers = Array.from({length: maxTotalNumbers}, (_, i) => i + 1);
             currentDrawCount = 0;
-            
+
             updateDisplay();
             const resultElement = document.getElementById("result");
             resultElement.textContent = "-";
+            resultElement.classList.remove('is-rolling', 'is-revealing'); // Remove animation classes
             document.getElementById("drawButton").disabled = false;
             document.getElementById("drawButton").innerHTML = "<span>Ambil Nomor</span>";
         }
@@ -81,24 +82,28 @@
             }
             isDrawing = true;
             currentDrawCount++;
-            
+
             const resultElement = document.getElementById('result');
             const drawButton = document.getElementById("drawButton");
 
-            resultElement.innerHTML = '<div class="spinner"></div>';
+            resultElement.textContent = ''; // Clear previous result
+            resultElement.classList.add('is-rolling'); // Start rolling animation
             drawButton.disabled = true;
             drawButton.innerHTML = "<span>Memproses...</span>";
-            
+
             setTimeout(() => {
                 const randomIndex = Math.floor(Math.random() * remainingNumbers.length);
                 const chosenNumber = remainingNumbers.splice(randomIndex, 1)[0];
                 historyNumbers.push(chosenNumber);
-                
+
+                resultElement.classList.remove('is-rolling'); // Stop rolling
                 resultElement.textContent = chosenNumber;
-                
+                resultElement.classList.add('is-revealing'); // Start reveal animation
+                setTimeout(() => resultElement.classList.remove('is-revealing'), 300); // Remove reveal class
+
                 updateDisplay();
                 isDrawing = false;
-                
+
                 if (remainingNumbers.length === 0 || currentDrawCount >= maxAllowedDraws) {
                     drawButton.innerHTML = "<span>Selesai</span>";
                     if (remainingNumbers.length === 0) {
@@ -110,25 +115,25 @@
                     drawButton.disabled = false;
                     drawButton.innerHTML = "<span>Ambil Nomor</span>";
                 }
-            }, 1200);
+            }, 1500); // Adjust timeout to match animation duration if needed
         }
 
         function updateDisplay() {
             const historyElement = document.getElementById("history");
             const remainingElement = document.getElementById("remaining");
-            
-            historyElement.innerHTML = historyNumbers.map(num => 
+
+            historyElement.innerHTML = historyNumbers.map(num =>
                 `<div class="number-chip">${num}</div>`
             ).reverse().join('');
-            
-            remainingElement.innerHTML = remainingNumbers.map(num => 
+
+            remainingElement.innerHTML = remainingNumbers.map(num =>
                 `<div class="number-chip">${num}</div>`
             ).join('');
 
             document.getElementById("drawCount").textContent = historyNumbers.length;
             document.getElementById("maxDrawValue").textContent = maxAllowedDraws;
         }
-        
+
         document.getElementById("maxAngka").addEventListener("change", () => {
             const currentDraws = historyNumbers.length;
             if (currentDraws > 0 && confirm("Mengubah total nomor akan mereset undian yang sedang berjalan. Lanjutkan?")) {
@@ -143,7 +148,7 @@
         document.getElementById("maxDraw").addEventListener("change", () => {
             const newMaxDraw = parseInt(document.getElementById('maxDraw').value);
             const totalNumbers = parseInt(document.getElementById('maxAngka').value);
-            
+
             if (newMaxDraw > totalNumbers) {
                 alert("Maksimal pengambilan tidak boleh melebihi total nomor undian.");
                 document.getElementById('maxDraw').value = Math.min(maxAllowedDraws, totalNumbers);
