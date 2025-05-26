@@ -3,146 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Format Teks</title>
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: linear-gradient(135deg, #6a11cb, #2575fc); /* Warna sama dengan index.html */
-            margin: 0;
-            color: #fff;
-            padding: 15px;
-            box-sizing: border-box;
-        }
-
-        .container {
-            text-align: center;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            width: 100%;
-            max-width: 500px;
-            box-sizing: border-box;
-        }
-
-        h1 {
-            margin-bottom: 20px;
-            font-size: 2em;
-            font-weight: bold;
-        }
-
-        textarea {
-            width: 100%;
-            height: 150px;
-            padding: 10px;
-            font-size: 1.1em;
-            border-radius: 8px;
-            border: none;
-            outline: none;
-            resize: none;
-            background: rgba(255, 255, 255, 0.2);
-            color: #fff;
-            box-sizing: border-box;
-        }
-
-        textarea::placeholder {
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .button-group {
-            margin-top: 15px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-        }
-
-        button {
-            padding: 12px 20px;
-            font-size: 1.1em;
-            font-weight: bold;
-            color: #fff;
-            background: #007bff;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.3s ease, transform 0.2s ease;
-            flex: 1 1 calc(50% - 10px);
-            min-width: 120px;
-        }
-
-        button:hover {
-            background: #0056b3;
-            transform: scale(1.05);
-        }
-
-        .copy-btn {
-            background: #28a745;
-        }
-
-        .copy-btn:hover {
-            background: #218838;
-        }
-
-        .footer {
-            margin-top: 20px;
-            font-size: 0.9em;
-            color: rgba(255, 255, 255, 0.85);
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 20px;
-                max-width: 90%;
-            }
-
-            h1 {
-                font-size: 1.5em;
-            }
-
-            textarea {
-                font-size: 1em;
-            }
-
-            button {
-                font-size: 1em;
-                padding: 10px;
-            }
-        }
-    </style>
+    <title>✍️ Pengubah Format Teks Ajaib</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="format-teks-page">
     <div class="container">
-        <h1>Ubah Format Teks</h1>
+        <h1>✍️ Sulap Format Teksmu! 🪄</h1>
 
-        <textarea id="textInput" placeholder="Masukkan teks di sini..."></textarea>
+        <textarea id="textInput" placeholder="Tuliskan mantra... eh, teksmu di sini..."></textarea>
 
         <div class="button-group">
-            <button onclick="formatText('sentence')">Sentence Case</button>
-            <button onclick="formatText('lower')">Lower Case</button>
-            <button onclick="formatText('upper')">UPPER CASE</button>
-            <button onclick="formatText('capitalized')">Capitalized Case</button>
-            <button onclick="formatText('alternating')">aLtErNaTiNg CaSe</button>
-            <button onclick="formatText('title')">Title Case</button>
-            <button onclick="formatText('inverse')">InVeRsE CaSe</button>
-            <button class="copy-btn" onclick="copyText()">Copy</button>
+            <button onclick="formatText('sentence')">Kalimat Rapi</button>
+            <button onclick="formatText('lower')">huruf kecil semua</button>
+            <button onclick="formatText('upper')">JADI BESAR SEMUA!</button>
+            <button onclick="formatText('capitalized')">Setiap Kata Besar</button>
+            <button onclick="formatText('alternating')">aLtErNaTiNg sErU</button>
+            <button onclick="formatText('title')">Gaya Judul Kece</button>
+            <button onclick="formatText('inverse')">bAlIkKaN kAsUs</button>
+            <button class="copy-btn" onclick="copyText()">Salin Keajaiban Ini! 📋</button>
         </div>
 
-        <div class="footer">Dibuat dengan ❤️ oleh Anda</div>
+        <div class="footer">Diciptakan dengan imajinasi ✨ oleh Kamu!</div>
     </div>
 
     <script>
         function formatText(type) {
             let textInput = document.getElementById('textInput');
+            let originalText = textInput.value; // Keep original for some cases
 
-            if (textInput.value.trim() === "") {
-                alert("Masukkan teks terlebih dahulu!");
+            if (originalText.trim() === "") {
+                alert("Ups! Tulis sesuatu dulu dong biar bisa disulap!");
                 return;
             }
 
@@ -150,45 +41,60 @@
 
             switch (type) {
                 case 'sentence':
-                    formattedText = textInput.value.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g, (c) => c.toUpperCase());
+                    formattedText = originalText.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g, (c) => c.toUpperCase());
                     break;
                 case 'lower':
-                    formattedText = textInput.value.toLowerCase();
+                    formattedText = originalText.toLowerCase();
                     break;
                 case 'upper':
-                    formattedText = textInput.value.toUpperCase();
+                    formattedText = originalText.toUpperCase();
                     break;
                 case 'capitalized':
-                    formattedText = textInput.value.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+                    formattedText = originalText.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
                     break;
                 case 'alternating':
-                    formattedText = textInput.value.split('').map((char, index) => index % 2 === 0 ? char.toLowerCase() : char.toUpperCase()).join('');
+                    formattedText = originalText.split('').map((char, index) => index % 2 === 0 ? char.toLowerCase() : char.toUpperCase()).join('');
                     break;
-                case 'title':
-                    formattedText = textInput.value.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+                case 'title': // More robust title case (example, not exhaustive)
+                    const smallWords = /^(a|an|and|as|at|but|by|en|for|if|in|nor|of|on|or|per|the|to|vs?\.?|via)$/i;
+                    formattedText = originalText.toLowerCase().split(' ').map((word, index, array) => {
+                        if (index === 0 || index === array.length -1 || !smallWords.test(word)) {
+                            return word.charAt(0).toUpperCase() + word.slice(1);
+                        }
+                        return word;
+                    }).join(' ');
                     break;
                 case 'inverse':
-                    formattedText = textInput.value.split('').map(char => char === char.toUpperCase() ? char.toLowerCase() : char.toUpperCase()).join('');
+                    formattedText = originalText.split('').map(char => char === char.toUpperCase() ? char.toLowerCase() : char.toUpperCase()).join('');
                     break;
                 default:
-                    formattedText = textInput.value;
+                    formattedText = originalText;
             }
 
             textInput.value = formattedText;
+            // Little visual feedback
+            textInput.style.transition = 'transform 0.2s ease';
+            textInput.style.transform = 'scale(1.02)';
+            setTimeout(() => { textInput.style.transform = 'scale(1)'; }, 200);
         }
 
         function copyText() {
             let textInput = document.getElementById('textInput');
 
             if (textInput.value.trim() === "") {
-                alert("Tidak ada teks untuk disalin!");
+                alert("Hehe, belum ada teks ajaib untuk disalin nih!");
                 return;
             }
 
             textInput.select();
-            document.execCommand("copy");
+            textInput.setSelectionRange(0, 99999); // For mobile devices
 
-            alert("Teks berhasil disalin!");
+            try {
+                document.execCommand("copy");
+                alert("Voila! Teks ajaib berhasil disalin! ✨");
+            } catch (err) {
+                alert("Oops! Gagal menyalin. Coba cara manual ya.");
+            }
         }
     </script>
 </body>

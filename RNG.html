@@ -3,221 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nomor Acak</title>
-    <style>
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: radial-gradient(circle, #6a11cb, #2575fc);
-            margin: 0;
-            color: #fff;
-            padding: 15px;
-            box-sizing: border-box;
-        }
-
-        .container {
-            text-align: center;
-            background: rgba(255, 255, 255, 0.15);
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            width: 100%;
-            max-width: 400px;
-        }
-
-        h1 {
-            margin-bottom: 15px;
-            font-size: 2em;
-            font-weight: bold;
-        }
-
-        label {
-            display: block;
-            margin: 10px 0 5px;
-            font-weight: bold;
-            font-size: 1.1em;
-        }
-
-        input {
-            padding: 12px;
-            width: 100%;
-            max-width: 250px;
-            margin-bottom: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.2);
-            color: #fff;
-            font-size: 1.2em;
-            text-align: center;
-            outline: none;
-        }
-
-        input::placeholder {
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        #result {
-            font-size: 2.5em;
-            font-weight: bold;
-            margin: 20px 0;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            min-height: 60px;
-        }
-
-        .spinner {
-            display: inline-block;
-            width: 30px;
-            height: 30px;
-            border: 4px solid rgba(255, 255, 255, 0.5);
-            border-top-color: #fff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        button {
-            padding: 16px 35px;
-            font-size: 1.3em;
-            font-weight: bold;
-            color: #fff;
-            background: linear-gradient(135deg, #ff416c, #ff4b2b);
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: transform 0.3s ease, background 0.3s ease;
-            width: 100%;
-            max-width: 300px;
-            margin-top: 15px;
-        }
-
-        button:hover {
-            transform: scale(1.05);
-            background: linear-gradient(135deg, #ff4b2b, #ff416c);
-        }
-
-        .footer {
-            margin-top: 20px;
-            font-size: 1em;
-            color: rgba(255, 255, 255, 0.85);
-        }
-
-        /* Checkbox container */
-        .checkbox-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 15px;
-            cursor: pointer;
-        }
-
-        .checkbox-container label {
-            font-size: 1.1em;
-            margin-left: 12px;
-            cursor: pointer;
-        }
-
-        /* Custom checkbox */
-        .checkbox-container input {
-            display: none;
-        }
-
-        .checkbox-custom {
-            width: 45px;
-            height: 25px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 15px;
-            position: relative;
-            transition: background 0.3s ease;
-            cursor: pointer;
-            display: inline-block;
-        }
-
-        .checkbox-custom::before {
-            content: "";
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: white;
-            border-radius: 50%;
-            top: 50%;
-            left: 5px;
-            transform: translateY(-50%);
-            transition: 0.3s ease;
-        }
-
-        .checkbox-container input:checked + label .checkbox-custom {
-            background: #ff4b2b;
-        }
-
-        .checkbox-container input:checked + label .checkbox-custom::before {
-            left: 20px;
-        }
-
-        /* Responsif untuk HP */
-        @media (max-width: 480px) {
-            .container {
-                padding: 20px;
-                max-width: 100%;
-            }
-
-            h1 {
-                font-size: 1.8em;
-            }
-
-            input {
-                font-size: 1.1em;
-                padding: 14px;
-            }
-
-            button {
-                font-size: 1.2em;
-                padding: 14px;
-                width: 100%;
-            }
-
-            #result {
-                font-size: 2em;
-            }
-        }
-    </style>
+    <title>🎲 Generator Nomor Super Acak!</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="rng-page">
     <div class="container">
-        <h1>Nomor Acak</h1>
+        <h1>🎲 Mesin Angka Super Acak! 🎰</h1>
         
-        <label for="banyakAngka">Banyak Angka:</label>
+        <label for="banyakAngka">Mau Berapa Angka?</label>
         <input type="number" id="banyakAngka" min="1" value="1">
 
-        <label for="minAngka">Nilai Minimum:</label>
+        <label for="minAngka">Angka Terkecil?</label>
         <input type="number" id="minAngka" min="0" value="1">
 
-        <label for="maxAngka">Nilai Maksimum:</label>
+        <label for="maxAngka">Angka Terbesar?</label>
         <input type="number" id="maxAngka" min="1" value="100">
 
         <div class="checkbox-container">
-            <input type="checkbox" id="uniqueNumbers">
+            <input type="checkbox" id="uniqueNumbers" class="custom-checkbox">
             <label for="uniqueNumbers">
-                <span class="checkbox-custom"></span> Hindari angka duplikat
+                <span class="checkbox-custom"></span> Hindari Angka Kembar Biar Seru!
             </label>
         </div>
 
         <div id="result">-</div>
 
-        <button onclick="spinRoulette()">🎲 Putar</button>
+        <button onclick="spinRoulette()">🎲 PUTAR RODA ANGKA! 🎲</button>
         
-        <div class="footer">Dibuat dengan ❤️ oleh Anda</div>
+        <div class="footer">Dibuat dengan keajaiban angka ✨ oleh Kamu!</div>
     </div>
 
     <script>
@@ -228,13 +42,34 @@
             const uniqueNumbers = document.getElementById('uniqueNumbers').checked;
             const resultElement = document.getElementById('result');
 
-            resultElement.innerHTML = '<div class="spinner"></div>';
+            if (minAngka > maxAngka) {
+                alert("Hei! Angka minimum tidak boleh lebih besar dari maksimum ya!");
+                return;
+            }
+            if (banyakAngka <= 0) {
+                alert("Jumlah angka harus lebih dari nol dong!");
+                return;
+            }
+            if (uniqueNumbers && banyakAngka > (maxAngka - minAngka + 1)) {
+                alert("Tidak cukup angka unik dalam rentang yang diminta!");
+                return;
+            }
+
+
+            resultElement.innerHTML = '<div class="spinner"></div> <p style="font-size: 0.5em; margin-top: 5px;">Mengocok angka...</p>'; // Added text
+            resultElement.style.animation = 'none'; // Reset animation before starting
 
             setTimeout(() => {
                 let hasil = [];
                 if (uniqueNumbers) {
                     let angkaTersedia = [];
                     for (let i = minAngka; i <= maxAngka; i++) angkaTersedia.push(i);
+                    
+                    if (banyakAngka > angkaTersedia.length) {
+                         resultElement.textContent = "Oops! Kurang angka unik.";
+                         return;
+                    }
+
                     for (let i = 0; i < banyakAngka && angkaTersedia.length; i++) {
                         let index = Math.floor(Math.random() * angkaTersedia.length);
                         hasil.push(angkaTersedia.splice(index, 1)[0]);
@@ -246,7 +81,12 @@
                 }
 
                 resultElement.textContent = hasil.join(', ');
-            }, 1200);
+                // Fun animation for the result
+                resultElement.style.transform = 'scale(0.8)';
+                resultElement.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                setTimeout(() => { resultElement.style.transform = 'scale(1)'; }, 50);
+
+            }, 1500); // Longer spin for more suspense!
         }
     </script>
 </body>

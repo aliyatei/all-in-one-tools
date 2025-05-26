@@ -3,135 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pembuatan QR Code</title>
+    <title>📲 Pembuatan QR Code Instan</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: linear-gradient(135deg, #6a11cb, #2575fc);
-            margin: 0;
-            color: #fff;
-            padding: 15px;
-            box-sizing: border-box;
-        }
-
-        .container {
-            text-align: center;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            width: 100%;
-            max-width: 400px;
-            box-sizing: border-box;
-        }
-
-        h1 {
-            margin-bottom: 20px;
-            font-size: 2em;
-            font-weight: bold;
-        }
-
-        input {
-            width: 100%;
-            padding: 10px;
-            font-size: 1.1em;
-            border-radius: 8px;
-            border: none;
-            outline: none;
-            background: rgba(255, 255, 255, 0.2);
-            color: #fff;
-            text-align: center;
-            box-sizing: border-box;
-        }
-
-        input::placeholder {
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .button-group {
-            margin-top: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        button {
-            padding: 12px;
-            font-size: 1.1em;
-            font-weight: bold;
-            color: #fff;
-            background: #007bff;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.3s ease, transform 0.2s ease;
-        }
-
-        button:hover {
-            background: #0056b3;
-            transform: scale(1.05);
-        }
-
-        .download-btn {
-            background: #28a745;
-        }
-
-        .download-btn:hover {
-            background: #218838;
-        }
-
-        #qrcode {
-            margin-top: 20px;
-        }
-
-        .footer {
-            margin-top: 20px;
-            font-size: 0.9em;
-            color: rgba(255, 255, 255, 0.85);
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 20px;
-                max-width: 90%;
-            }
-
-            h1 {
-                font-size: 1.5em;
-            }
-
-            input {
-                font-size: 1em;
-            }
-
-            button {
-                font-size: 1em;
-                padding: 10px;
-            }
-        }
-    </style>
 </head>
-<body>
+<body class="qr-page">
     <div class="container">
-        <h1>Pembuatan QR Code</h1>
+        <h1>📲 Buat QR Code MANTAP!  маги </h1>
 
-        <input type="text" id="textInput" placeholder="Masukkan teks atau link...">
+        <input type="text" id="textInput" placeholder="Ketik teks atau link di sini...">
 
         <div class="button-group">
-            <button onclick="generateQRCode()">Generate QR Code</button>
-            <button class="download-btn" onclick="downloadQRCode()">Download QR</button>
+            <button onclick="generateQRCode()">✨ Generate QR Ajaib! ✨</button>
+            <button class="download-btn" onclick="downloadQRCode()">💾 Unduh QR Keren Ini!</button>
         </div>
 
         <div id="qrcode"></div>
 
-        <div class="footer">Dibuat dengan ❤️ oleh Anda</div>
+        <div class="footer">Dibuat dengan sihir 🪄 oleh Kamu!</div>
     </div>
 
     <script>
@@ -142,33 +32,61 @@
             const qrContainer = document.getElementById("qrcode");
 
             if (text === "") {
-                alert("Masukkan teks atau link terlebih dahulu!");
+                alert("Waduh! Isi dulu teks atau linknya ya!");
                 return;
             }
 
-            // Hapus QR lama sebelum membuat yang baru
-            qrContainer.innerHTML = "";
+            qrContainer.innerHTML = ""; // Clear previous QR
+            qrContainer.style.display = 'flex'; // Ensure it's visible
 
             qr = new QRCode(qrContainer, {
                 text: text,
-                width: 200,
-                height: 200
+                width: 200, // Consistent size, can be adjusted in CSS if needed
+                height: 200,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
             });
+            // Add a little animation/feedback
+            qrContainer.style.animation = 'fadeInScaleUp 0.3s ease-out';
         }
 
         function downloadQRCode() {
             if (!qr) {
-                alert("Buat QR Code dulu!");
+                alert("Eits! Buat dulu QR Code-nya, dong!");
                 return;
             }
 
+            // Find the image element if qrcode.js generates an img tag, or canvas
+            const qrImg = document.querySelector("#qrcode img");
             const qrCanvas = document.querySelector("#qrcode canvas");
-            const qrImage = qrCanvas.toDataURL("image/png");
-            const downloadLink = document.createElement("a");
+            let qrImage;
 
+            if (qrImg) {
+                 // For image, we can try to create a new canvas to draw it for download if direct download is tricky
+                const canvas = document.createElement('canvas');
+                canvas.width = qrImg.width;
+                canvas.height = qrImg.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(qrImg, 0, 0);
+                qrImage = canvas.toDataURL("image/png");
+
+            } else if (qrCanvas) {
+                qrImage = qrCanvas.toDataURL("image/png");
+            } else {
+                alert("Tidak bisa menemukan gambar QR untuk diunduh!");
+                return;
+            }
+
+
+            const downloadLink = document.createElement("a");
             downloadLink.href = qrImage;
-            downloadLink.download = "qrcode.png";
+            downloadLink.download = "qrcode_keren.png"; // Fun filename
+            document.body.appendChild(downloadLink); // Required for Firefox
             downloadLink.click();
+            document.body.removeChild(downloadLink); // Clean up
+            
+            alert("QR Code berhasil diunduh! Keren kan? 😉");
         }
     </script>
 </body>

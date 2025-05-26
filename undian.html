@@ -3,270 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generator Nomor Undian</title>
-    <style>
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes confetti {
-            0% { transform: translateY(-100%) rotate(0deg); }
-            100% { transform: translateY(100vh) rotate(360deg); }
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            margin: 0;
-            color: #fff;
-            padding: 20px;
-            box-sizing: border-box;
-            position: relative;
-        }
-
-        .container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 800px;
-            margin: 20px 0;
-        }
-
-        h1 {
-            font-size: 2.8em;
-            font-weight: 700;
-            margin-bottom: 25px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        .input-group-container {
-            display: flex;
-            gap: 20px;
-        }
-
-        .input-group {
-            margin-bottom: 20px;
-            flex: 1;
-            max-width: 300px;
-        }
-
-        label {
-            font-size: 1.2em;
-            font-weight: 500;
-            margin-bottom: 10px;
-            display: block;
-        }
-
-        input {
-            padding: 12px;
-            font-size: 1.1em;
-            text-align: center;
-            border-radius: 10px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            outline: none;
-            width: 100%;
-            max-width: 200px;
-            transition: all 0.3s ease;
-        }
-
-        input:focus {
-            border-color: #fff;
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        #result {
-            font-size: 5em;
-            font-weight: 800;
-            margin: 30px 0;
-            min-height: 120px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 15px;
-            padding: 20px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .numbers-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-top: 30px;
-        }
-
-        .numbers-box {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 20px;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-
-        .numbers-box h2 {
-            font-size: 1.4em;
-            margin-bottom: 15px;
-        }
-
-        .numbers-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .number-chip {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.9em;
-        }
-
-        .button-group {
-            display: flex;
-            gap: 15px;
-            margin-top: 25px;
-            justify-content: center;
-        }
-
-        button {
-            padding: 15px 30px;
-            font-size: 1.2em;
-            font-weight: 600;
-            color: #fff;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        #drawButton {
-            background: linear-gradient(135deg, #ff6b6b, #ff4757);
-        }
-
-        #resetButton {
-            background: linear-gradient(135deg, #4b6cb7, #182848);
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        button:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top-color: #fff;
-            animation: spin 1s linear infinite;
-        }
-
-        .confetti {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background: #fff;
-            animation: confetti 3s linear infinite;
-            opacity: 0.7;
-        }
-
-        @media (max-width: 768px) {
-            .input-group-container {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 15px;
-                margin: 10px 0;
-                border-radius: 15px;
-            }
-
-            h1 {
-                font-size: 2em;
-                margin-bottom: 20px;
-            }
-
-            .input-group {
-                margin-bottom: 15px;
-            }
-
-            input {
-                width: 100%;
-                font-size: 1em;
-                padding: 10px;
-            }
-
-            #result {
-                font-size: 3.5em;
-                min-height: 100px;
-                margin: 20px 0;
-            }
-
-            .button-group {
-                flex-direction: column;
-                width: 100%;
-                gap: 10px;
-            }
-
-            button {
-                width: 100%;
-                padding: 12px;
-                font-size: 1.1em;
-                justify-content: center;
-            }
-
-            .numbers-container {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-
-            .numbers-box {
-                max-height: 150px;
-                padding: 15px;
-            }
-
-            .number-chip {
-                padding: 5px 10px;
-                font-size: 0.8em;
-            }
-        }
-    </style>
+    <title>🎟️ Mesin Undian Super Hoki!</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="undian-page">
     <div class="container">
-        <h1>🎉 Generator Undian</h1>
+        <h1>🎟️ Mesin Undian Super HOKI! 🏆</h1>
 
         <div class="input-group-container">
             <div class="input-group">
-                <label for="maxAngka">Total Nomor:</label>
+                <label for="maxAngka">Total Nomor Undian:</label>
                 <input type="number" id="maxAngka" min="1" value="100">
             </div>
             <div class="input-group">
-                <label for="maxDraw">Maksimal Pengambilan:</label>
-                <input type="number" id="maxDraw" min="1" value="100">
+                <label for="maxDraw">Berapa Kali Ambil?</label>
+                <input type="number" id="maxDraw" min="1" value="10">
             </div>
         </div>
 
@@ -274,76 +26,96 @@
 
         <div class="button-group">
             <button id="drawButton" onclick="generateLotteryNumber()">
-                <span>🎟 Ambil Nomor</span>
+                <span>🎉 AMBIL NOMOR HOKI! 🎉</span>
             </button>
             <button id="resetButton" onclick="initializeNumbers()">
-                <span>🔄 Reset</span>
+                <span>🔄 Ulangi Keberuntungan!</span>
             </button>
         </div>
 
         <div class="numbers-container">
             <div class="numbers-box">
-                <h2>Terambil (<span id="drawCount">0</span>/<span id="maxDrawValue">100</span>)</h2>
+                <h2>Nomor Terpilih (<span id="drawCount">0</span>/<span id="maxDrawValue">10</span>):</h2>
                 <div id="history" class="numbers-list"></div>
             </div>
             <div class="numbers-box">
-                <h2>Tersisa</h2>
+                <h2>Nomor Tersisa:</h2>
                 <div id="remaining" class="numbers-list"></div>
             </div>
         </div>
+         <div class="footer">Semoga Beruntung! 🤞 Dibuat oleh Kamu yang Hebat!</div>
     </div>
 
     <script>
         let historyNumbers = [];
         let remainingNumbers = [];
         let isDrawing = false;
-        let maxDraw = 100;
-        let remainingDraws = 100;
+        let maxTotalNumbers = 100;
+        let maxAllowedDraws = 10; // Max times user can click draw
+        let currentDrawCount = 0; // How many times user has clicked draw
 
         function initializeNumbers() {
-            const maxAngka = Math.max(1, parseInt(document.getElementById('maxAngka').value) || 100);
-            maxDraw = Math.min(maxAngka, parseInt(document.getElementById('maxDraw').value) || maxAngka);
+            maxTotalNumbers = Math.max(1, parseInt(document.getElementById('maxAngka').value) || 100);
+            maxAllowedDraws = Math.min(maxTotalNumbers, parseInt(document.getElementById('maxDraw').value) || Math.min(10, maxTotalNumbers));
             
-            document.getElementById('maxAngka').value = maxAngka;
-            document.getElementById('maxDraw').value = maxDraw;
-            document.getElementById('maxDrawValue').textContent = maxDraw;
+            document.getElementById('maxAngka').value = maxTotalNumbers;
+            document.getElementById('maxDraw').value = maxAllowedDraws;
+            document.getElementById('maxDrawValue').textContent = maxAllowedDraws;
             
             historyNumbers = [];
-            remainingNumbers = Array.from({length: maxAngka}, (_, i) => i + 1);
-            remainingDraws = maxDraw;
+            remainingNumbers = Array.from({length: maxTotalNumbers}, (_, i) => i + 1);
+            currentDrawCount = 0;
             
             updateDisplay();
-            document.getElementById("result").textContent = "-";
+            const resultElement = document.getElementById("result");
+            resultElement.textContent = "🤞";
+            resultElement.classList.remove('winner-pulse');
             document.getElementById("drawButton").disabled = false;
-            document.getElementById("drawCount").textContent = "0";
+            document.getElementById("drawButton").innerHTML = "<span>🎉 AMBIL NOMOR HOKI! 🎉</span>";
         }
 
         function generateLotteryNumber() {
-            if (isDrawing || remainingNumbers.length === 0 || remainingDraws <= 0) return;
+            if (isDrawing || remainingNumbers.length === 0 || currentDrawCount >= maxAllowedDraws) {
+                if (remainingNumbers.length === 0) alert("Semua nomor sudah terambil!");
+                else if (currentDrawCount >= maxAllowedDraws) alert("Sudah mencapai batas maksimal pengambilan!");
+                return;
+            }
             isDrawing = true;
+            currentDrawCount++;
             
             const resultElement = document.getElementById('result');
+            const drawButton = document.getElementById("drawButton");
+
             resultElement.innerHTML = '<div class="spinner"></div>';
+            drawButton.disabled = true;
+            drawButton.innerHTML = "<span>Mengocok...</span>";
             
             setTimeout(() => {
                 const randomIndex = Math.floor(Math.random() * remainingNumbers.length);
                 const chosenNumber = remainingNumbers.splice(randomIndex, 1)[0];
                 historyNumbers.push(chosenNumber);
-                remainingDraws--;
                 
                 resultElement.textContent = chosenNumber;
-                resultElement.style.animation = 'none';
-                void resultElement.offsetWidth;
-                resultElement.style.animation = 'pulse 0.5s ease';
+                resultElement.classList.add('winner-pulse');
+                setTimeout(() => resultElement.classList.remove('winner-pulse'), 800); // Match CSS animation
                 
                 updateDisplay();
                 isDrawing = false;
                 
-                if (remainingNumbers.length === 0 || remainingDraws <= 0) {
-                    document.getElementById("drawButton").disabled = true;
-                    createConfetti(true);
+                if (remainingNumbers.length === 0 || currentDrawCount >= maxAllowedDraws) {
+                    drawButton.innerHTML = "<span>✅ Selesai!</span>";
+                    // document.getElementById("drawButton").disabled = true; No, keep it enabled to show message
+                    if (remainingNumbers.length === 0) {
+                         alert("🥳 Semua nomor sudah terpilih! Selamat!");
+                    } else if (currentDrawCount >= maxAllowedDraws) {
+                         alert("🏁 Batas pengambilan nomor tercapai!");
+                    }
+                    createConfettiShower(true); // Big celebration
+                } else {
+                    drawButton.disabled = false;
+                    drawButton.innerHTML = "<span>🎉 AMBIL NOMOR HOKI! 🎉</span>";
                 }
-            }, 1200);
+            }, 1800); // Increased timeout for more dramatic effect
         }
 
         function updateDisplay() {
@@ -352,50 +124,78 @@
             
             historyElement.innerHTML = historyNumbers.map(num => 
                 `<div class="number-chip">${num}</div>`
-            ).reverse().join('');
+            ).reverse().join(''); // Show newest first
             
             remainingElement.innerHTML = remainingNumbers.map(num => 
                 `<div class="number-chip">${num}</div>`
             ).join('');
 
             document.getElementById("drawCount").textContent = historyNumbers.length;
+            document.getElementById("maxDrawValue").textContent = maxAllowedDraws; // Ensure this updates if maxDraw changes
         }
 
-        function createConfetti(isCelebration = false) {
-            const container = document.body;
-            if (isCelebration) {
-                for (let i = 0; i < 50; i++) {
-                    const confetti = document.createElement('div');
-                    confetti.className = 'confetti';
-                    confetti.style.left = Math.random() * 100 + 'vw';
-                    confetti.style.animationDelay = Math.random() * 2 + 's';
-                    confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 70%)`;
-                    container.appendChild(confetti);
-                    
-                    setTimeout(() => confetti.remove(), 3000);
-                }
+        function createConfettiShower(isCelebration = false) {
+            const container = document.querySelector('.undian-page .container'); // Target container for better positioning
+            if (!container) return;
+
+            const numConfetti = isCelebration ? 100 : 20; // More for celebration
+            const colors = ['#ffdd57', '#ff6b6b', '#4facfe', '#48cfad', '#f783ac', '#f9a825'];
+
+
+            for (let i = 0; i < numConfetti; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                // Position confetti within the container bounds randomly
+                const startX = Math.random() * container.offsetWidth;
+                const startY = -20; // Start above the container
+
+                confetti.style.left = startX + 'px';
+                confetti.style.top = startY + 'px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.setProperty('--random-rotate-end', (Math.random() * 720 - 360) + 'deg');
+                confetti.style.animationDuration = (Math.random() * 2 + 2) + 's'; // 2-4 seconds fall time
+                confetti.style.animationDelay = (Math.random() * 1) + 's'; // Stagger start times
+                
+                container.appendChild(confetti);
+                
+                setTimeout(() => confetti.remove(), 4000); // Remove after animation
             }
         }
-
+        
+        // Event listeners for input changes
         document.getElementById("maxAngka").addEventListener("change", () => {
-            if (confirm("Mengubah total nomor akan mereset undian. Lanjutkan?")) {
+            const currentMax = parseInt(document.getElementById('maxAngka').value);
+            const currentDraws = historyNumbers.length;
+            if (currentDraws > 0 && confirm("Mengubah total nomor akan mereset undian yang sedang berjalan. Lanjutkan?")) {
                 initializeNumbers();
-            } else {
-                document.getElementById("maxAngka").value = remainingNumbers.length + historyNumbers.length;
+            } else if (currentDraws === 0) {
+                 initializeNumbers(); // If no draws yet, just re-init
+            }
+            else {
+                document.getElementById("maxAngka").value = maxTotalNumbers; // Revert if cancelled
             }
         });
 
         document.getElementById("maxDraw").addEventListener("change", () => {
             const newMaxDraw = parseInt(document.getElementById('maxDraw').value);
-            const maxAngka = parseInt(document.getElementById('maxAngka').value);
+            const totalNumbers = parseInt(document.getElementById('maxAngka').value);
             
-            if (newMaxDraw > maxAngka) {
-                alert("Maksimal pengambilan tidak boleh melebihi total nomor!");
-                document.getElementById('maxDraw').value = maxAngka;
+            if (newMaxDraw > totalNumbers) {
+                alert("Maksimal pengambilan tidak boleh melebihi total nomor undian!");
+                document.getElementById('maxDraw').value = Math.min(maxAllowedDraws, totalNumbers); // Revert to old valid or new valid
+                return;
             }
-            initializeNumbers();
+            if (historyNumbers.length > 0 && confirm("Mengubah maksimal pengambilan akan mereset undian. Lanjutkan?")){
+                 initializeNumbers();
+            } else if (historyNumbers.length === 0) {
+                 initializeNumbers();
+            }
+             else {
+                document.getElementById('maxDraw').value = maxAllowedDraws; // Revert if cancelled
+            }
         });
 
+        // Initialize on load
         initializeNumbers();
     </script>
 </body>
