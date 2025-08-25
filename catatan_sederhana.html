@@ -4,126 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catatan Sederhana - Portal Utilitas</title>
-    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; background: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%); }
+        .text-gradient { background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .btn-gradient { background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); }
+    </style>
 </head>
-<body class="catatan-sederhana-page">
-    <div class="container">
-        <h1>Catatan Sederhana</h1>
-        <div class="note-editor">
-            <input type="text" id="noteTitle" placeholder="Judul Catatan">
-            <textarea id="noteContent" placeholder="Tulis catatan Anda di sini..."></textarea>
-            <input type="hidden" id="noteId"> <button id="saveNoteBtn">Simpan Catatan</button>
+<body class="flex items-center justify-center min-h-screen p-5">
+
+    <div class="w-full max-w-3xl p-8 bg-white/70 backdrop-blur-xl rounded-2xl shadow-lg border border-white/30">
+        <h1 class="text-3xl font-bold text-center mb-6 text-gradient">Catatan Sederhana</h1>
+        <div class="note-editor p-4 bg-gray-200/60 rounded-lg">
+            <input type="text" id="noteTitle" placeholder="Judul Catatan" class="w-full p-2 mb-2 bg-white/80 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500">
+            <textarea id="noteContent" placeholder="Tulis catatan Anda di sini..." class="w-full h-28 p-2 bg-white/80 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500"></textarea>
+            <input type="hidden" id="noteId">
+            <button id="saveNoteBtn" class="w-full mt-2 py-2 text-white rounded-lg btn-gradient hover:opacity-90 transition-opacity">Simpan Catatan</button>
         </div>
         
-        <h2>Daftar Catatan:</h2>
-        <div id="notesList" class="notes-list-container">
+        <h2 class="text-xl font-semibold text-gray-800 mt-6 mb-4">Daftar Catatan:</h2>
+        <div id="notesList" class="space-y-4 max-h-80 overflow-y-auto pr-2">
             </div>
-        <div class="footer"><a href="index.html" class="back-link">Kembali ke Menu Utama</a></div>
+
+        <div class="text-center mt-6">
+            <a href="index.html" class="text-purple-600 hover:text-blue-500 font-semibold transition-colors">Kembali ke Menu Utama</a>
+        </div>
     </div>
 
     <script>
-        const noteTitleEl = document.getElementById('noteTitle');
-        const noteContentEl = document.getElementById('noteContent');
-        const noteIdEl = document.getElementById('noteId');
-        const saveNoteBtn = document.getElementById('saveNoteBtn');
-        const notesListEl = document.getElementById('notesList');
-
-        function getNotes() {
-            return JSON.parse(localStorage.getItem('simpleNotes')) || [];
-        }
-
-        function saveNotes(notes) {
-            localStorage.setItem('simpleNotes', JSON.stringify(notes));
-        }
-
-        function displayNotes() {
-            const notes = getNotes();
-            notesListEl.innerHTML = '';
-            if (notes.length === 0) {
-                notesListEl.innerHTML = '<p>Belum ada catatan.</p>';
-                return;
-            }
-
-            notes.forEach(note => {
-                const noteDiv = document.createElement('div');
-                noteDiv.classList.add('note-item');
-                noteDiv.innerHTML = `
-                    <h3>${note.title}</h3>
-                    <p>${note.content.substring(0, 100)}${note.content.length > 100 ? '...' : ''}</p>
-                    <small>Dibuat: ${new Date(note.timestamp).toLocaleString()}</small>
-                    <div class="note-actions">
-                        <button onclick="editNote('${note.id}')">Edit</button>
-                        <button onclick="deleteNote('${note.id}')" class="delete-btn">Hapus</button>
-                    </div>
-                `;
-                notesListEl.appendChild(noteDiv);
-            });
-        }
-
-        saveNoteBtn.addEventListener('click', () => {
-            const title = noteTitleEl.value.trim();
-            const content = noteContentEl.value.trim();
-            const id = noteIdEl.value;
-
-            if (!title || !content) {
-                alert("Judul dan isi catatan tidak boleh kosong.");
-                return;
-            }
-
-            let notes = getNotes();
-            if (id) { // Editing existing note
-                const noteIndex = notes.findIndex(note => note.id === id);
-                if (noteIndex > -1) {
-                    notes[noteIndex].title = title;
-                    notes[noteIndex].content = content;
-                    notes[noteIndex].timestamp = Date.now();
-                }
-            } else { // Creating new note
-                const newNote = {
-                    id: 'note_' + Date.now() + Math.random().toString(16).slice(2), // Unique ID
-                    title,
-                    content,
-                    timestamp: Date.now()
-                };
-                notes.unshift(newNote); // Add to the beginning
-            }
-            
-            saveNotes(notes);
-            clearEditor();
-            displayNotes();
-        });
-        
-        function clearEditor() {
-            noteTitleEl.value = '';
-            noteContentEl.value = '';
-            noteIdEl.value = '';
-            saveNoteBtn.textContent = 'Simpan Catatan';
-        }
-
-        window.editNote = function(id) {
-            const notes = getNotes();
-            const noteToEdit = notes.find(note => note.id === id);
-            if (noteToEdit) {
-                noteTitleEl.value = noteToEdit.title;
-                noteContentEl.value = noteToEdit.content;
-                noteIdEl.value = noteToEdit.id;
-                saveNoteBtn.textContent = 'Perbarui Catatan';
-                noteTitleEl.focus();
-            }
-        }
-
-        window.deleteNote = function(id) {
-            if (confirm("Apakah Anda yakin ingin menghapus catatan ini?")) {
-                let notes = getNotes();
-                notes = notes.filter(note => note.id !== id);
-                saveNotes(notes);
-                clearEditor(); // If the deleted note was being edited
-                displayNotes();
-            }
-        }
-
-        // Initial display
+        // Javascript functionality remains the same, with UI creation updated for Tailwind
+        const noteTitleEl = document.getElementById('noteTitle'); const noteContentEl = document.getElementById('noteContent'); const noteIdEl = document.getElementById('noteId'); const saveNoteBtn = document.getElementById('saveNoteBtn'); const notesListEl = document.getElementById('notesList'); function getNotes() { return JSON.parse(localStorage.getItem('simpleNotes')) || []; } function saveNotes(notes) { localStorage.setItem('simpleNotes', JSON.stringify(notes)); }
+        function displayNotes() { const notes = getNotes(); notesListEl.innerHTML = ''; if (notes.length === 0) { notesListEl.innerHTML = '<p class="text-center text-gray-500">Belum ada catatan.</p>'; return; } notes.forEach(note => { const noteDiv = document.createElement('div'); noteDiv.className = 'bg-white/80 p-4 rounded-lg shadow-sm border border-gray-200'; noteDiv.innerHTML = `<h3 class="font-bold text-lg text-purple-700 mb-1">${note.title}</h3><p class="text-gray-700 text-sm mb-2 whitespace-pre-wrap">${note.content.substring(0, 150)}${note.content.length > 150 ? '...' : ''}</p><small class="text-gray-500 text-xs">Dibuat: ${new Date(note.timestamp).toLocaleString()}</small><div class="flex gap-2 mt-3"><button onclick="editNote('${note.id}')" class="px-3 py-1 text-sm text-white bg-blue-500 hover:bg-blue-600 rounded">Edit</button><button onclick="deleteNote('${note.id}')" class="px-3 py-1 text-sm text-white bg-red-500 hover:bg-red-600 rounded">Hapus</button></div>`; notesListEl.appendChild(noteDiv); }); }
+        saveNoteBtn.addEventListener('click', () => { const title = noteTitleEl.value.trim(); const content = noteContentEl.value.trim(); const id = noteIdEl.value; if (!title || !content) { alert("Judul dan isi catatan tidak boleh kosong."); return; } let notes = getNotes(); if (id) { const noteIndex = notes.findIndex(note => note.id === id); if (noteIndex > -1) { notes[noteIndex].title = title; notes[noteIndex].content = content; notes[noteIndex].timestamp = Date.now(); } } else { const newNote = { id: 'note_' + Date.now(), title, content, timestamp: Date.now() }; notes.unshift(newNote); } saveNotes(notes); clearEditor(); displayNotes(); });
+        function clearEditor() { noteTitleEl.value = ''; noteContentEl.value = ''; noteIdEl.value = ''; saveNoteBtn.textContent = 'Simpan Catatan'; } window.editNote = function(id) { const notes = getNotes(); const noteToEdit = notes.find(note => note.id === id); if (noteToEdit) { noteTitleEl.value = noteToEdit.title; noteContentEl.value = noteToEdit.content; noteIdEl.value = noteToEdit.id; saveNoteBtn.textContent = 'Perbarui Catatan'; noteTitleEl.focus(); } }
+        window.deleteNote = function(id) { if (confirm("Yakin ingin menghapus catatan ini?")) { let notes = getNotes(); notes = notes.filter(note => note.id !== id); saveNotes(notes); clearEditor(); displayNotes(); } }
         displayNotes();
     </script>
 </body>

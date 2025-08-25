@@ -4,28 +4,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal Utilitas Komprehensif</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
 </head>
-<body class="index-page">
-    <div class="container">
-        <h1>Portal Utilitas Komprehensif</h1>
-        <p style="margin-bottom: 25px; font-size: 1em; color: #555;">Pilih layanan utilitas yang Anda butuhkan:</p>
+<body class="flex items-center justify-center min-h-screen p-5 bg-gray-100">
 
-        <div class="button-grid">
-            <button onclick="window.location.href='Format_Teks.html'">Pengubah Format Teks</button>
-            <button onclick="window.location.href='RNG.html'">Generator Angka Acak</button>
-            <button onclick="window.location.href='Buat_QR.html'">Pembuat Kode QR</button>
-            <button onclick="window.location.href='undian.html'">Generator Undian</button>
-            <button onclick="window.location.href='kalkulator.html'">Kalkulator</button>
-            <button onclick="window.location.href='konverter_satuan.html'">Konverter Satuan</button>
-            <button onclick="window.location.href='penghitung_kata.html'">Penghitung Kata/Karakter</button>
-            <button onclick="window.location.href='generator_password.html'">Generator Password</button>
-            <button onclick="window.location.href='catatan_sederhana.html'">Catatan Sederhana</button>
-            <button onclick="window.location.href='timer_stopwatch.html'">Timer & Stopwatch</button>
+    <div class="w-full max-w-4xl p-8 md:p-10 bg-white/70 backdrop-blur-xl rounded-2xl shadow-lg border border-white/30">
+        <h1 class="text-3xl md:text-4xl font-bold text-center mb-4 text-gradient">
+            Portal Utilitas Komprehensif
+        </h1>
+        <p class="text-center text-gray-600 mb-8 md:mb-10">
+            Pilih layanan utilitas yang Anda butuhkan:
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <a href="Format_Teks.html" class="block p-5 text-center bg-white/80 rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transform transition-all duration-300">
+                <span class="text-lg font-semibold text-gray-800">Pengubah Format Teks</span>
+            </a>
+            <a href="RNG.html" class="block p-5 text-center bg-white/80 rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transform transition-all duration-300">
+                <span class="text-lg font-semibold text-gray-800">Generator Angka Acak</span>
+            </a>
+            <a href="Buat_QR.html" class="block p-5 text-center bg-white/80 rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transform transition-all duration-300">
+                <span class="text-lg font-semibold text-gray-800">Pembuat Kode QR</span>
+            </a>
+            <a href="undian.html" class="block p-5 text-center bg-white/80 rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transform transition-all duration-300">
+                <span class="text-lg font-semibold text-gray-800">Generator Undian</span>
+            </a>
+            <a href="kalkulator.html" class="block p-5 text-center bg-white/80 rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transform transition-all duration-300">
+                <span class="text-lg font-semibold text-gray-800">Kalkulator</span>
+            </a>
+            <a href="konverter_satuan.html" class="block p-5 text-center bg-white/80 rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transform transition-all duration-300">
+                <span class="text-lg font-semibold text-gray-800">Konverter Satuan</span>
+            </a>
+            <a href="penghitung_kata.html" class="block p-5 text-center bg-white/80 rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transform transition-all duration-300">
+                <span class="text-lg font-semibold text-gray-800">Penghitung Kata</span>
+            </a>
+            <a href="generator_password.html" class="block p-5 text-center bg-white/80 rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transform transition-all duration-300">
+                <span class="text-lg font-semibold text-gray-800">Generator Password</span>
+            </a>
+            <a href="catatan_sederhana.html" class="block p-5 text-center bg-white/80 rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transform transition-all duration-300">
+                <span class="text-lg font-semibold text-gray-800">Catatan Sederhana</span>
+            </a>
+            <a href="timer_stopwatch.html" class="block p-5 text-center bg-white/80 rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transform transition-all duration-300">
+                <span class="text-lg font-semibold text-gray-800">Timer & Stopwatch</span>
+            </a>
         </div>
 
-        <div class="footer">Disediakan oleh Sistem Aplikasi Web Lanjutan</div>
+        <div class="text-center text-gray-500 mt-10">
+            Disediakan oleh Sistem Aplikasi Web Lanjutan
+        </div>
     </div>
 </body>
 </html>

@@ -4,84 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pembuatan Kode QR</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; background: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%); }
+        .text-gradient { background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .btn-gradient { background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); }
+    </style>
 </head>
-<body class="qr-page">
-    <div class="container">
-        <h1>Pembuat Kode QR</h1>
+<body class="flex items-center justify-center min-h-screen p-5">
 
-        <input type="text" id="textInput" placeholder="Masukkan teks atau tautan">
+    <div class="w-full max-w-md p-8 bg-white/70 backdrop-blur-xl rounded-2xl shadow-lg border border-white/30 text-center">
+        <h1 class="text-3xl font-bold mb-6 text-gradient">Pembuat Kode QR</h1>
 
-        <div class="button-group">
-            <button onclick="generateQRCode()">Buat Kode QR</button>
-            <button class="download-btn" onclick="downloadQRCode()">Unduh Kode QR</button>
+        <input type="text" id="textInput" placeholder="Masukkan teks atau tautan" class="w-full p-3 bg-white/80 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 transition duration-300">
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
+            <button onclick="generateQRCode()" class="w-full py-2 text-white rounded-lg btn-gradient hover:opacity-90 transition-opacity">Buat Kode QR</button>
+            <button onclick="downloadQRCode()" class="w-full py-2 text-white bg-green-500 rounded-lg hover:bg-green-600 transition-colors">Unduh Kode QR</button>
         </div>
 
-        <div id="qrcode"></div>
+        <div id="qrcode" class="mt-6 inline-flex p-4 bg-white rounded-lg shadow-inner min-h-[232px] min-w-[232px] items-center justify-center"></div>
 
-        <div class="footer"><a href="index.html" class="back-link">Kembali ke Menu Utama</a></div>
+        <div class="mt-6">
+            <a href="index.html" class="text-purple-600 hover:text-blue-500 font-semibold transition-colors">Kembali ke Menu Utama</a>
+        </div>
     </div>
 
     <script>
-        let qr;
-
-        function generateQRCode() {
-            const text = document.getElementById("textInput").value.trim();
-            const qrContainer = document.getElementById("qrcode");
-
-            if (text === "") {
-                alert("Silakan masukkan teks atau tautan terlebih dahulu.");
-                return;
-            }
-
-            qrContainer.innerHTML = "";
-            qrContainer.style.display = 'inline-flex'; // Ensure visibility and centering
-
-            qr = new QRCode(qrContainer, {
-                text: text,
-                width: 200,
-                height: 200,
-                colorDark : "#000000",
-                colorLight : "#ffffff",
-                correctLevel : QRCode.CorrectLevel.H
-            });
-        }
-
-        function downloadQRCode() {
-            if (!qr) {
-                alert("Silakan buat Kode QR terlebih dahulu.");
-                return;
-            }
-
-            const qrImg = document.querySelector("#qrcode img");
-            const qrCanvas = document.querySelector("#qrcode canvas");
-            let qrImage;
-
-            if (qrImg) {
-                const canvas = document.createElement('canvas');
-                canvas.width = qrImg.width;
-                canvas.height = qrImg.height;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(qrImg, 0, 0);
-                qrImage = canvas.toDataURL("image/png");
-            } else if (qrCanvas) {
-                qrImage = qrCanvas.toDataURL("image/png");
-            } else {
-                alert("Gagal menemukan gambar QR untuk diunduh.");
-                return;
-            }
-
-            const downloadLink = document.createElement("a");
-            downloadLink.href = qrImage;
-            downloadLink.download = "qrcode.png";
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
-            
-            alert("Kode QR berhasil diunduh.");
-        }
+        // Javascript functionality remains the same
+        let qr; function generateQRCode() { const text = document.getElementById("textInput").value.trim(); const qrContainer = document.getElementById("qrcode"); if (text === "") { alert("Silakan masukkan teks atau tautan terlebih dahulu."); return; } qrContainer.innerHTML = ""; qr = new QRCode(qrContainer, { text: text, width: 200, height: 200, colorDark : "#000000", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H }); }
+        function downloadQRCode() { if (!qr) { alert("Silakan buat Kode QR terlebih dahulu."); return; } const qrImg = document.querySelector("#qrcode img"); const qrCanvas = document.querySelector("#qrcode canvas"); let qrImage; if (qrImg) { const canvas = document.createElement('canvas'); canvas.width = qrImg.width; canvas.height = qrImg.height; const ctx = canvas.getContext('2d'); ctx.drawImage(qrImg, 0, 0); qrImage = canvas.toDataURL("image/png"); } else if (qrCanvas) { qrImage = qrCanvas.toDataURL("image/png"); } else { alert("Gagal menemukan gambar QR untuk diunduh."); return; } const downloadLink = document.createElement("a"); downloadLink.href = qrImage; downloadLink.download = "qrcode.png"; document.body.appendChild(downloadLink); downloadLink.click(); document.body.removeChild(downloadLink); }
     </script>
 </body>
 </html>

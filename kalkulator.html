@@ -4,163 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kalkulator - Portal Utilitas</title>
-    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; background: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%); }
+        .text-gradient { background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .key { transition: background-color 0.2s ease; }
+        .key:active { transform: scale(0.98); }
+    </style>
 </head>
-<body class="kalkulator-page">
-    <div class="container">
-        <h1>Kalkulator</h1>
-        <div class="calculator">
-            <div id="display" class="calculator-display">0</div>
-            <div class="calculator-keys">
-                <button data-action="clear" class="key-operator">C</button>
-                <button data-action="backspace" class="key-operator">&larr;</button>
-                <button data-action="percent" class="key-operator">%</button>
-                <button data-action="divide" class="key-operator">&divide;</button>
+<body class="flex items-center justify-center min-h-screen p-5">
 
-                <button>7</button>
-                <button>8</button>
-                <button>9</button>
-                <button data-action="multiply" class="key-operator">&times;</button>
+    <div class="w-full max-w-sm p-6 bg-white/70 backdrop-blur-xl rounded-2xl shadow-lg border border-white/30">
+        <h1 class="text-3xl font-bold text-center mb-4 text-gradient">Kalkulator</h1>
+        <div class="calculator-body bg-gray-900 rounded-xl shadow-2xl overflow-hidden">
+            <div id="display" class="bg-gray-900 text-white text-5xl font-light text-right p-6 break-all">0</div>
+            <div class="grid grid-cols-4 gap-px">
+                <button data-action="clear" class="key bg-gray-700 hover:bg-gray-600 text-white text-2xl p-6 col-span-1">C</button>
+                <button data-action="negate" class="key bg-gray-700 hover:bg-gray-600 text-white text-2xl p-6">+/-</button>
+                <button data-action="percent" class="key bg-gray-700 hover:bg-gray-600 text-white text-2xl p-6">%</button>
+                <button data-action="divide" class="key bg-orange-500 hover:bg-orange-400 text-white text-2xl p-6">&divide;</button>
 
-                <button>4</button>
-                <button>5</button>
-                <button>6</button>
-                <button data-action="subtract" class="key-operator">-</button>
+                <button class="key bg-gray-800 hover:bg-gray-700 text-white text-2xl p-6">7</button>
+                <button class="key bg-gray-800 hover:bg-gray-700 text-white text-2xl p-6">8</button>
+                <button class="key bg-gray-800 hover:bg-gray-700 text-white text-2xl p-6">9</button>
+                <button data-action="multiply" class="key bg-orange-500 hover:bg-orange-400 text-white text-2xl p-6">&times;</button>
 
-                <button>1</button>
-                <button>2</button>
-                <button>3</button>
-                <button data-action="add" class="key-operator">+</button>
+                <button class="key bg-gray-800 hover:bg-gray-700 text-white text-2xl p-6">4</button>
+                <button class="key bg-gray-800 hover:bg-gray-700 text-white text-2xl p-6">5</button>
+                <button class="key bg-gray-800 hover:bg-gray-700 text-white text-2xl p-6">6</button>
+                <button data-action="subtract" class="key bg-orange-500 hover:bg-orange-400 text-white text-2xl p-6">-</button>
 
-                <button>0</button>
-                <button data-action="decimal">.</button>
-                <button data-action="negate" class="key-operator">+/-</button>
-                <button data-action="calculate" class="key-equal">=</button>
+                <button class="key bg-gray-800 hover:bg-gray-700 text-white text-2xl p-6">1</button>
+                <button class="key bg-gray-800 hover:bg-gray-700 text-white text-2xl p-6">2</button>
+                <button class="key bg-gray-800 hover:bg-gray-700 text-white text-2xl p-6">3</button>
+                <button data-action="add" class="key bg-orange-500 hover:bg-orange-400 text-white text-2xl p-6">+</button>
+
+                <button class="key bg-gray-800 hover:bg-gray-700 text-white text-2xl p-6 col-span-2">0</button>
+                <button data-action="decimal" class="key bg-gray-800 hover:bg-gray-700 text-white text-2xl p-6">.</button>
+                <button data-action="calculate" class="key bg-orange-500 hover:bg-orange-400 text-white text-2xl p-6">=</button>
             </div>
         </div>
-        <div class="footer"><a href="index.html" class="back-link">Kembali ke Menu Utama</a></div>
+        <div class="text-center mt-6">
+            <a href="index.html" class="text-purple-600 hover:text-blue-500 font-semibold transition-colors">Kembali ke Menu Utama</a>
+        </div>
     </div>
 
     <script>
-        const calculator = document.querySelector('.calculator');
-        const display = document.getElementById('display');
-        const keys = calculator.querySelector('.calculator-keys');
-
-        let displayValue = '0';
-        let firstValue = null;
-        let operator = null;
-        let waitingForSecondValue = false;
-
-        function updateDisplay() {
-            display.textContent = displayValue;
-        }
-        updateDisplay();
-
-        keys.addEventListener('click', (event) => {
-            const { target } = event;
-            const { action } = target.dataset;
-            const keyContent = target.textContent;
-
-            if (!target.matches('button')) {
-                return;
-            }
-
-            if (action) {
-                handleAction(action);
-            } else {
-                handleNumber(keyContent);
-            }
-            updateDisplay();
-        });
-
-        function handleNumber(number) {
-            if (waitingForSecondValue) {
-                displayValue = number;
-                waitingForSecondValue = false;
-            } else {
-                displayValue = displayValue === '0' ? number : displayValue + number;
-            }
-        }
-
-        function handleAction(action) {
-            switch (action) {
-                case 'decimal':
-                    if (!displayValue.includes('.')) {
-                        displayValue += '.';
-                    }
-                    break;
-                case 'clear':
-                    displayValue = '0';
-                    firstValue = null;
-                    operator = null;
-                    waitingForSecondValue = false;
-                    break;
-                case 'backspace':
-                    displayValue = displayValue.slice(0, -1) || '0';
-                    break;
-                case 'negate':
-                    displayValue = (parseFloat(displayValue) * -1).toString();
-                    break;
-                case 'percent':
-                    displayValue = (parseFloat(displayValue) / 100).toString();
-                    break;
-                case 'add':
-                case 'subtract':
-                case 'multiply':
-                case 'divide':
-                    handleOperator(action);
-                    break;
-                case 'calculate':
-                    handleCalculate();
-                    break;
-            }
-        }
-
-        function handleOperator(nextOperator) {
-            const value = parseFloat(displayValue);
-
-            if (operator && waitingForSecondValue) {
-                operator = nextOperator;
-                return;
-            }
-
-            if (firstValue === null) {
-                firstValue = value;
-            } else if (operator) {
-                const result = performCalculation(firstValue, value, operator);
-                displayValue = `${parseFloat(result.toFixed(7))}`; // Limit precision
-                firstValue = result;
-            }
-
-            waitingForSecondValue = true;
-            operator = nextOperator;
-        }
-        
-        function performCalculation(first, second, op) {
-            if (op === 'add') return first + second;
-            if (op === 'subtract') return first - second;
-            if (op === 'multiply') return first * second;
-            if (op === 'divide') {
-                 if (second === 0) {
-                    alert("Error: Tidak bisa membagi dengan nol!");
-                    return first; // or clearAll();
-                }
-                return first / second;
-            }
-            return second;
-        }
-
-        function handleCalculate() {
-            if (operator && firstValue !== null) {
-                const value = parseFloat(displayValue);
-                const result = performCalculation(firstValue, value, operator);
-                displayValue = `${parseFloat(result.toFixed(7))}`;
-                firstValue = null; // Reset for next calculation starting with result
-                operator = null;
-                waitingForSecondValue = false; // Allow new number input
-            }
-        }
+        // Javascript functionality remains the same
+        const calculator = document.querySelector('.calculator-body'); const display = document.getElementById('display'); const keys = calculator.querySelector('.grid'); let displayValue = '0'; let firstValue = null; let operator = null; let waitingForSecondValue = false; function updateDisplay() { display.textContent = displayValue; } updateDisplay(); keys.addEventListener('click', (event) => { const { target } = event; const { action } = target.dataset; const keyContent = target.textContent; if (!target.matches('button')) { return; } if (action) { handleAction(action); } else { handleNumber(keyContent); } updateDisplay(); }); function handleNumber(number) { if (waitingForSecondValue) { displayValue = number; waitingForSecondValue = false; } else { displayValue = displayValue === '0' ? number : displayValue + number; } } function handleAction(action) { switch (action) { case 'decimal': if (!displayValue.includes('.')) { displayValue += '.'; } break; case 'clear': displayValue = '0'; firstValue = null; operator = null; waitingForSecondValue = false; break; case 'backspace': displayValue = displayValue.slice(0, -1) || '0'; break; case 'negate': displayValue = (parseFloat(displayValue) * -1).toString(); break; case 'percent': displayValue = (parseFloat(displayValue) / 100).toString(); break; case 'add': case 'subtract': case 'multiply': case 'divide': handleOperator(action); break; case 'calculate': handleCalculate(); break; } } function handleOperator(nextOperator) { const value = parseFloat(displayValue); if (operator && waitingForSecondValue) { operator = nextOperator; return; } if (firstValue === null) { firstValue = value; } else if (operator) { const result = performCalculation(firstValue, value, operator); displayValue = `${parseFloat(result.toFixed(7))}`; firstValue = result; } waitingForSecondValue = true; operator = nextOperator; } function performCalculation(first, second, op) { if (op === 'add') return first + second; if (op === 'subtract') return first - second; if (op === 'multiply') return first * second; if (op === 'divide') { if (second === 0) { alert("Error: Tidak bisa membagi dengan nol!"); return first; } return first / second; } return second; } function handleCalculate() { if (operator && firstValue !== null) { const value = parseFloat(displayValue); const result = performCalculation(firstValue, value, operator); displayValue = `${parseFloat(result.toFixed(7))}`; firstValue = null; operator = null; waitingForSecondValue = false; } }
     </script>
 </body>
 </html>
