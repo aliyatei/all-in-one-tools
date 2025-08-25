@@ -1,19 +1,10 @@
 <!DOCTYPE html>
-<html lang="id">
-<head>
+<html lang="id" class=""> <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal Utilitas Komprehensif</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-        // Script untuk mencegah FOUC (Flash of Unstyled Content) saat beralih tema
-        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    </script>
     <style>
         body { font-family: 'Poppins', sans-serif; }
         .text-gradient { background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -22,8 +13,7 @@
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 flex items-center justify-center min-h-screen p-5 transition-colors duration-300">
 
-    <button id="theme-toggle" class="fixed top-5 right-5 p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none">
-        </button>
+    <button id="theme-toggle" class="fixed top-5 right-5 p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none z-10"></button>
     
     <div class="w-full max-w-4xl p-8 md:p-10 bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-2xl shadow-lg border border-white/30 dark:border-gray-700/50">
         <h1 class="text-3xl md:text-4xl font-bold text-center mb-4 text-gradient">
@@ -34,36 +24,16 @@
         </p>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            <a href="Format_Teks.html" class="block p-5 text-center bg-white/80 dark:bg-gray-700/80 rounded-lg shadow-md hover:shadow-xl dark:hover:shadow-purple-500/20 hover:-translate-y-1 transform transition-all duration-300">
-                <span class="text-lg font-semibold text-gray-800 dark:text-gray-100">Pengubah Format Teks</span>
-            </a>
-            <a href="RNG.html" class="block p-5 text-center bg-white/80 dark:bg-gray-700/80 rounded-lg shadow-md hover:shadow-xl dark:hover:shadow-purple-500/20 hover:-translate-y-1 transform transition-all duration-300">
-                <span class="text-lg font-semibold text-gray-800 dark:text-gray-100">Generator Angka Acak</span>
-            </a>
-            <a href="Buat_QR.html" class="block p-5 text-center bg-white/80 dark:bg-gray-700/80 rounded-lg shadow-md hover:shadow-xl dark:hover:shadow-purple-500/20 hover:-translate-y-1 transform transition-all duration-300">
-                <span class="text-lg font-semibold text-gray-800 dark:text-gray-100">Pembuat Kode QR</span>
-            </a>
-            <a href="undian.html" class="block p-5 text-center bg-white/80 dark:bg-gray-700/80 rounded-lg shadow-md hover:shadow-xl dark:hover:shadow-purple-500/20 hover:-translate-y-1 transform transition-all duration-300">
-                <span class="text-lg font-semibold text-gray-800 dark:text-gray-100">Generator Undian</span>
-            </a>
-            <a href="kalkulator.html" class="block p-5 text-center bg-white/80 dark:bg-gray-700/80 rounded-lg shadow-md hover:shadow-xl dark:hover:shadow-purple-500/20 hover:-translate-y-1 transform transition-all duration-300">
-                <span class="text-lg font-semibold text-gray-800 dark:text-gray-100">Kalkulator</span>
-            </a>
-            <a href="konverter_satuan.html" class="block p-5 text-center bg-white/80 dark:bg-gray-700/80 rounded-lg shadow-md hover:shadow-xl dark:hover:shadow-purple-500/20 hover:-translate-y-1 transform transition-all duration-300">
-                <span class="text-lg font-semibold text-gray-800 dark:text-gray-100">Konverter Satuan</span>
-            </a>
-            <a href="penghitung_kata.html" class="block p-5 text-center bg-white/80 dark:bg-gray-700/80 rounded-lg shadow-md hover:shadow-xl dark:hover:shadow-purple-500/20 hover:-translate-y-1 transform transition-all duration-300">
-                <span class="text-lg font-semibold text-gray-800 dark:text-gray-100">Penghitung Kata</span>
-            </a>
-            <a href="generator_password.html" class="block p-5 text-center bg-white/80 dark:bg-gray-700/80 rounded-lg shadow-md hover:shadow-xl dark:hover:shadow-purple-500/20 hover:-translate-y-1 transform transition-all duration-300">
-                <span class="text-lg font-semibold text-gray-800 dark:text-gray-100">Generator Password</span>
-            </a>
-            <a href="catatan_sederhana.html" class="block p-5 text-center bg-white/80 dark:bg-gray-700/80 rounded-lg shadow-md hover:shadow-xl dark:hover:shadow-purple-500/20 hover:-translate-y-1 transform transition-all duration-300">
-                <span class="text-lg font-semibold text-gray-800 dark:text-gray-100">Catatan Sederhana</span>
-            </a>
-            <a href="timer_stopwatch.html" class="block p-5 text-center bg-white/80 dark:bg-gray-700/80 rounded-lg shadow-md hover:shadow-xl dark:hover:shadow-purple-500/20 hover:-translate-y-1 transform transition-all duration-300">
-                <span class="text-lg font-semibold text-gray-800 dark:text-gray-100">Timer & Stopwatch</span>
-            </a>
+            <a href="Format_Teks.html" class="block p-5 text-center bg-white/80 dark:bg-gray-700/80 rounded-lg shadow-md hover:shadow-xl dark:hover:shadow-purple-500/20 hover:-translate-y-1 transform transition-all duration-300"><span class="text-lg font-semibold text-gray-800 dark:text-gray-100">Pengubah Format Teks</span></a>
+            <a href="RNG.html" class="block p-5 text-center bg-white/80 dark:bg-gray-700/80 rounded-lg shadow-md hover:shadow-xl dark:hover:shadow-purple-500/20 hover:-translate-y-1 transform transition-all duration-300"><span class="text-lg font-semibold text-gray-800 dark:text-gray-100">Generator Angka Acak</span></a>
+            <a href="Buat_QR.html" class="block p-5 text-center bg-white/80 dark:bg-gray-700/80 rounded-lg shadow-md hover:shadow-xl dark:hover:shadow-purple-500/20 hover:-translate-y-1 transform transition-all duration-300"><span class="text-lg font-semibold text-gray-800 dark:text-gray-100">Pembuat Kode QR</span></a>
+            <a href="undian.html" class="block p-5 text-center bg-white/80 dark:bg-gray-700/80 rounded-lg shadow-md hover:shadow-xl dark:hover:shadow-purple-500/20 hover:-translate-y-1 transform transition-all duration-300"><span class="text-lg font-semibold text-gray-800 dark:text-gray-100">Generator Undian</span></a>
+            <a href="kalkulator.html" class="block p-5 text-center bg-white/80 dark:bg-gray-700/80 rounded-lg shadow-md hover:shadow-xl dark:hover:shadow-purple-500/20 hover:-translate-y-1 transform transition-all duration-300"><span class="text-lg font-semibold text-gray-800 dark:text-gray-100">Kalkulator</span></a>
+            <a href="konverter_satuan.html" class="block p-5 text-center bg-white/80 dark:bg-gray-700/80 rounded-lg shadow-md hover:shadow-xl dark:hover:shadow-purple-500/20 hover:-translate-y-1 transform transition-all duration-300"><span class="text-lg font-semibold text-gray-800 dark:text-gray-100">Konverter Satuan</span></a>
+            <a href="penghitung_kata.html" class="block p-5 text-center bg-white/80 dark:bg-gray-700/80 rounded-lg shadow-md hover:shadow-xl dark:hover:shadow-purple-500/20 hover:-translate-y-1 transform transition-all duration-300"><span class="text-lg font-semibold text-gray-800 dark:text-gray-100">Penghitung Kata</span></a>
+            <a href="generator_password.html" class="block p-5 text-center bg-white/80 dark:bg-gray-700/80 rounded-lg shadow-md hover:shadow-xl dark:hover:shadow-purple-500/20 hover:-translate-y-1 transform transition-all duration-300"><span class="text-lg font-semibold text-gray-800 dark:text-gray-100">Generator Password</span></a>
+            <a href="catatan_sederhana.html" class="block p-5 text-center bg-white/80 dark:bg-gray-700/80 rounded-lg shadow-md hover:shadow-xl dark:hover:shadow-purple-500/20 hover:-translate-y-1 transform transition-all duration-300"><span class="text-lg font-semibold text-gray-800 dark:text-gray-100">Catatan Sederhana</span></a>
+            <a href="timer_stopwatch.html" class="block p-5 text-center bg-white/80 dark:bg-gray-700/80 rounded-lg shadow-md hover:shadow-xl dark:hover:shadow-purple-500/20 hover:-translate-y-1 transform transition-all duration-300"><span class="text-lg font-semibold text-gray-800 dark:text-gray-100">Timer & Stopwatch</span></a>
         </div>
 
         <div class="text-center text-gray-500 dark:text-gray-400 mt-10">
@@ -72,29 +42,33 @@
     </div>
 
     <script>
-        // JavaScript untuk Theme Toggle
         const themeToggle = document.getElementById('theme-toggle');
         const sunIcon = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>`;
         const moonIcon = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>`;
-        
-        // Atur ikon awal berdasarkan tema saat ini
-        if (document.documentElement.classList.contains('dark')) {
-            themeToggle.innerHTML = sunIcon;
-        } else {
-            themeToggle.innerHTML = moonIcon;
+        const html = document.documentElement;
+
+        // Fungsi untuk mengaplikasikan tema
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                html.classList.add('dark');
+                themeToggle.innerHTML = sunIcon;
+            } else {
+                html.classList.remove('dark');
+                themeToggle.innerHTML = moonIcon;
+            }
         }
 
+        // Event listener untuk tombol
         themeToggle.addEventListener('click', () => {
-            if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-                themeToggle.innerHTML = moonIcon;
-            } else {
-                document.documentElement.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-                themeToggle.innerHTML = sunIcon;
-            }
+            const currentTheme = localStorage.getItem('theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', currentTheme);
+            applyTheme(currentTheme);
         });
+
+        // Inisialisasi tema saat halaman dimuat
+        const savedTheme = localStorage.getItem('theme');
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        applyTheme(savedTheme || (systemPrefersDark ? 'dark' : 'light'));
     </script>
 </body>
 </html>
