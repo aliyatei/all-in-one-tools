@@ -1,74 +1,52 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kalkulator - Portal Utilitas</title>
+    <script>tailwind.config = { darkMode: 'class' }</script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-    <script>
-        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    </script>
     <style>
         body { font-family: 'Poppins', sans-serif; }
-        .text-gradient { background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .dark .text-gradient { background: linear-gradient(135deg, #a78bfa 0%, #60a5fa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .text-gradient { background: linear-gradient(135deg, #a78bfa 0%, #60a5fa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .key { transition: background-color 0.2s ease; }
         .key:active { transform: scale(0.98); }
     </style>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 flex items-center justify-center min-h-screen p-5 transition-colors duration-300">
-
-    <button id="theme-toggle" class="fixed top-5 right-5 p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none">
-        </button>
-    
-    <div class="w-full max-w-sm p-6 bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-2xl shadow-lg border border-white/30 dark:border-gray-700/50">
+<body class="bg-gray-900 flex items-center justify-center min-h-screen p-5">
+    <div class="w-full max-w-sm p-6 bg-gray-800/70 backdrop-blur-xl rounded-2xl shadow-lg border border-gray-700/50">
         <h1 class="text-3xl font-bold text-center mb-4 text-gradient">Kalkulator</h1>
-        
-        <div class="calculator-body bg-gray-200 dark:bg-gray-900 rounded-xl shadow-2xl overflow-hidden">
-            <div id="display" class="bg-gray-200 dark:bg-gray-900 text-gray-900 dark:text-white text-5xl font-light text-right p-6 break-all">0</div>
-            <div class="grid grid-cols-4 gap-px bg-gray-300 dark:bg-gray-700">
-                <button data-action="clear" class="key bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 text-gray-800 dark:text-white text-2xl p-6">C</button>
-                <button data-action="negate" class="key bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 text-gray-800 dark:text-white text-2xl p-6">+/-</button>
-                <button data-action="percent" class="key bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 text-gray-800 dark:text-white text-2xl p-6">%</button>
-                <button data-action="divide" class="key bg-orange-400 hover:bg-orange-500 text-white text-2xl p-6">&divide;</button>
-                <button class="key bg-white dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-800 dark:text-white text-2xl p-6">7</button>
-                <button class="key bg-white dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-800 dark:text-white text-2xl p-6">8</button>
-                <button class="key bg-white dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-800 dark:text-white text-2xl p-6">9</button>
-                <button data-action="multiply" class="key bg-orange-400 hover:bg-orange-500 text-white text-2xl p-6">&times;</button>
-                <button class="key bg-white dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-800 dark:text-white text-2xl p-6">4</button>
-                <button class="key bg-white dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-800 dark:text-white text-2xl p-6">5</button>
-                <button class="key bg-white dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-800 dark:text-white text-2xl p-6">6</button>
-                <button data-action="subtract" class="key bg-orange-400 hover:bg-orange-500 text-white text-2xl p-6">-</button>
-                <button class="key bg-white dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-800 dark:text-white text-2xl p-6">1</button>
-                <button class="key bg-white dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-800 dark:text-white text-2xl p-6">2</button>
-                <button class="key bg-white dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-800 dark:text-white text-2xl p-6">3</button>
-                <button data-action="add" class="key bg-orange-400 hover:bg-orange-500 text-white text-2xl p-6">+</button>
-                <button class="key bg-white dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-800 dark:text-white text-2xl p-6 col-span-2">0</button>
-                <button data-action="decimal" class="key bg-white dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-800 dark:text-white text-2xl p-6">.</button>
-                <button data-action="calculate" class="key bg-orange-400 hover:bg-orange-500 text-white text-2xl p-6">=</button>
+        <div class="calculator-body bg-gray-900 rounded-xl shadow-2xl overflow-hidden">
+            <div id="display" class="text-white text-5xl font-light text-right p-6 break-all">0</div>
+            <div class="grid grid-cols-4 gap-px bg-gray-700">
+                <button data-action="clear" class="key bg-gray-600 hover:bg-gray-500 text-white text-2xl p-6">C</button>
+                <button data-action="negate" class="key bg-gray-600 hover:bg-gray-500 text-white text-2xl p-6">+/-</button>
+                <button data-action="percent" class="key bg-gray-600 hover:bg-gray-500 text-white text-2xl p-6">%</button>
+                <button data-action="divide" class="key bg-orange-500 hover:bg-orange-600 text-white text-2xl p-6">&divide;</button>
+                <button class="key bg-gray-800 hover:bg-gray-700 text-white text-2xl p-6">7</button>
+                <button class="key bg-gray-800 hover:bg-gray-700 text-white text-2xl p-6">8</button>
+                <button class="key bg-gray-800 hover:bg-gray-700 text-white text-2xl p-6">9</button>
+                <button data-action="multiply" class="key bg-orange-500 hover:bg-orange-600 text-white text-2xl p-6">&times;</button>
+                <button class="key bg-gray-800 hover:bg-gray-700 text-white text-2xl p-6">4</button>
+                <button class="key bg-gray-800 hover:bg-gray-700 text-white text-2xl p-6">5</button>
+                <button class="key bg-gray-800 hover:bg-gray-700 text-white text-2xl p-6">6</button>
+                <button data-action="subtract" class="key bg-orange-500 hover:bg-orange-600 text-white text-2xl p-6">-</button>
+                <button class="key bg-gray-800 hover:bg-gray-700 text-white text-2xl p-6">1</button>
+                <button class="key bg-gray-800 hover:bg-gray-700 text-white text-2xl p-6">2</button>
+                <button class="key bg-gray-800 hover:bg-gray-700 text-white text-2xl p-6">3</button>
+                <button data-action="add" class="key bg-orange-500 hover:bg-orange-600 text-white text-2xl p-6">+</button>
+                <button class="key bg-gray-800 hover:bg-gray-700 text-white text-2xl p-6 col-span-2">0</button>
+                <button data-action="decimal" class="key bg-gray-800 hover:bg-gray-700 text-white text-2xl p-6">.</button>
+                <button data-action="calculate" class="key bg-orange-500 hover:bg-orange-600 text-white text-2xl p-6">=</button>
             </div>
         </div>
-        
         <div class="text-center mt-6">
-            <a href="index.html" class="text-purple-600 dark:text-purple-400 hover:text-blue-500 font-semibold transition-colors">Kembali ke Menu Utama</a>
+            <a href="index.html" class="text-purple-400 hover:text-blue-500 font-semibold transition-colors">Kembali ke Menu Utama</a>
         </div>
     </div>
-
     <script>
         const calculator = document.querySelector('.calculator-body'); const display = document.getElementById('display'); const keys = calculator.querySelector('.grid'); let displayValue = '0'; let firstValue = null; let operator = null; let waitingForSecondValue = false; function updateDisplay() { display.textContent = displayValue; } updateDisplay(); keys.addEventListener('click', (event) => { const { target } = event; const { action } = target.dataset; const keyContent = target.textContent; if (!target.matches('button')) { return; } if (action) { handleAction(action); } else { handleNumber(keyContent); } updateDisplay(); }); function handleNumber(number) { if (waitingForSecondValue) { displayValue = number; waitingForSecondValue = false; } else { displayValue = displayValue === '0' ? number : displayValue + number; } } function handleAction(action) { switch (action) { case 'decimal': if (!displayValue.includes('.')) { displayValue += '.'; } break; case 'clear': displayValue = '0'; firstValue = null; operator = null; waitingForSecondValue = false; break; case 'backspace': displayValue = displayValue.slice(0, -1) || '0'; break; case 'negate': displayValue = (parseFloat(displayValue) * -1).toString(); break; case 'percent': displayValue = (parseFloat(displayValue) / 100).toString(); break; case 'add': case 'subtract': case 'multiply': case 'divide': handleOperator(action); break; case 'calculate': handleCalculate(); break; } } function handleOperator(nextOperator) { const value = parseFloat(displayValue); if (operator && waitingForSecondValue) { operator = nextOperator; return; } if (firstValue === null) { firstValue = value; } else if (operator) { const result = performCalculation(firstValue, value, operator); displayValue = `${parseFloat(result.toFixed(7))}`; firstValue = result; } waitingForSecondValue = true; operator = nextOperator; } function performCalculation(first, second, op) { if (op === 'add') return first + second; if (op === 'subtract') return first - second; if (op === 'multiply') return first * second; if (op === 'divide') { if (second === 0) { alert("Error: Tidak bisa membagi dengan nol!"); return first; } return first / second; } return second; } function handleCalculate() { if (operator && firstValue !== null) { const value = parseFloat(displayValue); const result = performCalculation(firstValue, value, operator); displayValue = `${parseFloat(result.toFixed(7))}`; firstValue = null; operator = null; waitingForSecondValue = false; } }
-    </script>
-    
-    <script>
-        const themeToggle = document.getElementById('theme-toggle');
-        const sunIcon = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>`;
-        const moonIcon = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>`;
-        if (document.documentElement.classList.contains('dark')) { themeToggle.innerHTML = sunIcon; } else { themeToggle.innerHTML = moonIcon; }
-        themeToggle.addEventListener('click', () => { if (document.documentElement.classList.contains('dark')) { document.documentElement.classList.remove('dark'); localStorage.setItem('theme', 'light'); themeToggle.innerHTML = moonIcon; } else { document.documentElement.classList.add('dark'); localStorage.setItem('theme', 'dark'); themeToggle.innerHTML = sunIcon; } });
     </script>
 </body>
 </html>

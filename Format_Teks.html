@@ -1,34 +1,23 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pengubah Format Teks</title>
+    <script>tailwind.config = { darkMode: 'class' }</script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    </script>
     <style>
         body { font-family: 'Poppins', sans-serif; }
-        .text-gradient { background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .dark .text-gradient { background: linear-gradient(135deg, #a78bfa 0%, #60a5fa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .text-gradient { background: linear-gradient(135deg, #a78bfa 0%, #60a5fa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .btn-gradient { background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%); }
         .btn-gradient-secondary { background: linear-gradient(135deg, #5664d0 0%, #17a2b8 100%); }
     </style>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 flex items-center justify-center min-h-screen p-5 transition-colors duration-300">
-
-    <button id="theme-toggle" class="fixed top-5 right-5 p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none z-10"></button>
-
-    <div class="w-full max-w-2xl p-8 bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-2xl shadow-lg border border-white/30 dark:border-gray-700/50">
+<body class="bg-gray-900 flex items-center justify-center min-h-screen p-5">
+    <div class="w-full max-w-2xl p-8 bg-gray-800/70 backdrop-blur-xl rounded-2xl shadow-lg border border-gray-700/50">
         <h1 class="text-3xl font-bold text-center mb-6 text-gradient">Pengubah Format Teks</h1>
-        <textarea id="textInput" placeholder="Masukkan teks Anda di sini..." class="w-full h-40 p-3 bg-white/80 dark:bg-gray-700/80 text-gray-800 dark:text-gray-200 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition duration-300"></textarea>
-
+        <textarea id="textInput" placeholder="Masukkan teks Anda di sini..." class="w-full h-40 p-3 bg-gray-700/80 text-gray-200 rounded-lg border border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition duration-300"></textarea>
         <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-4">
             <button onclick="formatText('sentence')" class="px-4 py-2 text-white rounded-lg btn-gradient hover:opacity-90 transition-opacity">Sentence case</button>
             <button onclick="formatText('lower')" class="px-4 py-2 text-white rounded-lg btn-gradient hover:opacity-90 transition-opacity">lower case</button>
@@ -39,18 +28,13 @@
         </div>
         <button onclick="formatText('inverse')" class="w-full mt-3 px-4 py-2 text-white rounded-lg btn-gradient hover:opacity-90 transition-opacity">InVeRsE CaSe</button>
         <button onclick="copyText()" class="w-full mt-3 px-4 py-2 text-white rounded-lg btn-gradient-secondary hover:opacity-90 transition-opacity">Salin Teks</button>
-
         <div class="text-center mt-6">
-            <a href="index.html" class="text-purple-600 dark:text-purple-400 hover:text-blue-500 font-semibold transition-colors">Kembali ke Menu Utama</a>
+            <a href="index.html" class="text-purple-400 hover:text-blue-500 font-semibold transition-colors">Kembali ke Menu Utama</a>
         </div>
     </div>
-
     <script>
         function formatText(type) { let textInput = document.getElementById('textInput'); let originalText = textInput.value; if (originalText.trim() === "") { alert("Silakan masukkan teks terlebih dahulu."); return; } let formattedText = ""; switch (type) { case 'sentence': formattedText = originalText.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g, (c) => c.toUpperCase()); break; case 'lower': formattedText = originalText.toLowerCase(); break; case 'upper': formattedText = originalText.toUpperCase(); break; case 'capitalized': formattedText = originalText.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '); break; case 'alternating': formattedText = originalText.split('').map((char, index) => index % 2 === 0 ? char.toLowerCase() : char.toUpperCase()).join(''); break; case 'title': const smallWords = /^(a|an|and|as|at|but|by|en|for|if|in|nor|of|on|or|per|the|to|vs?\.?|via)$/i; formattedText = originalText.toLowerCase().split(' ').map((word, index, array) => { if (index === 0 || index === array.length -1 || !smallWords.test(word)) { return word.charAt(0).toUpperCase() + word.slice(1); } return word; }).join(' '); break; case 'inverse': formattedText = originalText.split('').map(char => char === char.toUpperCase() ? char.toLowerCase() : char.toUpperCase()).join(''); break; default: formattedText = originalText; } textInput.value = formattedText; }
         function copyText() { let textInput = document.getElementById('textInput'); if (textInput.value.trim() === "") { alert("Tidak ada teks untuk disalin."); return; } textInput.select(); textInput.setSelectionRange(0, 99999); try { document.execCommand("copy"); alert("Teks berhasil disalin."); } catch (err) { alert("Gagal menyalin teks. Silakan coba secara manual."); } }
-    </script>
-    <script>
-        const themeToggle = document.getElementById('theme-toggle'); const sunIcon = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>`; const moonIcon = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>`; if (document.documentElement.classList.contains('dark')) { themeToggle.innerHTML = sunIcon; } else { themeToggle.innerHTML = moonIcon; } themeToggle.addEventListener('click', () => { if (document.documentElement.classList.contains('dark')) { document.documentElement.classList.remove('dark'); localStorage.setItem('theme', 'light'); themeToggle.innerHTML = moonIcon; } else { document.documentElement.classList.add('dark'); localStorage.setItem('theme', 'dark'); themeToggle.innerHTML = sunIcon; } });
     </script>
 </body>
 </html>

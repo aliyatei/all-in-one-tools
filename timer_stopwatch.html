@@ -1,74 +1,59 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Timer & Stopwatch - Portal Utilitas</title>
+    <script>tailwind.config = { darkMode: 'class' }</script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) { document.documentElement.classList.add('dark'); } else { document.documentElement.classList.remove('dark'); }
-    </script>
     <style>
         body { font-family: 'Poppins', sans-serif; }
-        .text-gradient { background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .dark .text-gradient { background: linear-gradient(135deg, #a78bfa 0%, #60a5fa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .tab-button.active { color: #8b5cf6; border-color: #8b5cf6; }
-        .dark .tab-button.active { color: #a78bfa; border-color: #a78bfa; }
+        .text-gradient { background: linear-gradient(135deg, #a78bfa 0%, #60a5fa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .tab-button.active { color: #a78bfa; border-color: #a78bfa; }
     </style>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 flex items-center justify-center min-h-screen p-5 transition-colors duration-300">
-
-    <button id="theme-toggle" class="fixed top-5 right-5 p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none z-10"></button>
-
-    <div class="w-full max-w-lg p-8 bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-2xl shadow-lg border border-white/30 dark:border-gray-700/50">
+<body class="bg-gray-900 flex items-center justify-center min-h-screen p-5">
+    <div class="w-full max-w-lg p-8 bg-gray-800/70 backdrop-blur-xl rounded-2xl shadow-lg border border-gray-700/50">
         <h1 class="text-3xl font-bold text-center mb-4 text-gradient">Timer & Stopwatch</h1>
-
-        <div class="flex justify-center border-b border-gray-300 dark:border-gray-600">
+        <div class="flex justify-center border-b border-gray-600">
             <button class="tab-button active text-lg font-semibold px-6 py-2 border-b-2 transition-colors" onclick="showTab('timer')">Timer</button>
-            <button class="tab-button text-lg font-semibold text-gray-500 dark:text-gray-400 px-6 py-2 border-b-2 border-transparent transition-colors" onclick="showTab('stopwatch')">Stopwatch</button>
+            <button class="tab-button text-lg font-semibold text-gray-400 px-6 py-2 border-b-2 border-transparent transition-colors" onclick="showTab('stopwatch')">Stopwatch</button>
         </div>
-
         <div id="timer" class="tab-content mt-6">
-            <div class="flex justify-center items-center gap-2 text-2xl font-semibold text-gray-700 dark:text-gray-300">
-                <input type="number" id="timerHours" placeholder="JJ" min="0" value="0" class="w-20 p-2 text-center bg-white/80 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg border border-gray-300 dark:border-gray-600"> :
-                <input type="number" id="timerMinutes" placeholder="MM" min="0" max="59" value="5" class="w-20 p-2 text-center bg-white/80 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg border border-gray-300 dark:border-gray-600"> :
-                <input type="number" id="timerSeconds" placeholder="DD" min="0" max="59" value="0" class="w-20 p-2 text-center bg-white/80 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg border border-gray-300 dark:border-gray-600">
+            <div class="flex justify-center items-center gap-2 text-2xl font-semibold text-gray-300">
+                <input type="number" id="timerHours" placeholder="JJ" min="0" value="0" class="w-20 p-2 text-center bg-gray-700 text-gray-200 rounded-lg border border-gray-600"> :
+                <input type="number" id="timerMinutes" placeholder="MM" min="0" max="59" value="5" class="w-20 p-2 text-center bg-gray-700 text-gray-200 rounded-lg border border-gray-600"> :
+                <input type="number" id="timerSeconds" placeholder="DD" min="0" max="59" value="0" class="w-20 p-2 text-center bg-gray-700 text-gray-200 rounded-lg border border-gray-600">
             </div>
-            <div id="timerDisplay" class="text-6xl font-mono font-bold text-center my-4 text-purple-700 dark:text-purple-400">00:05:00</div>
+            <div id="timerDisplay" class="text-6xl font-mono font-bold text-center my-4 text-purple-400">00:05:00</div>
             <div class="flex justify-center gap-3">
-                <button id="startTimerBtn" class="px-6 py-2 text-white bg-green-500 rounded-lg hover:bg-green-600 disabled:bg-green-300 dark:disabled:bg-green-800">Mulai</button>
-                <button id="pauseTimerBtn" disabled class="px-6 py-2 text-white bg-yellow-500 rounded-lg hover:bg-yellow-600 disabled:bg-yellow-300 dark:disabled:bg-yellow-800">Jeda</button>
+                <button id="startTimerBtn" class="px-6 py-2 text-white bg-green-500 rounded-lg hover:bg-green-600 disabled:bg-green-800">Mulai</button>
+                <button id="pauseTimerBtn" disabled class="px-6 py-2 text-white bg-yellow-500 rounded-lg hover:bg-yellow-600 disabled:bg-yellow-800">Jeda</button>
                 <button id="resetTimerBtn" class="px-6 py-2 text-white bg-gray-500 rounded-lg hover:bg-gray-600">Reset</button>
             </div>
         </div>
-
         <div id="stopwatch" class="tab-content mt-6 hidden">
-            <div id="stopwatchDisplay" class="text-6xl font-mono font-bold text-center my-4 text-purple-700 dark:text-purple-400">00:00:00.000</div>
+            <div id="stopwatchDisplay" class="text-6xl font-mono font-bold text-center my-4 text-purple-400">00:00:00.000</div>
             <div class="flex justify-center flex-wrap gap-3">
-                <button id="startStopwatchBtn" class="px-6 py-2 text-white bg-green-500 rounded-lg hover:bg-green-600 disabled:bg-green-300 dark:disabled:bg-green-800">Mulai</button>
-                <button id="pauseStopwatchBtn" disabled class="px-6 py-2 text-white bg-yellow-500 rounded-lg hover:bg-yellow-600 disabled:bg-yellow-300 dark:disabled:bg-yellow-800">Jeda</button>
+                <button id="startStopwatchBtn" class="px-6 py-2 text-white bg-green-500 rounded-lg hover:bg-green-600 disabled:bg-green-800">Mulai</button>
+                <button id="pauseStopwatchBtn" disabled class="px-6 py-2 text-white bg-yellow-500 rounded-lg hover:bg-yellow-600 disabled:bg-yellow-800">Jeda</button>
                 <button id="resetStopwatchBtn" class="px-6 py-2 text-white bg-gray-500 rounded-lg hover:bg-gray-600">Reset</button>
-                <button id="lapStopwatchBtn" disabled class="px-6 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 disabled:bg-blue-300 dark:disabled:bg-blue-800">Lap</button>
+                <button id="lapStopwatchBtn" disabled class="px-6 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 disabled:bg-blue-800">Lap</button>
             </div>
             <div class="mt-4">
-                <h3 class="font-semibold text-gray-700 dark:text-gray-300">Laps:</h3>
-                <ul id="lapsList" class="mt-2 p-2 bg-gray-200/60 dark:bg-gray-900/60 rounded-lg h-32 overflow-y-auto space-y-1 text-gray-800 dark:text-gray-200 font-mono"></ul>
+                <h3 class="font-semibold text-gray-300">Laps:</h3>
+                <ul id="lapsList" class="mt-2 p-2 bg-gray-900/60 rounded-lg h-32 overflow-y-auto space-y-1 text-gray-200 font-mono"></ul>
             </div>
         </div>
-        
         <div class="text-center mt-6">
-            <a href="index.html" class="text-purple-600 dark:text-purple-400 hover:text-blue-500 font-semibold transition-colors">Kembali ke Menu Utama</a>
+            <a href="index.html" class="text-purple-400 hover:text-blue-500 font-semibold transition-colors">Kembali ke Menu Utama</a>
         </div>
     </div>
-
     <script>
         function showTab(tabName) { document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden')); document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active')); document.getElementById(tabName).classList.remove('hidden'); document.querySelector(`button[onclick="showTab('${tabName}')"]`).classList.add('active'); }
         const timerHoursEl=document.getElementById('timerHours'), timerMinutesEl=document.getElementById('timerMinutes'), timerSecondsEl=document.getElementById('timerSeconds'), timerDisplayEl=document.getElementById('timerDisplay'), startTimerBtn=document.getElementById('startTimerBtn'), pauseTimerBtn=document.getElementById('pauseTimerBtn'), resetTimerBtn=document.getElementById('resetTimerBtn'); let timerInterval, totalTimerSeconds=0; function updateTimerDisplay(){const h=Math.floor(totalTimerSeconds/3600),m=Math.floor(totalTimerSeconds%3600/60),s=totalTimerSeconds%60;timerDisplayEl.textContent=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`} function setTimerFromInputs(){const h=parseInt(timerHoursEl.value)||0,m=parseInt(timerMinutesEl.value)||0,s=parseInt(timerSecondsEl.value)||0;totalTimerSeconds=h*3600+m*60+s;if(totalTimerSeconds<0)totalTimerSeconds=0;updateTimerDisplay()};[timerHoursEl,timerMinutesEl,timerSecondsEl].forEach(el=>el.addEventListener('input',setTimerFromInputs));startTimerBtn.addEventListener('click',()=>{if(totalTimerSeconds<=0){setTimerFromInputs();if(totalTimerSeconds<=0){alert("Atur waktu timer terlebih dahulu.");return}} clearInterval(timerInterval);timerInterval=setInterval(()=>{if(totalTimerSeconds>0){totalTimerSeconds--;updateTimerDisplay()}else{clearInterval(timerInterval);alert("Waktu habis!");startTimerBtn.disabled=!1;pauseTimerBtn.disabled=!0}},1e3);startTimerBtn.disabled=!0;pauseTimerBtn.disabled=!1});pauseTimerBtn.addEventListener('click',()=>{clearInterval(timerInterval);startTimerBtn.disabled=!1;pauseTimerBtn.disabled=!0});resetTimerBtn.addEventListener('click',()=>{clearInterval(timerInterval);timerHoursEl.value="0";timerMinutesEl.value="5";timerSecondsEl.value="0";setTimerFromInputs();startTimerBtn.disabled=!1;pauseTimerBtn.disabled=!0});
         const stopwatchDisplayEl=document.getElementById('stopwatchDisplay'),startStopwatchBtn=document.getElementById('startStopwatchBtn'),pauseStopwatchBtn=document.getElementById('pauseStopwatchBtn'),resetStopwatchBtn=document.getElementById('resetStopwatchBtn'),lapStopwatchBtn=document.getElementById('lapStopwatchBtn'),lapsListEl=document.getElementById('lapsList');let stopwatchInterval,stopwatchMilliseconds=0,lapCounter=1;function formatStopwatchTime(ms){const totalSeconds=Math.floor(ms/1e3),hours=Math.floor(totalSeconds/3600),minutes=Math.floor(totalSeconds%3600/60),seconds=totalSeconds%60,milliseconds=String(ms%1e3).padStart(3,'0');return`${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}.${milliseconds}`} startStopwatchBtn.addEventListener('click',()=>{clearInterval(stopwatchInterval);const startTime=Date.now()-stopwatchMilliseconds;stopwatchInterval=setInterval(()=>{stopwatchMilliseconds=Date.now()-startTime;stopwatchDisplayEl.textContent=formatStopwatchTime(stopwatchMilliseconds)},10);startStopwatchBtn.disabled=!0;pauseStopwatchBtn.disabled=!1;lapStopwatchBtn.disabled=!1});pauseStopwatchBtn.addEventListener('click',()=>{clearInterval(stopwatchInterval);startStopwatchBtn.disabled=!1;pauseStopwatchBtn.disabled=!0});resetStopwatchBtn.addEventListener('click',()=>{clearInterval(stopwatchInterval);stopwatchMilliseconds=0;stopwatchDisplayEl.textContent=formatStopwatchTime(0);lapsListEl.innerHTML='';lapCounter=1;startStopwatchBtn.disabled=!1;pauseStopwatchBtn.disabled=!0;lapStopwatchBtn.disabled=!0});lapStopwatchBtn.addEventListener('click',()=>{const lapTime=formatStopwatchTime(stopwatchMilliseconds),listItem=document.createElement('li');listItem.textContent=`Lap ${lapCounter}: ${lapTime}`;lapsListEl.appendChild(listItem);lapCounter++});setTimerFromInputs();stopwatchDisplayEl.textContent=formatStopwatchTime(0);
-    </script>
-    <script>
-        const themeToggle = document.getElementById('theme-toggle'); const sunIcon = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>`; const moonIcon = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>`; if (document.documentElement.classList.contains('dark')) { themeToggle.innerHTML = sunIcon; } else { themeToggle.innerHTML = moonIcon; } themeToggle.addEventListener('click', () => { if (document.documentElement.classList.contains('dark')) { document.documentElement.classList.remove('dark'); localStorage.setItem('theme', 'light'); themeToggle.innerHTML = moonIcon; } else { document.documentElement.classList.add('dark'); localStorage.setItem('theme', 'dark'); themeToggle.innerHTML = sunIcon; } });
     </script>
 </body>
 </html>
