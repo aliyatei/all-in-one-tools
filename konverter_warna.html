@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konverter Warna</title>
+    <script>tailwind.config = { darkMode: 'class' }</script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        .text-gradient { background: linear-gradient(135deg, #a78bfa 0%, #60a5fa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    </style>
+</head>
+<body class="bg-gray-900 flex items-center justify-center min-h-screen p-5">
+    <div class="w-full max-w-md p-8 bg-gray-800/70 backdrop-blur-xl rounded-2xl shadow-lg border border-gray-700/50">
+        <h1 class="text-3xl font-bold text-center mb-6 text-gradient">Konverter Warna</h1>
+        <div class="space-y-4">
+            <div id="color-preview" class="w-full h-24 rounded-lg border-4 border-gray-700 transition-colors duration-300" style="background-color: #8b5cf6;"></div>
+            <div>
+                <label for="colorInput" class="block mb-1 font-semibold text-gray-300">Masukkan Kode Warna (HEX, RGB, HSL):</label>
+                <input type="text" id="colorInput" value="#8b5cf6" class="w-full p-3 font-mono bg-gray-700 text-gray-200 rounded-lg border border-gray-600 focus:ring-2 focus:ring-purple-500">
+            </div>
+            <div class="grid grid-cols-1 gap-2 text-sm">
+                <div class="bg-gray-700/80 p-3 rounded-lg"><strong class="text-gray-300">HEX:</strong> <span id="hexResult" class="font-mono text-purple-400 float-right">#8b5cf6</span></div>
+                <div class="bg-gray-700/80 p-3 rounded-lg"><strong class="text-gray-300">RGB:</strong> <span id="rgbResult" class="font-mono text-purple-400 float-right">rgb(139, 92, 246)</span></div>
+                <div class="bg-gray-700/80 p-3 rounded-lg"><strong class="text-gray-300">HSL:</strong> <span id="hslResult" class="font-mono text-purple-400 float-right">hsl(260, 91%, 66%)</span></div>
+            </div>
+        </div>
+        <div class="text-center mt-6">
+            <a href="index.html" class="text-purple-400 hover:text-blue-500 font-semibold transition-colors">Kembali ke Menu Utama</a>
+        </div>
+    </div>
+    <script>
+        const colorInput = document.getElementById('colorInput');
+        const preview = document.getElementById('color-preview');
+        const hexEl = document.getElementById('hexResult');
+        const rgbEl = document.getElementById('rgbResult');
+        const hslEl = document.getElementById('hslResult');
+
+        function isValidColor(strColor) {
+            const s = new Option().style;
+            s.color = strColor;
+            return s.color !== '';
+        }
+
+        function updateColors(colorStr) {
+            if (!isValidColor(colorStr)) return;
+            
+            preview.style.backgroundColor = colorStr;
+            const tempDiv = document.createElement('div');
+            tempDiv.style.color = colorStr;
+            document.body.appendChild(tempDiv);
+            
+            const rgbColor = window.getComputedStyle(tempDiv).color;
+            document.body.removeChild(tempDiv);
+            
+            const [r, g, b] = rgbColor.match(/\d+/g).map(Number);
+
+            // RGB to HEX
+            const toHex = c => ('0' + c.toString(16)).slice(-2);
+            hexEl.textContent = `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+
+            // RGB to HSL
+            const r_norm = r / 255, g_norm = g / 255, b_norm = b / 255;
+            const max = Math.max(r_norm, g_norm, b_norm), min = Math.min(r_norm, g_norm, b_norm);
+            let h, s, l = (max + min) / 2;
+            if (max === min) {
+                h = s = 0;
+            } else {
+                const d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                switch (max) {
+                    case r_norm: h = (g_norm - b_norm) / d + (g_norm < b_norm ? 6 : 0); break;
+                    case g_norm: h = (b_norm - r_norm) / d + 2; break;
+                    case b_norm: h = (r_norm - g_norm) / d + 4; break;
+                }
+                h /= 6;
+            }
+            h = Math.round(h * 360);
+            s = Math.round(s * 100);
+            l = Math.round(l * 100);
+
+            rgbEl.textContent = `rgb(${r}, ${g}, ${b})`;
+            hslEl.textContent = `hsl(${h}, ${s}%, ${l}%)`;
+        }
+
+        colorInput.addEventListener('input', () => updateColors(colorInput.value));
+        updateColors(colorInput.value);
+    </script>
+</body>
+</html>

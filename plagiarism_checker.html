@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pemeriksa Plagiarisme Sederhana</title>
+    <script>tailwind.config = { darkMode: 'class' }</script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        .text-gradient { background: linear-gradient(135deg, #a78bfa 0%, #60a5fa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .btn-gradient { background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%); }
+    </style>
+</head>
+<body class="bg-gray-900 flex items-center justify-center min-h-screen p-5">
+    <div class="w-full max-w-3xl p-8 bg-gray-800/70 backdrop-blur-xl rounded-2xl shadow-lg border border-gray-700/50">
+        <h1 class="text-3xl font-bold text-center mb-6 text-gradient">Pemeriksa Plagiarisme Sederhana</h1>
+        <p class="text-center text-gray-400 text-sm mb-4">Tempelkan teks di bawah, dan alat ini akan membuatkan link Google Search untuk setiap kalimat untuk membantu pengecekan manual.</p>
+        <textarea id="textInput" placeholder="Masukkan teks di sini..." class="w-full h-48 p-3 bg-gray-700 text-gray-200 rounded-lg border border-gray-600 focus:ring-2 focus:ring-purple-500"></textarea>
+        <button id="checkButton" class="w-full mt-4 py-3 text-lg text-white rounded-lg btn-gradient hover:opacity-90 transition-opacity shadow-md">Periksa Kalimat</button>
+        <div class="mt-6">
+            <h2 class="text-xl font-semibold text-gray-200 mb-2">Hasil:</h2>
+            <div id="results" class="space-y-2 max-h-64 overflow-y-auto pr-2">
+                <p class="text-gray-500">Hasil akan ditampilkan di sini.</p>
+            </div>
+        </div>
+        <div class="text-center mt-6">
+            <a href="index.html" class="text-purple-400 hover:text-blue-500 font-semibold transition-colors">Kembali ke Menu Utama</a>
+        </div>
+    </div>
+    <script>
+        const textInput = document.getElementById('textInput');
+        const checkButton = document.getElementById('checkButton');
+        const resultsContainer = document.getElementById('results');
+
+        checkButton.addEventListener('click', () => {
+            const text = textInput.value.trim();
+            if (text === '') {
+                resultsContainer.innerHTML = '<p class="text-gray-500">Silakan masukkan teks terlebih dahulu.</p>';
+                return;
+            }
+
+            resultsContainer.innerHTML = '';
+            // Split by sentence-ending punctuation
+            const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+
+            if (sentences.length > 0) {
+                sentences.forEach(sentence => {
+                    const trimmedSentence = sentence.trim();
+                    if (trimmedSentence.length > 0) {
+                        const link = document.createElement('a');
+                        link.href = `https://www.google.com/search?q="${encodeURIComponent(trimmedSentence)}"`;
+                        link.target = '_blank';
+                        link.rel = 'noopener noreferrer';
+                        link.className = 'block p-3 bg-gray-700/80 rounded-lg hover:bg-gray-700 transition-colors';
+                        
+                        const p = document.createElement('p');
+                        p.textContent = trimmedSentence;
+                        p.className = 'text-gray-300';
+                        
+                        const small = document.createElement('small');
+                        small.textContent = 'Cari di Google';
+                        small.className = 'text-purple-400 font-semibold';
+                        
+                        link.appendChild(p);
+                        link.appendChild(small);
+                        resultsContainer.appendChild(link);
+                    }
+                });
+            } else {
+                resultsContainer.innerHTML = '<p class="text-gray-500">Tidak ada kalimat yang bisa diperiksa.</p>';
+            }
+        });
+    </script>
+</body>
+</html>

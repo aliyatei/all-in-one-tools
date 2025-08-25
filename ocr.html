@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ekstraktor Teks dari Gambar (OCR)</title>
+    <script>tailwind.config = { darkMode: 'class' }</script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        .text-gradient { background: linear-gradient(135deg, #a78bfa 0%, #60a5fa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .btn-gradient { background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%); }
+    </style>
+</head>
+<body class="bg-gray-900 flex items-center justify-center min-h-screen p-5">
+    <div class="w-full max-w-3xl p-8 bg-gray-800/70 backdrop-blur-xl rounded-2xl shadow-lg border border-gray-700/50">
+        <h1 class="text-3xl font-bold text-center mb-6 text-gradient">Gambar ke Teks (OCR)</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+            <div>
+                <label for="imageUpload" class="block mb-2 font-semibold text-gray-300">Unggah Gambar:</label>
+                <input type="file" id="imageUpload" accept="image/*" class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-700">
+                <img id="imagePreview" src="" alt="Pratinjau Gambar" class="mt-4 rounded-lg hidden max-h-64 mx-auto">
+            </div>
+            <div>
+                <h2 class="text-xl font-semibold text-gray-200 mb-2">Teks Hasil Ekstraksi:</h2>
+                <div id="progress" class="text-purple-400 hidden">Membaca teks dari gambar...</div>
+                <textarea id="resultText" readonly class="w-full h-56 p-3 bg-gray-700/80 text-gray-200 rounded-lg border border-gray-600"></textarea>
+                <button id="copyButton" class="w-full mt-2 py-2 text-white bg-green-500 rounded-lg hover:bg-green-600 transition-colors">Salin Teks</button>
+            </div>
+        </div>
+
+        <div class="text-center mt-6">
+            <a href="index.html" class="text-purple-400 hover:text-blue-500 font-semibold transition-colors">Kembali ke Menu Utama</a>
+        </div>
+    </div>
+    <script>
+        const imageUpload = document.getElementById('imageUpload');
+        const imagePreview = document.getElementById('imagePreview');
+        const resultText = document.getElementById('resultText');
+        const progress = document.getElementById('progress');
+        const copyButton = document.getElementById('copyButton');
+
+        imageUpload.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                imagePreview.src = e.target.result;
+                imagePreview.classList.remove('hidden');
+                resultText.value = '';
+                progress.classList.remove('hidden');
+                
+                Tesseract.recognize(
+                    file,
+                    'ind+eng', // Menggunakan bahasa Indonesia dan Inggris
+                    { logger: m => console.log(m) }
+                ).then(({ data: { text } }) => {
+                    resultText.value = text;
+                    progress.classList.add('hidden');
+                });
+            };
+            reader.readAsDataURL(file);
+        });
+
+        copyButton.addEventListener('click', () => {
+            if (resultText.value.trim() === '') {
+                alert('Tidak ada teks untuk disalin.');
+                return;
+            }
+            navigator.clipboard.writeText(resultText.value)
+                .then(() => alert('Teks berhasil disalin!'))
+                .catch(err => alert('Gagal menyalin teks.'));
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konverter Gambar</title>
+    <script>tailwind.config = { darkMode: 'class' }</script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        .text-gradient { background: linear-gradient(135deg, #a78bfa 0%, #60a5fa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    </style>
+</head>
+<body class="bg-gray-900 flex items-center justify-center min-h-screen p-5">
+    <div class="w-full max-w-xl p-8 bg-gray-800/70 backdrop-blur-xl rounded-2xl shadow-lg border border-gray-700/50">
+        <h1 class="text-3xl font-bold text-center mb-6 text-gradient">Konverter Gambar</h1>
+        <div class="space-y-4">
+            <div>
+                <label for="imageUpload" class="block mb-2 font-semibold text-gray-300">Unggah Gambar:</label>
+                <input type="file" id="imageUpload" accept="image/jpeg, image/png, image/gif, image/webp" class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-700">
+            </div>
+            <img id="imagePreview" src="" alt="Pratinjau" class="hidden max-h-64 mx-auto rounded-lg mt-4">
+            <div>
+                <label for="formatSelect" class="block mb-1 font-semibold text-gray-300">Konversi ke Format:</label>
+                <select id="formatSelect" class="w-full p-3 bg-gray-700 text-gray-200 rounded-lg border border-gray-600 focus:ring-2 focus:ring-purple-500">
+                    <option value="png">PNG</option>
+                    <option value="jpeg">JPEG</option>
+                    <option value="webp">WEBP</option>
+                    <option value="gif">GIF</option>
+                </select>
+            </div>
+            <button id="convertBtn" class="w-full py-3 text-lg text-white rounded-lg bg-green-500 hover:bg-green-600 transition-opacity shadow-md disabled:bg-gray-500" disabled>Konversi & Unduh</button>
+        </div>
+        <div class="text-center mt-6">
+            <a href="index.html" class="text-purple-400 hover:text-blue-500 font-semibold transition-colors">Kembali ke Menu Utama</a>
+        </div>
+    </div>
+    <script>
+        const imageUpload = document.getElementById('imageUpload');
+        const imagePreview = document.getElementById('imagePreview');
+        const formatSelect = document.getElementById('formatSelect');
+        const convertBtn = document.getElementById('convertBtn');
+        let currentFile = null;
+
+        imageUpload.addEventListener('change', e => {
+            if (e.target.files && e.target.files[0]) {
+                currentFile = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.classList.remove('hidden');
+                    convertBtn.disabled = false;
+                }
+                reader.readAsDataURL(currentFile);
+            }
+        });
+
+        convertBtn.addEventListener('click', () => {
+            if (!currentFile) return;
+            const targetFormat = formatSelect.value;
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            
+            img.onload = () => {
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+                
+                const mimeType = targetFormat === 'jpeg' ? 'image/jpeg' : `image/${targetFormat}`;
+                canvas.toBlob(blob => {
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = `${currentFile.name.split('.')[0]}.${targetFormat}`;
+                    link.click();
+                    URL.revokeObjectURL(link.href);
+                }, mimeType, 0.9);
+            };
+            img.src = URL.createObjectURL(currentFile);
+        });
+    </script>
+</body>
+</html>
