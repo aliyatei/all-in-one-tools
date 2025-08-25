@@ -7,13 +7,19 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Poppins', sans-serif; }
-        body.theme-transition { transition: background-color 0.3s, color 0.3s; }
+        body { font-family: 'Poppins', sans-serif; transition: background-color 0.3s, color 0.3s; }
         .text-gradient { background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .dark .text-gradient { background: linear-gradient(135deg, #a78bfa 0%, #60a5fa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     </style>
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 flex items-center justify-center min-h-screen p-5 theme-transition">
+<body class="bg-gray-100 dark:bg-gray-900 flex items-center justify-center min-h-screen p-5">
 
     <button id="theme-toggle" class="fixed top-5 right-5 p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none z-10"></button>
     
@@ -36,35 +42,25 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const themeToggle = document.getElementById('theme-toggle');
-            const sunIcon = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>`;
-            const moonIcon = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>`;
-            const html = document.documentElement;
+        const themeToggle = document.getElementById('theme-toggle');
+        const sunIcon = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>`;
+        const moonIcon = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>`;
+        
+        // Atur ikon saat halaman dimuat
+        if (document.documentElement.classList.contains('dark')) {
+            themeToggle.innerHTML = sunIcon;
+        } else {
+            themeToggle.innerHTML = moonIcon;
+        }
 
-            function applyTheme(theme) {
-                if (theme === 'dark') {
-                    html.classList.add('dark');
-                    if (themeToggle) themeToggle.innerHTML = sunIcon;
-                } else {
-                    html.classList.remove('dark');
-                    if (themeToggle) themeToggle.innerHTML = moonIcon;
-                }
-            }
-
-            // Inisialisasi tema segera
-            const savedTheme = localStorage.getItem('theme');
-            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            applyTheme(savedTheme || (systemPrefersDark ? 'dark' : 'light'));
-
-            // Event listener untuk tombol
-            if (themeToggle) {
-                themeToggle.addEventListener('click', () => {
-                    const isDark = html.classList.contains('dark');
-                    const newTheme = isDark ? 'light' : 'dark';
-                    localStorage.setItem('theme', newTheme);
-                    applyTheme(newTheme);
-                });
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            if (document.documentElement.classList.contains('dark')) {
+                localStorage.theme = 'dark';
+                themeToggle.innerHTML = sunIcon;
+            } else {
+                localStorage.theme = 'light';
+                themeToggle.innerHTML = moonIcon;
             }
         });
     </script>
