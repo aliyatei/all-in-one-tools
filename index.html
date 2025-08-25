@@ -7,26 +7,19 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* CSS untuk mencegah "kedipan" tema */
-        body.theme-transition {
-            transition: background-color 0.3s, color 0.3s;
-        }
+        body { font-family: 'Poppins', sans-serif; }
+        body.theme-transition { transition: background-color 0.3s, color 0.3s; }
         .text-gradient { background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .dark .text-gradient { background: linear-gradient(135deg, #a78bfa 0%, #60a5fa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     </style>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 theme-transition">
+<body class="bg-gray-100 dark:bg-gray-900 flex items-center justify-center min-h-screen p-5 theme-transition">
 
     <button id="theme-toggle" class="fixed top-5 right-5 p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none z-10"></button>
     
     <div class="w-full max-w-4xl p-8 md:p-10 bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-2xl shadow-lg border border-white/30 dark:border-gray-700/50">
-        <h1 class="text-3xl md:text-4xl font-bold text-center mb-4 text-gradient">
-            Portal Utilitas Komprehensif
-        </h1>
-        <p class="text-center text-gray-600 dark:text-gray-300 mb-8 md:mb-10">
-            Pilih layanan utilitas yang Anda butuhkan:
-        </p>
-
+        <h1 class="text-3xl md:text-4xl font-bold text-center mb-4 text-gradient">Portal Utilitas Komprehensif</h1>
+        <p class="text-center text-gray-600 dark:text-gray-300 mb-8 md:mb-10">Pilih layanan utilitas yang Anda butuhkan:</p>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             <a href="Format_Teks.html" class="block p-5 text-center bg-white/80 dark:bg-gray-700/80 rounded-lg shadow-md hover:shadow-xl dark:hover:shadow-purple-500/20 hover:-translate-y-1 transform transition-all duration-300"><span class="text-lg font-semibold text-gray-800 dark:text-gray-100">Pengubah Format Teks</span></a>
             <a href="RNG.html" class="block p-5 text-center bg-white/80 dark:bg-gray-700/80 rounded-lg shadow-md hover:shadow-xl dark:hover:shadow-purple-500/20 hover:-translate-y-1 transform transition-all duration-300"><span class="text-lg font-semibold text-gray-800 dark:text-gray-100">Generator Angka Acak</span></a>
@@ -39,14 +32,11 @@
             <a href="catatan_sederhana.html" class="block p-5 text-center bg-white/80 dark:bg-gray-700/80 rounded-lg shadow-md hover:shadow-xl dark:hover:shadow-purple-500/20 hover:-translate-y-1 transform transition-all duration-300"><span class="text-lg font-semibold text-gray-800 dark:text-gray-100">Catatan Sederhana</span></a>
             <a href="timer_stopwatch.html" class="block p-5 text-center bg-white/80 dark:bg-gray-700/80 rounded-lg shadow-md hover:shadow-xl dark:hover:shadow-purple-500/20 hover:-translate-y-1 transform transition-all duration-300"><span class="text-lg font-semibold text-gray-800 dark:text-gray-100">Timer & Stopwatch</span></a>
         </div>
-
-        <div class="text-center text-gray-500 dark:text-gray-400 mt-10">
-            Disediakan oleh Sistem Aplikasi Web Lanjutan
-        </div>
+        <div class="text-center text-gray-500 dark:text-gray-400 mt-10">Disediakan oleh Sistem Aplikasi Web Lanjutan</div>
     </div>
 
     <script>
-        (function() {
+        document.addEventListener('DOMContentLoaded', () => {
             const themeToggle = document.getElementById('theme-toggle');
             const sunIcon = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>`;
             const moonIcon = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>`;
@@ -55,25 +45,28 @@
             function applyTheme(theme) {
                 if (theme === 'dark') {
                     html.classList.add('dark');
-                    themeToggle.innerHTML = sunIcon;
+                    if (themeToggle) themeToggle.innerHTML = sunIcon;
                 } else {
                     html.classList.remove('dark');
-                    themeToggle.innerHTML = moonIcon;
+                    if (themeToggle) themeToggle.innerHTML = moonIcon;
                 }
             }
 
-            themeToggle.addEventListener('click', () => {
-                const isDark = html.classList.contains('dark');
-                const newTheme = isDark ? 'light' : 'dark';
-                localStorage.setItem('theme', newTheme);
-                applyTheme(newTheme);
-            });
-
-            // Inisialisasi tema
+            // Inisialisasi tema segera
             const savedTheme = localStorage.getItem('theme');
             const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             applyTheme(savedTheme || (systemPrefersDark ? 'dark' : 'light'));
-        })();
+
+            // Event listener untuk tombol
+            if (themeToggle) {
+                themeToggle.addEventListener('click', () => {
+                    const isDark = html.classList.contains('dark');
+                    const newTheme = isDark ? 'light' : 'dark';
+                    localStorage.setItem('theme', newTheme);
+                    applyTheme(newTheme);
+                });
+            }
+        });
     </script>
 </body>
 </html>
