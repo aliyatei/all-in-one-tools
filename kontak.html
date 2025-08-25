@@ -16,25 +16,55 @@
 <body class="bg-gray-900 flex items-center justify-center min-h-screen p-5">
     <div class="w-full max-w-lg p-8 bg-gray-800/70 backdrop-blur-xl rounded-2xl shadow-lg border border-gray-700/50">
         <h1 class="text-3xl font-bold text-center mb-6 text-gradient">Hubungi Kami</h1>
-        <p class="text-center text-gray-300 mb-6">Punya saran, masukan, atau menemukan bug? Kami senang mendengarnya. Silakan isi formulir di bawah ini.</p>
-        <form action="#" method="POST" class="space-y-4">
+        <p class="text-center text-gray-300 mb-6">Punya saran, masukan, atau menemukan bug? Kami senang mendengarnya.</p>
+        
+        <form id="contact-form" class="space-y-4">
             <div>
                 <label for="name" class="block mb-1 font-semibold text-gray-300">Nama Anda</label>
-                <input type="text" id="name" name="name" required class="w-full p-3 bg-gray-700 text-gray-200 rounded-lg border border-gray-600 focus:ring-2 focus:ring-purple-500">
+                <input type="text" id="name" name="entry.738454685" required class="w-full p-3 bg-gray-700 text-gray-200 rounded-lg border border-gray-600 focus:ring-2 focus:ring-purple-500">
             </div>
             <div>
                 <label for="email" class="block mb-1 font-semibold text-gray-300">Alamat Email</label>
-                <input type="email" id="email" name="email" required class="w-full p-3 bg-gray-700 text-gray-200 rounded-lg border border-gray-600 focus:ring-2 focus:ring-purple-500">
+                <input type="email" id="email" name="entry.1871290256" required class="w-full p-3 bg-gray-700 text-gray-200 rounded-lg border border-gray-600 focus:ring-2 focus:ring-purple-500">
             </div>
             <div>
                 <label for="message" class="block mb-1 font-semibold text-gray-300">Pesan Anda</label>
-                <textarea id="message" name="message" rows="4" required class="w-full p-3 bg-gray-700 text-gray-200 rounded-lg border border-gray-600 focus:ring-2 focus:ring-purple-500"></textarea>
+                <textarea id="message" name="entry.739501104" rows="4" required class="w-full p-3 bg-gray-700 text-gray-200 rounded-lg border border-gray-600 focus:ring-2 focus:ring-purple-500"></textarea>
             </div>
             <button type="submit" class="w-full py-3 text-lg text-white rounded-lg btn-gradient hover:opacity-90 transition-opacity shadow-md">Kirim Pesan</button>
         </form>
+
+        <div id="success-message" class="hidden text-center p-4 mt-4 bg-green-800/50 text-green-300 rounded-lg">
+            <h3 class="font-bold text-lg">Terima kasih!</h3>
+            <p>Pesan Anda telah berhasil dikirim.</p>
+        </div>
+
         <div class="text-center mt-6">
             <a href="index.html" class="text-purple-400 hover:text-blue-500 font-semibold transition-colors">Kembali ke Menu Utama</a>
         </div>
     </div>
+
+    <script>
+        const form = document.getElementById('contact-form');
+        const successMessage = document.getElementById('success-message');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+            // URL ini juga sudah benar, tidak perlu diubah lagi
+            const formActionURL = 'https://docs.google.com/forms/d/e/1FAIpQLScxHzowhiKdQreGiTADev6X1O6hKGeR0jM-rl7Dg4c3sudYCA/formResponse';
+            
+            fetch(formActionURL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: new URLSearchParams(formData)
+            }).then(() => {
+                form.reset();
+                form.classList.add('hidden');
+                successMessage.classList.remove('hidden');
+            }).catch(error => alert('Terjadi kesalahan. Silakan coba lagi.'));
+        });
+    </script>
 </body>
 </html>
