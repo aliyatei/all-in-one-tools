@@ -6,48 +6,56 @@
     <title>Penghitung Kata & Karakter</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) { document.documentElement.classList.add('dark'); } else { document.documentElement.classList.remove('dark'); }
+    </script>
     <style>
-        body { font-family: 'Poppins', sans-serif; background: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%); }
-        .text-gradient { background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        body { font-family: 'Poppins', sans-serif; }
+        .text-gradient { background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .dark .text-gradient { background: linear-gradient(135deg, #a78bfa 0%, #60a5fa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-5">
+<body class="bg-gray-100 dark:bg-gray-900 flex items-center justify-center min-h-screen p-5 transition-colors duration-300">
 
-    <div class="w-full max-w-3xl p-8 bg-white/70 backdrop-blur-xl rounded-2xl shadow-lg border border-white/30">
+    <button id="theme-toggle" class="fixed top-5 right-5 p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none z-10"></button>
+
+    <div class="w-full max-w-3xl p-8 bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-2xl shadow-lg border border-white/30 dark:border-gray-700/50">
         <h1 class="text-3xl font-bold text-center mb-6 text-gradient">Penghitung Kata & Karakter</h1>
-        <textarea id="textInput" placeholder="Masukkan teks Anda di sini untuk dianalisis..." class="w-full h-48 p-3 bg-white/80 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition duration-300"></textarea>
+        <textarea id="textInput" placeholder="Masukkan teks Anda di sini untuk dianalisis..." class="w-full h-48 p-3 bg-white/80 dark:bg-gray-700/80 text-gray-800 dark:text-gray-200 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition duration-300"></textarea>
         
         <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 mt-6 text-center">
-            <div class="bg-gray-200/80 p-4 rounded-lg">
-                <strong class="block text-gray-700">Jumlah Kata:</strong>
-                <span id="wordCount" class="text-2xl font-bold text-purple-600">0</span>
+            <div class="bg-gray-200/80 dark:bg-gray-700/80 p-4 rounded-lg">
+                <strong class="block text-gray-700 dark:text-gray-300">Jumlah Kata:</strong>
+                <span id="wordCount" class="text-2xl font-bold text-purple-600 dark:text-purple-400">0</span>
             </div>
-            <div class="bg-gray-200/80 p-4 rounded-lg">
-                <strong>Karakter (dgn spasi):</strong>
-                <span id="charCountWithSpaces" class="text-2xl font-bold text-purple-600">0</span>
+            <div class="bg-gray-200/80 dark:bg-gray-700/80 p-4 rounded-lg">
+                <strong class="block text-gray-700 dark:text-gray-300">Karakter (dgn spasi):</strong>
+                <span id="charCountWithSpaces" class="text-2xl font-bold text-purple-600 dark:text-purple-400">0</span>
             </div>
-            <div class="bg-gray-200/80 p-4 rounded-lg">
-                <strong>Karakter (tnp spasi):</strong>
-                <span id="charCountWithoutSpaces" class="text-2xl font-bold text-purple-600">0</span>
+            <div class="bg-gray-200/80 dark:bg-gray-700/80 p-4 rounded-lg">
+                <strong class="block text-gray-700 dark:text-gray-300">Karakter (tnp spasi):</strong>
+                <span id="charCountWithoutSpaces" class="text-2xl font-bold text-purple-600 dark:text-purple-400">0</span>
             </div>
-            <div class="bg-gray-200/80 p-4 rounded-lg">
-                <strong>Jumlah Kalimat:</strong>
-                <span id="sentenceCount" class="text-2xl font-bold text-purple-600">0</span>
+            <div class="bg-gray-200/80 dark:bg-gray-700/80 p-4 rounded-lg">
+                <strong class="block text-gray-700 dark:text-gray-300">Jumlah Kalimat:</strong>
+                <span id="sentenceCount" class="text-2xl font-bold text-purple-600 dark:text-purple-400">0</span>
             </div>
-            <div class="bg-gray-200/80 p-4 rounded-lg col-span-2 lg:col-span-1">
-                <strong>Jumlah Paragraf:</strong>
-                <span id="paragraphCount" class="text-2xl font-bold text-purple-600">0</span>
+            <div class="bg-gray-200/80 dark:bg-gray-700/80 p-4 rounded-lg col-span-2 lg:col-span-1">
+                <strong class="block text-gray-700 dark:text-gray-300">Jumlah Paragraf:</strong>
+                <span id="paragraphCount" class="text-2xl font-bold text-purple-600 dark:text-purple-400">0</span>
             </div>
         </div>
         
         <div class="text-center mt-6">
-            <a href="index.html" class="text-purple-600 hover:text-blue-500 font-semibold transition-colors">Kembali ke Menu Utama</a>
+            <a href="index.html" class="text-purple-600 dark:text-purple-400 hover:text-blue-500 font-semibold transition-colors">Kembali ke Menu Utama</a>
         </div>
     </div>
 
     <script>
-        // Javascript functionality remains the same
         const textInput = document.getElementById('textInput'); const wordCountEl = document.getElementById('wordCount'); const charCountWithSpacesEl = document.getElementById('charCountWithSpaces'); const charCountWithoutSpacesEl = document.getElementById('charCountWithoutSpaces'); const sentenceCountEl = document.getElementById('sentenceCount'); const paragraphCountEl = document.getElementById('paragraphCount'); textInput.addEventListener('input', analyzeText); function analyzeText() { const text = textInput.value; charCountWithSpacesEl.textContent = text.length; charCountWithoutSpacesEl.textContent = text.replace(/\s/g, '').length; const words = text.trim().split(/\s+/).filter(word => word.length > 0); wordCountEl.textContent = words.length; if (text.trim() === "") wordCountEl.textContent = 0; const sentences = text.split(/[.!?]+/).filter(sentence => sentence.trim().length > 0); sentenceCountEl.textContent = sentences.length; if (text.trim() === "") sentenceCountEl.textContent = 0; const paragraphs = text.split(/\n+/).filter(paragraph => paragraph.trim().length > 0); paragraphCountEl.textContent = paragraphs.length; if (text.trim() === "") paragraphCountEl.textContent = 0; } analyzeText();
+    </script>
+    <script>
+        const themeToggle = document.getElementById('theme-toggle'); const sunIcon = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>`; const moonIcon = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>`; if (document.documentElement.classList.contains('dark')) { themeToggle.innerHTML = sunIcon; } else { themeToggle.innerHTML = moonIcon; } themeToggle.addEventListener('click', () => { if (document.documentElement.classList.contains('dark')) { document.documentElement.classList.remove('dark'); localStorage.setItem('theme', 'light'); themeToggle.innerHTML = moonIcon; } else { document.documentElement.classList.add('dark'); localStorage.setItem('theme', 'dark'); themeToggle.innerHTML = sunIcon; } });
     </script>
 </body>
 </html>
