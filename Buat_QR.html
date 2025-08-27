@@ -19,6 +19,11 @@
         .btn-gradient { background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%); }
         .tab-button.active { color: #a78bfa; border-color: #a78bfa; }
         #qr-reader video { border-radius: 8px; }
+        /* Style untuk area drop */
+        .drop-zone-active {
+            border-color: #a78bfa;
+            background-color: rgba(167, 139, 250, 0.1);
+        }
     </style>
 </head>
 <body class="bg-gray-900 flex items-center justify-center min-h-screen p-5">
@@ -44,15 +49,16 @@
                 <div id="qr-reader" class="w-full mx-auto border-2 border-dashed border-gray-600 rounded-lg min-h-[300px] bg-gray-900/50 flex items-center justify-center overflow-hidden">
                     <div id="scan-status" class="text-gray-400 text-center p-4">Menyiapkan kamera...</div>
                 </div>
-                <div class="flex items-center gap-2">
-                    <hr class="flex-grow border-gray-600"><span class="text-gray-500 text-sm">ATAU</span><hr class="flex-grow border-gray-600">
-                </div>
+                <div class="flex items-center gap-2"><hr class="flex-grow border-gray-600"><span class="text-gray-500 text-sm">ATAU</span><hr class="flex-grow border-gray-600"></div>
+                
                 <div>
-                    <label for="qr-input-file" class="w-full cursor-pointer text-center block py-2 px-4 rounded-lg border-2 border-dashed border-gray-600 hover:bg-gray-700/50 hover:border-purple-500 transition-colors">
-                        <span class="font-semibold text-gray-300">Unggah Gambar Kode QR</span>
+                    <label for="qr-input-file" id="drop-zone" class="w-full cursor-pointer text-center block py-4 px-4 rounded-lg border-2 border-dashed border-gray-600 hover:bg-gray-700/50 hover:border-purple-500 transition-colors">
+                        <span id="file-name" class="font-semibold text-gray-300">Seret & lepas gambar di sini</span>
+                        <span class="text-gray-400 text-sm block">atau klik untuk memilih file</span>
                         <input type="file" id="qr-input-file" accept="image/*" class="hidden">
                     </label>
                 </div>
+
                 <div id="result-container" class="hidden">
                     <h3 class="font-semibold text-lg text-gray-200">Hasil Scan:</h3>
                     <p id="qr-reader-result" class="p-3 mt-1 bg-gray-900/50 text-purple-300 rounded-lg break-all"></p>
@@ -82,6 +88,8 @@
             const downloadBtn = document.getElementById('downloadBtn');
             const textInput = document.getElementById("textInput");
             const qrContainer = document.getElementById("qrcode");
+            const dropZone = document.getElementById('drop-zone'); // Elemen drop zone
+            const fileNameEl = document.getElementById('file-name'); // Elemen nama file
 
             // -- LOGIKA TAB --
             function showTab(tabName) {
@@ -108,15 +116,14 @@
             btnBaca.addEventListener('click', () => showTab('baca'));
             
             // -- LOGIKA MEMBUAT QR --
-            function generateQRCode() {
+            generateBtn.addEventListener('click', () => {
                 const text = textInput.value.trim();
                 if (text === "") { alert("Silakan masukkan teks."); return; }
                 qrContainer.innerHTML = "";
                 qrGenerator = new QRCode(qrContainer, { text, width: 200, height: 200 });
-            }
-            generateBtn.addEventListener('click', generateQRCode);
+            });
 
-            function downloadQRCode() {
+            downloadBtn.addEventListener('click', () => {
                 if (!qrGenerator) { alert("Buat Kode QR terlebih dahulu."); return; }
                 const qrCanvas = qrContainer.querySelector("canvas");
                 if (!qrCanvas) { alert("Gagal menemukan gambar QR."); return; }
@@ -125,8 +132,7 @@
                 link.href = image;
                 link.download = "qrcode.png";
                 link.click();
-            }
-            downloadBtn.addEventListener('click', downloadQRCode);
+            });
 
             // -- LOGIKA MEMBACA QR --
             const onScanSuccess = (decodedText) => {
@@ -166,19 +172,46 @@
                 }
             }
 
-            fileInput.addEventListener('change', e => {
-                if (e.target.files.length === 0) return;
+            // -- LOGIKA UNGGAH FILE (TERMASUK DRAG & DROP) --
+            function handleFile(file) {
+                 if (!file || !file.type.startsWith('image/')) {
+                    alert('Harap unggah file gambar yang valid.');
+                    return;
+                }
                 stopScanner();
                 scanStatusEl.textContent = 'Membaca gambar...';
-                const imageFile = e.target.files[0];
+                fileNameEl.textContent = file.name; // Tampilkan nama file
                 
                 const fileScanner = new Html5Qrcode("qr-reader");
-                fileScanner.scanFile(imageFile, true)
+                fileScanner.scanFile(file, true)
                     .then(onScanSuccess)
                     .catch(err => {
                         alert(`Gagal membaca Kode QR dari gambar.`);
                         scanStatusEl.textContent = 'Gagal membaca Kode QR dari gambar.';
                     });
+            }
+
+            fileInput.addEventListener('change', e => {
+                if (e.target.files.length > 0) {
+                    handleFile(e.target.files[0]);
+                }
+            });
+
+            dropZone.addEventListener('dragover', e => {
+                e.preventDefault();
+                dropZone.classList.add('drop-zone-active');
+            });
+
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('drop-zone-active');
+            });
+
+            dropZone.addEventListener('drop', e => {
+                e.preventDefault();
+                dropZone.classList.remove('drop-zone-active');
+                if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                    handleFile(e.dataTransfer.files[0]);
+                }
             });
         });
     </script>
