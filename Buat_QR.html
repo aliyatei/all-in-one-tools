@@ -5,9 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pembuat & Pembaca Kode QR</title>
     
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Library QRCodeJS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+
+    <!-- Library Html5-Qrcode (versi fix) -->
+    <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/minified/html5-qrcode.min.js"></script>
     
     <script>
         tailwind.config = { darkMode: 'class' };
@@ -27,11 +32,13 @@
     <div class="w-full max-w-lg p-8 bg-gray-800/70 backdrop-blur-xl rounded-2xl shadow-lg border border-gray-700/50 text-center">
         <h1 class="text-3xl font-bold mb-4 text-gradient">Pembuat & Pembaca Kode QR</h1>
 
+        <!-- Tab -->
         <div class="flex justify-center border-b border-gray-600 mb-6">
             <button id="btn-buat" class="tab-button active text-lg font-semibold px-6 py-2 border-b-2 transition-colors">Buat QR</button>
             <button id="btn-baca" class="tab-button text-lg font-semibold text-gray-400 px-6 py-2 border-b-2 border-transparent transition-colors">Baca QR</button>
         </div>
 
+        <!-- Tab Buat -->
         <div id="tab-content-buat" class="tab-content">
             <input type="text" id="textInput" placeholder="Masukkan teks atau tautan" class="w-full p-3 bg-gray-700 text-gray-200 rounded-lg border border-gray-600 focus:ring-2 focus:ring-purple-500 transition duration-300">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
@@ -41,6 +48,7 @@
             <div id="qrcode" class="mt-6 inline-flex p-4 bg-white rounded-lg shadow-inner min-h-[232px] min-w-[232px] items-center justify-center"></div>
         </div>
 
+        <!-- Tab Baca -->
         <div id="tab-content-baca" class="tab-content hidden">
             <div class="space-y-4">
                 <div id="qr-reader" class="w-full mx-auto border-2 border-dashed border-gray-600 rounded-lg min-h-[300px] bg-gray-900/50 flex items-center justify-center overflow-hidden">
@@ -60,16 +68,14 @@
             </div>
         </div>
 
+        <!-- Kembali -->
         <div class="mt-6">
             <a href="index.html" class="text-purple-400 hover:text-blue-500 font-semibold transition-colors">Kembali ke Menu Utama</a>
         </div>
     </div>
 
     <script>
-        // Menunggu semua elemen HTML dan Pustaka CDN selesai dimuat
         document.addEventListener('DOMContentLoaded', function () {
-            
-            // --- Definisi Elemen ---
             let qrGenerator;
             let html5QrCode;
             const scanStatusEl = document.getElementById('scan-status');
@@ -85,7 +91,7 @@
             const textInput = document.getElementById("textInput");
             const qrContainer = document.getElementById("qrcode");
 
-            // --- Logika Tab ---
+            // Tab Switch
             function showTab(tabName) {
                 if (tabName === 'buat') {
                     tabBuatContent.classList.remove('hidden');
@@ -109,7 +115,7 @@
             btnBuat.addEventListener('click', () => showTab('buat'));
             btnBaca.addEventListener('click', () => showTab('baca'));
             
-            // --- Logika Membuat QR ---
+            // Generate QR
             function generateQRCodeInternal() {
                 const text = textInput.value.trim();
                 if (text === "") { alert("Silakan masukkan teks."); return; }
@@ -118,6 +124,7 @@
             }
             generateBtn.addEventListener('click', generateQRCodeInternal);
 
+            // Download QR
             function downloadQRCodeInternal() {
                 if (!qrGenerator) { alert("Buat Kode QR terlebih dahulu."); return; }
                 const qrCanvas = qrContainer.querySelector("canvas");
@@ -130,7 +137,7 @@
             }
             downloadBtn.addEventListener('click', downloadQRCodeInternal);
 
-            // --- Logika Membaca QR ---
+            // Scan QR
             const onScanSuccess = (decodedText) => {
                 resultEl.textContent = decodedText;
                 resultContainer.classList.remove('hidden');
@@ -168,13 +175,13 @@
                 }
             }
 
+            // Scan dari File
             fileInput.addEventListener('change', e => {
                 if (e.target.files.length === 0) return;
                 stopScanner();
                 scanStatusEl.textContent = 'Membaca gambar...';
                 const imageFile = e.target.files[0];
                 
-                // Buat instance baru untuk scan file
                 const fileScanner = new Html5Qrcode("qr-reader");
                 fileScanner.scanFile(imageFile, true)
                     .then(onScanSuccess)
