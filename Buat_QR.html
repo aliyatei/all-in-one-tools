@@ -158,14 +158,16 @@
             function startScanner() {
                 if (html5QrCode && html5QrCode.isScanning) return;
                 html5QrCode = new Html5Qrcode("qr-reader");
-                scanStatusEl.innerHTML = `Mencari kamera...`;
+                const statusElement = document.getElementById('scan-status');
+                if (statusElement) statusElement.innerHTML = `Mencari kamera...`;
+                
                 Html5Qrcode.getCameras().then(cameras => {
                     if (cameras && cameras.length) {
-                        scanStatusEl.textContent = 'Meminta izin kamera...';
+                        if (statusElement) statusElement.textContent = 'Meminta izin kamera...';
                         html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 250 } }, onScanSuccess)
-                        .catch(err => { scanStatusEl.innerHTML = `<span class="text-red-400">Gagal memulai kamera.</span><br><small>Pastikan izin tidak diblokir.</small>`; });
-                    } else { scanStatusEl.innerHTML = `<span class="text-red-400">Tidak ada kamera ditemukan.</span>`; }
-                }).catch(err => { scanStatusEl.innerHTML = `<span class="text-red-400">Error: Tidak dapat mengakses kamera.</span>`; });
+                        .catch(err => { if (statusElement) statusElement.innerHTML = `<span class="text-red-400">Gagal memulai kamera.</span><br><small>Pastikan izin tidak diblokir.</small>`; });
+                    } else { if (statusElement) statusElement.innerHTML = `<span class="text-red-400">Tidak ada kamera ditemukan.</span>`; }
+                }).catch(err => { if (statusElement) statusElement.innerHTML = `<span class="text-red-400">Error: Tidak dapat mengakses kamera.</span>`; });
             }
             
             function stopScanner() {
@@ -174,13 +176,20 @@
                 }
             }
 
-            // -- LOGIKA TOMBOL SCAN ULANG --
+            // -- LOGIKA TOMBOL SCAN ULANG (SUDAH DIPERBAIKI) --
             rescanBtn.addEventListener('click', () => {
                 resultContainer.classList.add('hidden');
                 readerWrapper.classList.remove('hidden');
                 dropZonePrompt.classList.remove('hidden');
                 fileNameDisplay.classList.add('hidden');
                 fileInput.value = '';
+
+                // --- BAGIAN KODE PERBAIKAN ---
+                // Mengambil elemen pembaca QR dan mereset kontennya ke keadaan awal untuk menghapus gambar lama.
+                const qrReader = document.getElementById('qr-reader');
+                qrReader.innerHTML = '<div id="scan-status" class="text-gray-400 text-center p-4">Menyiapkan kamera...</div>';
+                // -----------------------------
+
                 startScanner();
             });
 
@@ -195,7 +204,9 @@
                 dropZonePrompt.classList.add('hidden');
                 fileNameDisplay.textContent = file.name;
                 fileNameDisplay.classList.remove('hidden');
-                scanStatusEl.textContent = 'Membaca gambar...';
+
+                const qrReader = document.getElementById('qr-reader');
+                qrReader.innerHTML = '<div id="scan-status" class="text-gray-400 text-center p-4">Membaca gambar...</div>';
                 
                 const fileScanner = new Html5Qrcode("qr-reader");
                 fileScanner.scanFile(file, true)
@@ -203,7 +214,8 @@
                     .catch(err => {
                         if (!scanWasSuccessful) {
                             alert(`Gagal membaca Kode QR dari gambar.`);
-                            scanStatusEl.textContent = 'Gagal membaca Kode QR dari gambar.';
+                            const statusElement = document.getElementById('scan-status');
+                            if (statusElement) statusElement.textContent = 'Gagal membaca Kode QR dari gambar.';
                         }
                     });
             }
