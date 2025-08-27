@@ -94,22 +94,34 @@
             const textInput = document.getElementById("textInput");
             const qrContainer = document.getElementById("qrcode");
             const dropZone = document.getElementById('drop-zone');
-            const dropZonePrompt = document.getElementById('drop-zone-prompt'); // Teks asli
-            const fileNameDisplay = document.getElementById('file-name-display'); // Tampilan nama file
+            const dropZonePrompt = document.getElementById('drop-zone-prompt');
+            const fileNameDisplay = document.getElementById('file-name-display');
             const readerWrapper = document.getElementById('reader-wrapper');
             const rescanBtn = document.getElementById('rescanBtn');
 
-            // -- LOGIKA TAB --
+            // -- LOGIKA TAB (DIPERBAIKI) --
             function showTab(tabName) {
                 if (tabName === 'buat') {
                     tabBuatContent.classList.remove('hidden');
                     tabBacaContent.classList.add('hidden');
-                    btnBuat.classList.add('active'); btnBaca.classList.remove('active');
+                    
+                    btnBuat.classList.add('active');
+                    btnBuat.classList.remove('text-gray-400', 'border-transparent');
+
+                    btnBaca.classList.remove('active');
+                    btnBaca.classList.add('text-gray-400', 'border-transparent');
+                    
                     stopScanner();
                 } else {
                     tabBuatContent.classList.add('hidden');
                     tabBacaContent.classList.remove('hidden');
-                    btnBuat.classList.remove('active'); btnBaca.classList.add('active');
+
+                    btnBuat.classList.remove('active');
+                    btnBuat.classList.add('text-gray-400', 'border-transparent');
+                    
+                    btnBaca.classList.add('active');
+                    btnBaca.classList.remove('text-gray-400', 'border-transparent');
+                    
                     startScanner();
                 }
             }
@@ -162,20 +174,17 @@
                 }
             }
 
-            // -- LOGIKA TOMBOL SCAN ULANG (DIPERBAIKI) --
+            // -- LOGIKA TOMBOL SCAN ULANG --
             rescanBtn.addEventListener('click', () => {
-                resultContainer.classList.add('hidden'); // Sembunyikan hasil
-                readerWrapper.classList.remove('hidden'); // Tampilkan kembali area scan
-                
-                // Reset tampilan drop zone
+                resultContainer.classList.add('hidden');
+                readerWrapper.classList.remove('hidden');
                 dropZonePrompt.classList.remove('hidden');
                 fileNameDisplay.classList.add('hidden');
-
-                fileInput.value = ''; // Reset input file
+                fileInput.value = '';
                 startScanner();
             });
 
-            // -- LOGIKA UNGGAH FILE (DIPERBAIKI) --
+            // -- LOGIKA UNGGAH FILE --
             function handleFile(file) {
                 if (!file || !file.type.startsWith('image/')) {
                     alert('Harap unggah file gambar yang valid.');
@@ -183,12 +192,9 @@
                 }
                 scanWasSuccessful = false;
                 stopScanner();
-                
-                // Tampilkan nama file dan sembunyikan prompt
                 dropZonePrompt.classList.add('hidden');
                 fileNameDisplay.textContent = file.name;
                 fileNameDisplay.classList.remove('hidden');
-                
                 scanStatusEl.textContent = 'Membaca gambar...';
                 
                 const fileScanner = new Html5Qrcode("qr-reader");
