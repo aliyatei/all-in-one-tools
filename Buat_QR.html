@@ -52,10 +52,11 @@
                     <div class="flex items-center gap-2 mt-4"><hr class="flex-grow border-gray-600"><span class="text-gray-500 text-sm">ATAU</span><hr class="flex-grow border-gray-600"></div>
                     <div>
                         <label for="qr-input-file" id="drop-zone" class="w-full mt-4 cursor-pointer text-center block py-4 px-4 rounded-lg border-2 border-dashed border-gray-600 hover:bg-gray-700/50 hover:border-purple-500 transition-colors">
-                            <div id="drop-zone-text">
+                            <div id="drop-zone-prompt">
                                 <span class="font-semibold text-gray-300">Seret & lepas gambar di sini</span>
                                 <span class="text-gray-400 text-sm block">atau klik untuk memilih file</span>
                             </div>
+                            <div id="file-name-display" class="hidden font-semibold text-purple-400"></div>
                             <input type="file" id="qr-input-file" accept="image/*" class="hidden">
                         </label>
                     </div>
@@ -93,29 +94,22 @@
             const textInput = document.getElementById("textInput");
             const qrContainer = document.getElementById("qrcode");
             const dropZone = document.getElementById('drop-zone');
-            const dropZoneText = document.getElementById('drop-zone-text'); // Wrapper teks drop zone
+            const dropZonePrompt = document.getElementById('drop-zone-prompt'); // Teks asli
+            const fileNameDisplay = document.getElementById('file-name-display'); // Tampilan nama file
             const readerWrapper = document.getElementById('reader-wrapper');
             const rescanBtn = document.getElementById('rescanBtn');
-
-            const originalDropZoneText = dropZoneText.innerHTML; // Simpan teks asli
 
             // -- LOGIKA TAB --
             function showTab(tabName) {
                 if (tabName === 'buat') {
                     tabBuatContent.classList.remove('hidden');
                     tabBacaContent.classList.add('hidden');
-                    btnBuat.classList.add('active');
-                    btnBuat.classList.remove('text-gray-400', 'border-transparent');
-                    btnBaca.classList.remove('active');
-                    btnBaca.classList.add('text-gray-400', 'border-transparent');
+                    btnBuat.classList.add('active'); btnBaca.classList.remove('active');
                     stopScanner();
                 } else {
                     tabBuatContent.classList.add('hidden');
                     tabBacaContent.classList.remove('hidden');
-                    btnBuat.classList.remove('active');
-                    btnBuat.classList.add('text-gray-400', 'border-transparent');
-                    btnBaca.classList.add('active');
-                    btnBaca.classList.remove('text-gray-400', 'border-transparent');
+                    btnBuat.classList.remove('active'); btnBaca.classList.add('active');
                     startScanner();
                 }
             }
@@ -170,14 +164,18 @@
 
             // -- LOGIKA TOMBOL SCAN ULANG (DIPERBAIKI) --
             rescanBtn.addEventListener('click', () => {
-                resultContainer.classList.add('hidden');
-                readerWrapper.classList.remove('hidden');
-                dropZoneText.innerHTML = originalDropZoneText; // Kembalikan ke teks asli
-                fileInput.value = ''; // Reset input file agar bisa upload file yang sama
+                resultContainer.classList.add('hidden'); // Sembunyikan hasil
+                readerWrapper.classList.remove('hidden'); // Tampilkan kembali area scan
+                
+                // Reset tampilan drop zone
+                dropZonePrompt.classList.remove('hidden');
+                fileNameDisplay.classList.add('hidden');
+
+                fileInput.value = ''; // Reset input file
                 startScanner();
             });
 
-            // -- LOGIKA UNGGAH FILE --
+            // -- LOGIKA UNGGAH FILE (DIPERBAIKI) --
             function handleFile(file) {
                 if (!file || !file.type.startsWith('image/')) {
                     alert('Harap unggah file gambar yang valid.');
@@ -185,8 +183,13 @@
                 }
                 scanWasSuccessful = false;
                 stopScanner();
+                
+                // Tampilkan nama file dan sembunyikan prompt
+                dropZonePrompt.classList.add('hidden');
+                fileNameDisplay.textContent = file.name;
+                fileNameDisplay.classList.remove('hidden');
+                
                 scanStatusEl.textContent = 'Membaca gambar...';
-                dropZoneText.innerHTML = `<span class="font-semibold text-purple-400">${file.name}</span>`; // Ganti teks dengan nama file
                 
                 const fileScanner = new Html5Qrcode("qr-reader");
                 fileScanner.scanFile(file, true)
