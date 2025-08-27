@@ -22,8 +22,8 @@
         <h1 class="text-3xl font-bold mb-4 text-gradient">Pembuat & Pembaca Kode QR</h1>
 
         <div class="flex justify-center border-b border-gray-600 mb-6">
-            <button class="tab-button active text-lg font-semibold px-6 py-2 border-b-2 transition-colors" onclick="showTab('buat')">Buat QR</button>
-            <button class="tab-button text-lg font-semibold text-gray-400 px-6 py-2 border-b-2 border-transparent transition-colors" onclick="showTab('baca')">Baca QR</button>
+            <button class="tab-button active text-lg font-semibold px-6 py-2 border-b-2 transition-colors" onclick="showTab('buat', this)">Buat QR</button>
+            <button class="tab-button text-lg font-semibold text-gray-400 px-6 py-2 border-b-2 border-transparent transition-colors" onclick="showTab('baca', this)">Baca QR</button>
         </div>
 
         <div id="tab-content-buat" class="tab-content">
@@ -73,11 +73,25 @@
         let html5QrCode;
         const scanStatusEl = document.getElementById('scan-status');
 
-        function showTab(tabName) {
+        // --- Logika untuk Tab (DIPERBAIKI) ---
+        function showTab(tabName, selectedButton) {
+            // Sembunyikan semua konten tab
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
-            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            
+            // Atur semua tombol menjadi tidak aktif
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+                btn.classList.add('text-gray-400', 'border-transparent');
+            });
+
+            // Tampilkan konten tab yang dipilih
             document.getElementById(`tab-content-${tabName}`).classList.remove('hidden');
-            document.querySelector(`button[onclick="showTab('${tabName}')"]`).classList.add('active');
+
+            // Aktifkan tombol yang dipilih
+            selectedButton.classList.add('active');
+            selectedButton.classList.remove('text-gray-400', 'border-transparent');
+
+            // Logika start/stop scanner
             if (tabName === 'baca') {
                 startScanner();
             } else {
@@ -85,6 +99,7 @@
             }
         }
         
+        // --- Logika untuk Membuat QR ---
         function generateQRCode() {
             const text = document.getElementById("textInput").value.trim();
             const qrContainer = document.getElementById("qrcode");
@@ -106,6 +121,7 @@
             document.body.removeChild(downloadLink);
         }
 
+        // --- Logika untuk Membaca QR ---
         const qrCodeSuccessCallback = (decodedText, decodedResult) => {
             document.getElementById('qr-reader-result').textContent = decodedText;
             document.getElementById('result-container').classList.remove('hidden');
@@ -148,7 +164,7 @@
             stopScanner();
             scanStatusEl.textContent = 'Membaca gambar...';
             
-            const qrScanner = new Html5Qrcode("qr-reader"); // Buat instance baru untuk file scan
+            const qrScanner = new Html5Qrcode("qr-reader");
             qrScanner.scanFile(imageFile, true)
                 .then(qrCodeSuccessCallback)
                 .catch(err => {
