@@ -3,77 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ekstraktor Teks dari Gambar (OCR)</title>
+    <title>Konverter Gambar</title>
     <script>tailwind.config = { darkMode: 'class' }</script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Poppins', sans-serif; }
         .text-gradient { background: linear-gradient(135deg, #a78bfa 0%, #60a5fa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .btn-gradient { background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%); }
+        /* Style untuk area drop */
+        .drop-zone-active {
+            border-color: #a78bfa;
+            background-color: rgba(167, 139, 250, 0.1);
+        }
     </style>
 </head>
 <body class="bg-gray-900 flex items-center justify-center min-h-screen p-5">
-    <div class="w-full max-w-3xl p-8 bg-gray-800/70 backdrop-blur-xl rounded-2xl shadow-lg border border-gray-700/50">
-        <h1 class="text-3xl font-bold text-center mb-6 text-gradient">Gambar ke Teks (OCR)</h1>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+    <div class="w-full max-w-xl p-8 bg-gray-800/70 backdrop-blur-xl rounded-2xl shadow-lg border border-gray-700/50">
+        <h1 class="text-3xl font-bold text-center mb-6 text-gradient">Konverter Gambar</h1>
+        <div class="space-y-4">
+            <label for="imageUpload" id="drop-zone" class="w-full cursor-pointer text-center block p-8 rounded-lg border-2 border-dashed border-gray-600 hover:border-purple-500 transition-colors duration-300">
+                <span class="font-semibold text-gray-300">Seret & lepas file gambar di sini</span>
+                <span class="text-gray-400 block mt-1">atau klik untuk memilih file</span>
+                <input type="file" id="imageUpload" accept="image/jpeg, image/png, image/gif, image/webp" class="hidden">
+            </label>
+            
+            <img id="imagePreview" src="" alt="Pratinjau" class="hidden max-h-64 mx-auto rounded-lg mt-4">
+            
             <div>
-                <label for="imageUpload" class="block mb-2 font-semibold text-gray-300">Unggah Gambar:</label>
-                <input type="file" id="imageUpload" accept="image/*" class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-700">
-                <img id="imagePreview" src="" alt="Pratinjau Gambar" class="mt-4 rounded-lg hidden max-h-64 mx-auto">
+                <label for="formatSelect" class="block mb-1 font-semibold text-gray-300">Konversi ke Format:</label>
+                <select id="formatSelect" class="w-full p-3 bg-gray-700 text-gray-200 rounded-lg border border-gray-600 focus:ring-2 focus:ring-purple-500">
+                    <option value="png">PNG</option>
+                    <option value="jpeg">JPEG</option>
+                    <option value="webp">WEBP</option>
+                    <option value="gif">GIF</option>
+                </select>
             </div>
-            <div>
-                <h2 class="text-xl font-semibold text-gray-200 mb-2">Teks Hasil Ekstraksi:</h2>
-                <div id="progress" class="text-purple-400 hidden">Membaca teks dari gambar...</div>
-                <textarea id="resultText" readonly class="w-full h-56 p-3 bg-gray-700/80 text-gray-200 rounded-lg border border-gray-600"></textarea>
-                <button id="copyButton" class="w-full mt-2 py-2 text-white bg-green-500 rounded-lg hover:bg-green-600 transition-colors">Salin Teks</button>
-            </div>
+            <button id="convertBtn" class="w-full py-3 text-lg text-white rounded-lg bg-green-500 hover:bg-green-600 transition-opacity shadow-md disabled:bg-gray-600 disabled:cursor-not-allowed" disabled>Konversi & Unduh</button>
         </div>
-
         <div class="text-center mt-6">
             <a href="index.html" class="text-purple-400 hover:text-blue-500 font-semibold transition-colors">Kembali ke Menu Utama</a>
         </div>
     </div>
     <script>
+        const dropZone = document.getElementById('drop-zone');
         const imageUpload = document.getElementById('imageUpload');
         const imagePreview = document.getElementById('imagePreview');
-        const resultText = document.getElementById('resultText');
-        const progress = document.getElementById('progress');
-        const copyButton = document.getElementById('copyButton');
+        const formatSelect = document.getElementById('formatSelect');
+        const convertBtn = document.getElementById('convertBtn');
+        let currentFile = null;
 
-        imageUpload.addEventListener('change', (event) => {
-            const file = event.target.files[0];
-            if (!file) return;
+        function handleFile(file) {
+            if (file && file.type.startsWith('image/')) {
+                currentFile = file;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.classList.remove('hidden');
+                    convertBtn.disabled = false;
+                }
+                reader.readAsDataURL(currentFile);
+            } else {
+                alert("Harap unggah file gambar yang valid.");
+            }
+        }
 
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                imagePreview.src = e.target.result;
-                imagePreview.classList.remove('hidden');
-                resultText.value = '';
-                progress.classList.remove('hidden');
-                
-                Tesseract.recognize(
-                    file,
-                    'ind+eng', // Menggunakan bahasa Indonesia dan Inggris
-                    { logger: m => console.log(m) }
-                ).then(({ data: { text } }) => {
-                    resultText.value = text;
-                    progress.classList.add('hidden');
-                });
-            };
-            reader.readAsDataURL(file);
+        // Event listener untuk klik
+        imageUpload.addEventListener('change', e => {
+            if (e.target.files && e.target.files[0]) {
+                handleFile(e.target.files[0]);
+            }
         });
 
-        copyButton.addEventListener('click', () => {
-            if (resultText.value.trim() === '') {
-                alert('Tidak ada teks untuk disalin.');
-                return;
+        // Event listeners untuk Drag and Drop
+        dropZone.addEventListener('dragover', e => {
+            e.preventDefault();
+            dropZone.classList.add('drop-zone-active');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('drop-zone-active');
+        });
+
+        dropZone.addEventListener('drop', e => {
+            e.preventDefault();
+            dropZone.classList.remove('drop-zone-active');
+            if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                handleFile(e.dataTransfer.files[0]);
             }
-            navigator.clipboard.writeText(resultText.value)
-                .then(() => alert('Teks berhasil disalin!'))
-                .catch(err => alert('Gagal menyalin teks.'));
+        });
+
+        // Logika Konversi (tidak berubah)
+        convertBtn.addEventListener('click', () => {
+            if (!currentFile) return;
+            const targetFormat = formatSelect.value;
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            
+            img.onload = () => {
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+                
+                const mimeType = targetFormat === 'jpeg' ? 'image/jpeg' : `image/${targetFormat}`;
+                canvas.toBlob(blob => {
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = `${currentFile.name.split('.').slice(0, -1).join('.')}.${targetFormat}`;
+                    link.click();
+                    URL.revokeObjectURL(link.href);
+                }, mimeType, 0.9);
+            };
+            img.src = URL.createObjectURL(currentFile);
         });
     </script>
 </body>
