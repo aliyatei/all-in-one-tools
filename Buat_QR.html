@@ -19,7 +19,6 @@
         .btn-gradient { background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%); }
         .tab-button.active { color: #a78bfa; border-color: #a78bfa; }
         #qr-reader video { border-radius: 8px; }
-        /* Style untuk area drop */
         .drop-zone-active {
             border-color: #a78bfa;
             background-color: rgba(167, 139, 250, 0.1);
@@ -46,22 +45,23 @@
 
         <div id="tab-content-baca" class="tab-content hidden">
             <div class="space-y-4">
-                <div id="qr-reader" class="w-full mx-auto border-2 border-dashed border-gray-600 rounded-lg min-h-[300px] bg-gray-900/50 flex items-center justify-center overflow-hidden">
-                    <div id="scan-status" class="text-gray-400 text-center p-4">Menyiapkan kamera...</div>
-                </div>
-                <div class="flex items-center gap-2"><hr class="flex-grow border-gray-600"><span class="text-gray-500 text-sm">ATAU</span><hr class="flex-grow border-gray-600"></div>
-                
-                <div>
-                    <label for="qr-input-file" id="drop-zone" class="w-full cursor-pointer text-center block py-4 px-4 rounded-lg border-2 border-dashed border-gray-600 hover:bg-gray-700/50 hover:border-purple-500 transition-colors">
-                        <span id="file-name" class="font-semibold text-gray-300">Seret & lepas gambar di sini</span>
-                        <span class="text-gray-400 text-sm block">atau klik untuk memilih file</span>
-                        <input type="file" id="qr-input-file" accept="image/*" class="hidden">
-                    </label>
+                <div id="reader-wrapper"> <div id="qr-reader" class="w-full mx-auto border-2 border-dashed border-gray-600 rounded-lg min-h-[300px] bg-gray-900/50 flex items-center justify-center overflow-hidden">
+                        <div id="scan-status" class="text-gray-400 text-center p-4">Menyiapkan kamera...</div>
+                    </div>
+                    <div class="flex items-center gap-2 mt-4"><hr class="flex-grow border-gray-600"><span class="text-gray-500 text-sm">ATAU</span><hr class="flex-grow border-gray-600"></div>
+                    <div>
+                        <label for="qr-input-file" id="drop-zone" class="w-full mt-4 cursor-pointer text-center block py-4 px-4 rounded-lg border-2 border-dashed border-gray-600 hover:bg-gray-700/50 hover:border-purple-500 transition-colors">
+                            <span id="file-name" class="font-semibold text-gray-300">Seret & lepas gambar di sini</span>
+                            <span class="text-gray-400 text-sm block">atau klik untuk memilih file</span>
+                            <input type="file" id="qr-input-file" accept="image/*" class="hidden">
+                        </label>
+                    </div>
                 </div>
 
                 <div id="result-container" class="hidden">
                     <h3 class="font-semibold text-lg text-gray-200">Hasil Scan:</h3>
                     <p id="qr-reader-result" class="p-3 mt-1 bg-gray-900/50 text-purple-300 rounded-lg break-all"></p>
+                    <button id="rescanBtn" class="w-full mt-4 py-2 text-white rounded-lg btn-gradient hover:opacity-90 transition-opacity">Scan Ulang</button>
                 </div>
             </div>
         </div>
@@ -88,30 +88,27 @@
             const downloadBtn = document.getElementById('downloadBtn');
             const textInput = document.getElementById("textInput");
             const qrContainer = document.getElementById("qrcode");
-            const dropZone = document.getElementById('drop-zone'); // Elemen drop zone
-            const fileNameEl = document.getElementById('file-name'); // Elemen nama file
+            const dropZone = document.getElementById('drop-zone');
+            const fileNameEl = document.getElementById('file-name');
+            const readerWrapper = document.getElementById('reader-wrapper'); // Wrapper area scan
+            const rescanBtn = document.getElementById('rescanBtn'); // Tombol scan ulang
 
             // -- LOGIKA TAB --
             function showTab(tabName) {
                 if (tabName === 'buat') {
                     tabBuatContent.classList.remove('hidden');
                     tabBacaContent.classList.add('hidden');
-                    btnBuat.classList.add('active', 'text-white');
-                    btnBuat.classList.remove('text-gray-400', 'border-transparent');
-                    btnBaca.classList.remove('active', 'text-white');
-                    btnBaca.classList.add('text-gray-400', 'border-transparent');
+                    btnBuat.classList.add('active');
+                    btnBaca.classList.remove('active');
                     stopScanner();
                 } else {
                     tabBuatContent.classList.add('hidden');
                     tabBacaContent.classList.remove('hidden');
-                    btnBuat.classList.remove('active', 'text-white');
-                    btnBuat.classList.add('text-gray-400', 'border-transparent');
-                    btnBaca.classList.add('active', 'text-white');
-                    btnBaca.classList.remove('text-gray-400', 'border-transparent');
+                    btnBuat.classList.remove('active');
+                    btnBaca.classList.add('active');
                     startScanner();
                 }
             }
-
             btnBuat.addEventListener('click', () => showTab('buat'));
             btnBaca.addEventListener('click', () => showTab('baca'));
             
@@ -122,7 +119,6 @@
                 qrContainer.innerHTML = "";
                 qrGenerator = new QRCode(qrContainer, { text, width: 200, height: 200 });
             });
-
             downloadBtn.addEventListener('click', () => {
                 if (!qrGenerator) { alert("Buat Kode QR terlebih dahulu."); return; }
                 const qrCanvas = qrContainer.querySelector("canvas");
@@ -137,33 +133,22 @@
             // -- LOGIKA MEMBACA QR --
             const onScanSuccess = (decodedText) => {
                 resultEl.textContent = decodedText;
-                resultContainer.classList.remove('hidden');
-                scanStatusEl.innerHTML = `<span class="text-green-400 font-semibold">Scan Berhasil!</span>`;
+                readerWrapper.classList.add('hidden'); // Sembunyikan area scan
+                resultContainer.classList.remove('hidden'); // Tampilkan hasil
                 stopScanner();
             };
             
             function startScanner() {
                 if (html5QrCode && html5QrCode.isScanning) return;
-                
-                scanStatusEl.innerHTML = `Mencari kamera...`;
                 html5QrCode = new Html5Qrcode("qr-reader");
-
+                scanStatusEl.innerHTML = `Mencari kamera...`;
                 Html5Qrcode.getCameras().then(cameras => {
                     if (cameras && cameras.length) {
                         scanStatusEl.textContent = 'Meminta izin kamera...';
-                        html5QrCode.start(
-                            { facingMode: "environment" },
-                            { fps: 10, qrbox: { width: 250, height: 250 } },
-                            onScanSuccess
-                        ).catch(err => {
-                            scanStatusEl.innerHTML = `<span class="text-red-400">Gagal memulai kamera.</span><br><small>Pastikan izin tidak diblokir.</small>`;
-                        });
-                    } else {
-                        scanStatusEl.innerHTML = `<span class="text-red-400">Tidak ada kamera ditemukan.</span>`;
-                    }
-                }).catch(err => {
-                    scanStatusEl.innerHTML = `<span class="text-red-400">Error: Tidak dapat mengakses kamera.</span>`;
-                });
+                        html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 250 } }, onScanSuccess)
+                        .catch(err => { scanStatusEl.innerHTML = `<span class="text-red-400">Gagal memulai kamera.</span><br><small>Pastikan izin tidak diblokir.</small>`; });
+                    } else { scanStatusEl.innerHTML = `<span class="text-red-400">Tidak ada kamera ditemukan.</span>`; }
+                }).catch(err => { scanStatusEl.innerHTML = `<span class="text-red-400">Error: Tidak dapat mengakses kamera.</span>`; });
             }
             
             function stopScanner() {
@@ -172,15 +157,24 @@
                 }
             }
 
+            // -- LOGIKA TOMBOL SCAN ULANG --
+            rescanBtn.addEventListener('click', () => {
+                resultContainer.classList.add('hidden'); // Sembunyikan hasil
+                readerWrapper.classList.remove('hidden'); // Tampilkan kembali area scan
+                fileNameEl.innerHTML = 'Seret & lepas gambar di sini <span class="text-gray-400 text-sm block">atau klik untuk memilih file</span>'; // Reset teks
+                fileInput.value = ''; // Reset input file
+                startScanner();
+            });
+
             // -- LOGIKA UNGGAH FILE (TERMASUK DRAG & DROP) --
             function handleFile(file) {
-                 if (!file || !file.type.startsWith('image/')) {
+                if (!file || !file.type.startsWith('image/')) {
                     alert('Harap unggah file gambar yang valid.');
                     return;
                 }
                 stopScanner();
                 scanStatusEl.textContent = 'Membaca gambar...';
-                fileNameEl.textContent = file.name; // Tampilkan nama file
+                fileNameEl.textContent = file.name;
                 
                 const fileScanner = new Html5Qrcode("qr-reader");
                 fileScanner.scanFile(file, true)
@@ -191,21 +185,9 @@
                     });
             }
 
-            fileInput.addEventListener('change', e => {
-                if (e.target.files.length > 0) {
-                    handleFile(e.target.files[0]);
-                }
-            });
-
-            dropZone.addEventListener('dragover', e => {
-                e.preventDefault();
-                dropZone.classList.add('drop-zone-active');
-            });
-
-            dropZone.addEventListener('dragleave', () => {
-                dropZone.classList.remove('drop-zone-active');
-            });
-
+            fileInput.addEventListener('change', e => { if (e.target.files.length > 0) handleFile(e.target.files[0]); });
+            dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drop-zone-active'); });
+            dropZone.addEventListener('dragleave', () => { dropZone.classList.remove('drop-zone-active'); });
             dropZone.addEventListener('drop', e => {
                 e.preventDefault();
                 dropZone.classList.remove('drop-zone-active');
