@@ -34,7 +34,6 @@
             <button id="btn-baca" class="tab-button text-lg font-semibold text-gray-400 px-6 py-2 border-b-2 border-transparent transition-colors">Baca QR</button>
         </div>
 
-        <!-- Tab Buat -->
         <div id="tab-content-buat" class="tab-content">
             <input type="text" id="textInput" placeholder="Masukkan teks atau tautan" class="w-full p-3 bg-gray-700 text-gray-200 rounded-lg border border-gray-600 focus:ring-2 focus:ring-purple-500 transition duration-300">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
@@ -44,7 +43,6 @@
             <div id="qrcode" class="mt-6 inline-flex p-4 bg-white rounded-lg shadow-inner min-h-[232px] min-w-[232px] items-center justify-center"></div>
         </div>
 
-        <!-- Tab Baca -->
         <div id="tab-content-baca" class="tab-content hidden">
             <div class="space-y-4">
                 <div id="reader-wrapper">
@@ -54,8 +52,11 @@
                     <div class="flex items-center gap-2 mt-4"><hr class="flex-grow border-gray-600"><span class="text-gray-500 text-sm">ATAU</span><hr class="flex-grow border-gray-600"></div>
                     <div>
                         <label for="qr-input-file" id="drop-zone" class="w-full mt-4 cursor-pointer text-center block py-4 px-4 rounded-lg border-2 border-dashed border-gray-600 hover:bg-gray-700/50 hover:border-purple-500 transition-colors">
-                            <span id="file-name" class="font-semibold text-gray-300">Seret & lepas gambar di sini</span>
-                            <span class="text-gray-400 text-sm block">atau klik untuk memilih file</span>
+                            <div id="drop-zone-prompt">
+                                <span class="font-semibold text-gray-300">Seret & lepas gambar di sini</span>
+                                <span class="text-gray-400 text-sm block">atau klik untuk memilih file</span>
+                            </div>
+                            <div id="file-name-display" class="hidden font-semibold text-purple-400"></div>
                             <input type="file" id="qr-input-file" accept="image/*" class="hidden">
                         </label>
                     </div>
@@ -93,27 +94,34 @@
             const textInput = document.getElementById("textInput");
             const qrContainer = document.getElementById("qrcode");
             const dropZone = document.getElementById('drop-zone');
-            const fileNameEl = document.getElementById('file-name');
+            const dropZonePrompt = document.getElementById('drop-zone-prompt');
+            const fileNameDisplay = document.getElementById('file-name-display');
             const readerWrapper = document.getElementById('reader-wrapper');
             const rescanBtn = document.getElementById('rescanBtn');
 
-            // -- LOGIKA TAB --
+            // -- LOGIKA TAB (DIPERBAIKI) --
             function showTab(tabName) {
                 if (tabName === 'buat') {
                     tabBuatContent.classList.remove('hidden');
                     tabBacaContent.classList.add('hidden');
+                    
                     btnBuat.classList.add('active');
                     btnBuat.classList.remove('text-gray-400', 'border-transparent');
+
                     btnBaca.classList.remove('active');
                     btnBaca.classList.add('text-gray-400', 'border-transparent');
+                    
                     stopScanner();
                 } else {
                     tabBuatContent.classList.add('hidden');
                     tabBacaContent.classList.remove('hidden');
+
                     btnBuat.classList.remove('active');
                     btnBuat.classList.add('text-gray-400', 'border-transparent');
+                    
                     btnBaca.classList.add('active');
                     btnBaca.classList.remove('text-gray-400', 'border-transparent');
+                    
                     startScanner();
                 }
             }
@@ -170,12 +178,9 @@
             rescanBtn.addEventListener('click', () => {
                 resultContainer.classList.add('hidden');
                 readerWrapper.classList.remove('hidden');
-
-                // Reset dropzone ke tampilan awal
-                fileNameEl.textContent = 'Seret & lepas gambar di sini';
+                dropZonePrompt.classList.remove('hidden');
+                fileNameDisplay.classList.add('hidden');
                 fileInput.value = '';
-                scanStatusEl.textContent = 'Menyiapkan kamera...';
-
                 startScanner();
             });
 
@@ -187,8 +192,10 @@
                 }
                 scanWasSuccessful = false;
                 stopScanner();
+                dropZonePrompt.classList.add('hidden');
+                fileNameDisplay.textContent = file.name;
+                fileNameDisplay.classList.remove('hidden');
                 scanStatusEl.textContent = 'Membaca gambar...';
-                fileNameEl.textContent = file.name;
                 
                 const fileScanner = new Html5Qrcode("qr-reader");
                 fileScanner.scanFile(file, true)
