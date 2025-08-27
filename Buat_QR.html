@@ -95,39 +95,26 @@
             const readerWrapper = document.getElementById('reader-wrapper');
             const rescanBtn = document.getElementById('rescanBtn');
 
-            // -- LOGIKA TAB (DIPERBAIKI) --
+            // -- LOGIKA TAB --
             function showTab(tabName) {
                 if (tabName === 'buat') {
-                    // Tampilkan konten yang benar
                     tabBuatContent.classList.remove('hidden');
                     tabBacaContent.classList.add('hidden');
-                    
-                    // Atur gaya tombol 'Buat' menjadi aktif
                     btnBuat.classList.add('active');
                     btnBuat.classList.remove('text-gray-400', 'border-transparent');
-
-                    // Atur gaya tombol 'Baca' menjadi tidak aktif
                     btnBaca.classList.remove('active');
                     btnBaca.classList.add('text-gray-400', 'border-transparent');
-                    
                     stopScanner();
-                } else { // Jika tab 'baca'
-                    // Tampilkan konten yang benar
+                } else {
                     tabBuatContent.classList.add('hidden');
                     tabBacaContent.classList.remove('hidden');
-
-                    // Atur gaya tombol 'Buat' menjadi tidak aktif
                     btnBuat.classList.remove('active');
                     btnBuat.classList.add('text-gray-400', 'border-transparent');
-                    
-                    // Atur gaya tombol 'Baca' menjadi aktif
                     btnBaca.classList.add('active');
                     btnBaca.classList.remove('text-gray-400', 'border-transparent');
-                    
                     startScanner();
                 }
             }
-
             btnBuat.addEventListener('click', () => showTab('buat'));
             btnBaca.addEventListener('click', () => showTab('baca'));
             
@@ -177,11 +164,12 @@
                 }
             }
 
-            // -- LOGIKA TOMBOL SCAN ULANG --
+            // -- LOGIKA TOMBOL SCAN ULANG (DIPERBAIKI) --
             rescanBtn.addEventListener('click', () => {
                 resultContainer.classList.add('hidden');
                 readerWrapper.classList.remove('hidden');
-                fileNameEl.innerHTML = 'Seret & lepas gambar di sini <span class="text-gray-400 text-sm block">atau klik untuk memilih file</span>';
+                // Hanya ubah textContent dari elemen pertama, bukan innerHTML
+                fileNameEl.textContent = 'Seret & lepas gambar di sini'; 
                 fileInput.value = '';
                 startScanner();
             });
