@@ -14,7 +14,7 @@
         .text-gradient { background: linear-gradient(135deg, #a78bfa 0%, #60a5fa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .btn-gradient { background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%); }
         .tab-button.active { color: #a78bfa; border-color: #a78bfa; }
-        #qr-reader { border-radius: 8px; overflow: hidden; }
+        #qr-reader video { border-radius: 8px; }
     </style>
 </head>
 <body class="bg-gray-900 flex items-center justify-center min-h-screen p-5">
@@ -37,13 +37,16 @@
 
         <div id="tab-content-baca" class="tab-content hidden">
             <div class="space-y-4">
-                <div id="qr-reader" class="w-full mx-auto"></div>
-                <div id="scan-status" class="text-gray-400">Arahkan kamera ke Kode QR</div>
+                <div id="qr-reader" class="w-full mx-auto border-2 border-dashed border-gray-600 rounded-lg min-h-[300px] bg-gray-900/50 flex items-center justify-center overflow-hidden">
+                    <div id="scan-status" class="text-gray-400 text-center p-4">
+                        Meminta izin kamera...
+                        <br>
+                        <small>(Pastikan kamu mengklik "Allow" atau "Izinkan")</small>
+                    </div>
+                </div>
                 
                 <div class="flex items-center gap-2">
-                    <hr class="flex-grow border-gray-600">
-                    <span class="text-gray-500 text-sm">ATAU</span>
-                    <hr class="flex-grow border-gray-600">
+                    <hr class="flex-grow border-gray-600"><span class="text-gray-500 text-sm">ATAU</span><hr class="flex-grow border-gray-600">
                 </div>
 
                 <div>
@@ -68,14 +71,13 @@
     <script>
         let qrGenerator;
         let html5QrCode;
+        const scanStatusEl = document.getElementById('scan-status');
 
-        // --- Logika untuk Tab ---
         function showTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
             document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
             document.getElementById(`tab-content-${tabName}`).classList.remove('hidden');
             document.querySelector(`button[onclick="showTab('${tabName}')"]`).classList.add('active');
-
             if (tabName === 'baca') {
                 startScanner();
             } else {
@@ -83,7 +85,6 @@
             }
         }
         
-        // --- Logika untuk Membuat QR ---
         function generateQRCode() {
             const text = document.getElementById("textInput").value.trim();
             const qrContainer = document.getElementById("qrcode");
@@ -105,15 +106,14 @@
             document.body.removeChild(downloadLink);
         }
 
-        // --- Logika untuk Membaca QR ---
         const qrCodeSuccessCallback = (decodedText, decodedResult) => {
             document.getElementById('qr-reader-result').textContent = decodedText;
             document.getElementById('result-container').classList.remove('hidden');
-            stopScanner(); // Stop camera after successful scan
+            scanStatusEl.innerHTML = `<span class="text-green-400 font-semibold">Scan Berhasil!</span>`;
+            stopScanner();
         };
         
         const qrCodeErrorCallback = (errorMessage) => {
-            // Abaikan error "QR code not found" agar tidak mengganggu
             if (!errorMessage.includes("NotFoundException")) {
                 console.error(`QR Code scan error = ${errorMessage}`);
             }
@@ -121,45 +121,42 @@
 
         function startScanner() {
             if (!html5QrCode) {
-                html5QrCode = new Html5Qrcode("qr-reader");
+                html5QrCode = new Html5Qrcode("qr-reader", { formatsToSupport: [ Html5QrcodeSupportedFormats.QR_CODE ] });
             }
-            // Menggunakan kamera belakang (environment) jika memungkinkan
+            scanStatusEl.innerHTML = `Meminta izin kamera... <br><small>(Pastikan situs ini diakses via HTTPS atau localhost)</small>`;
+
             html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 250 } }, qrCodeSuccessCallback, qrCodeErrorCallback)
+                .then(() => {
+                    scanStatusEl.textContent = 'Arahkan kamera ke Kode QR';
+                })
                 .catch(err => {
-                    console.log("Tidak dapat memulai scanner, mungkin karena tidak ada kamera atau izin ditolak.", err);
-                    document.getElementById('scan-status').textContent = 'Kamera tidak ditemukan/diizinkan.';
+                    console.error("Tidak dapat memulai scanner.", err);
+                    scanStatusEl.innerHTML = `<span class="text-red-400">Kamera tidak ditemukan/diizinkan.</span><br><small>Silakan gunakan opsi unggah gambar.</small>`;
                 });
         }
         
         function stopScanner() {
             if (html5QrCode && html5QrCode.isScanning) {
-                html5QrCode.stop().then(ignore => {
-                    console.log("QR Code scanning stopped.");
-                }).catch(err => {
-                    console.error("Failed to stop QR Code scanning.", err);
-                });
+                html5QrCode.stop().catch(err => console.error("Gagal menghentikan scanner.", err));
             }
         }
 
-        // Event listener untuk unggah file
         const fileInput = document.getElementById('qr-input-file');
         fileInput.addEventListener('change', e => {
             if (e.target.files.length == 0) return;
             const imageFile = e.target.files[0];
-            stopScanner(); // Hentikan kamera jika user memilih upload file
+            stopScanner();
+            scanStatusEl.textContent = 'Membaca gambar...';
             
-            if (!html5QrCode) {
-                html5QrCode = new Html5Qrcode("qr-reader");
-            }
-
-            html5QrCode.scanFile(imageFile, true)
+            const qrScanner = new Html5Qrcode("qr-reader"); // Buat instance baru untuk file scan
+            qrScanner.scanFile(imageFile, true)
                 .then(qrCodeSuccessCallback)
                 .catch(err => {
-                    alert(`Error scanning file. ${err}`);
+                    alert(`Gagal membaca Kode QR dari gambar.`);
                     console.log(`Error scanning file. ${err}`);
+                    scanStatusEl.textContent = 'Gagal membaca Kode QR dari gambar.';
                 });
         });
-
     </script>
 </body>
 </html>
