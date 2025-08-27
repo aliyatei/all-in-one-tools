@@ -45,7 +45,8 @@
 
         <div id="tab-content-baca" class="tab-content hidden">
             <div class="space-y-4">
-                <div id="reader-wrapper"> <div id="qr-reader" class="w-full mx-auto border-2 border-dashed border-gray-600 rounded-lg min-h-[300px] bg-gray-900/50 flex items-center justify-center overflow-hidden">
+                <div id="reader-wrapper">
+                    <div id="qr-reader" class="w-full mx-auto border-2 border-dashed border-gray-600 rounded-lg min-h-[300px] bg-gray-900/50 flex items-center justify-center overflow-hidden">
                         <div id="scan-status" class="text-gray-400 text-center p-4">Menyiapkan kamera...</div>
                     </div>
                     <div class="flex items-center gap-2 mt-4"><hr class="flex-grow border-gray-600"><span class="text-gray-500 text-sm">ATAU</span><hr class="flex-grow border-gray-600"></div>
@@ -76,6 +77,7 @@
             // -- DEFINISI ELEMEN --
             let qrGenerator;
             let html5QrCode;
+            let scanWasSuccessful = false;
             const scanStatusEl = document.getElementById('scan-status');
             const resultContainer = document.getElementById('result-container');
             const resultEl = document.getElementById('qr-reader-result');
@@ -90,25 +92,42 @@
             const qrContainer = document.getElementById("qrcode");
             const dropZone = document.getElementById('drop-zone');
             const fileNameEl = document.getElementById('file-name');
-            const readerWrapper = document.getElementById('reader-wrapper'); // Wrapper area scan
-            const rescanBtn = document.getElementById('rescanBtn'); // Tombol scan ulang
+            const readerWrapper = document.getElementById('reader-wrapper');
+            const rescanBtn = document.getElementById('rescanBtn');
 
-            // -- LOGIKA TAB --
+            // -- LOGIKA TAB (DIPERBAIKI) --
             function showTab(tabName) {
                 if (tabName === 'buat') {
+                    // Tampilkan konten yang benar
                     tabBuatContent.classList.remove('hidden');
                     tabBacaContent.classList.add('hidden');
+                    
+                    // Atur gaya tombol 'Buat' menjadi aktif
                     btnBuat.classList.add('active');
+                    btnBuat.classList.remove('text-gray-400', 'border-transparent');
+
+                    // Atur gaya tombol 'Baca' menjadi tidak aktif
                     btnBaca.classList.remove('active');
+                    btnBaca.classList.add('text-gray-400', 'border-transparent');
+                    
                     stopScanner();
-                } else {
+                } else { // Jika tab 'baca'
+                    // Tampilkan konten yang benar
                     tabBuatContent.classList.add('hidden');
                     tabBacaContent.classList.remove('hidden');
+
+                    // Atur gaya tombol 'Buat' menjadi tidak aktif
                     btnBuat.classList.remove('active');
+                    btnBuat.classList.add('text-gray-400', 'border-transparent');
+                    
+                    // Atur gaya tombol 'Baca' menjadi aktif
                     btnBaca.classList.add('active');
+                    btnBaca.classList.remove('text-gray-400', 'border-transparent');
+                    
                     startScanner();
                 }
             }
+
             btnBuat.addEventListener('click', () => showTab('buat'));
             btnBaca.addEventListener('click', () => showTab('baca'));
             
@@ -132,9 +151,10 @@
 
             // -- LOGIKA MEMBACA QR --
             const onScanSuccess = (decodedText) => {
+                scanWasSuccessful = true;
                 resultEl.textContent = decodedText;
-                readerWrapper.classList.add('hidden'); // Sembunyikan area scan
-                resultContainer.classList.remove('hidden'); // Tampilkan hasil
+                readerWrapper.classList.add('hidden');
+                resultContainer.classList.remove('hidden');
                 stopScanner();
             };
             
@@ -159,19 +179,20 @@
 
             // -- LOGIKA TOMBOL SCAN ULANG --
             rescanBtn.addEventListener('click', () => {
-                resultContainer.classList.add('hidden'); // Sembunyikan hasil
-                readerWrapper.classList.remove('hidden'); // Tampilkan kembali area scan
-                fileNameEl.innerHTML = 'Seret & lepas gambar di sini <span class="text-gray-400 text-sm block">atau klik untuk memilih file</span>'; // Reset teks
-                fileInput.value = ''; // Reset input file
+                resultContainer.classList.add('hidden');
+                readerWrapper.classList.remove('hidden');
+                fileNameEl.innerHTML = 'Seret & lepas gambar di sini <span class="text-gray-400 text-sm block">atau klik untuk memilih file</span>';
+                fileInput.value = '';
                 startScanner();
             });
 
-            // -- LOGIKA UNGGAH FILE (TERMASUK DRAG & DROP) --
+            // -- LOGIKA UNGGAH FILE --
             function handleFile(file) {
                 if (!file || !file.type.startsWith('image/')) {
                     alert('Harap unggah file gambar yang valid.');
                     return;
                 }
+                scanWasSuccessful = false;
                 stopScanner();
                 scanStatusEl.textContent = 'Membaca gambar...';
                 fileNameEl.textContent = file.name;
@@ -180,8 +201,10 @@
                 fileScanner.scanFile(file, true)
                     .then(onScanSuccess)
                     .catch(err => {
-                        alert(`Gagal membaca Kode QR dari gambar.`);
-                        scanStatusEl.textContent = 'Gagal membaca Kode QR dari gambar.';
+                        if (!scanWasSuccessful) {
+                            alert(`Gagal membaca Kode QR dari gambar.`);
+                            scanStatusEl.textContent = 'Gagal membaca Kode QR dari gambar.';
+                        }
                     });
             }
 
