@@ -17,7 +17,7 @@
     <div class="w-full max-w-lg p-8 bg-gray-800/70 backdrop-blur-xl rounded-2xl shadow-lg border border-gray-700/50">
         <h1 class="text-3xl font-bold text-center mb-4 text-gradient">Timer & Stopwatch</h1>
         <div class="flex justify-center border-b border-gray-600">
-            <button class="tab-button active text-lg font-semibold px-6 py-2 border-b-2 transition-colors" onclick="showTab('timer')">Timer</button>
+            <button class="tab-button active text-lg font-semibold px-6 py-2 border-b-2 border-transparent transition-colors" onclick="showTab('timer')">Timer</button>
             <button class="tab-button text-lg font-semibold text-gray-400 px-6 py-2 border-b-2 border-transparent transition-colors" onclick="showTab('stopwatch')">Stopwatch</button>
         </div>
         <div id="timer" class="tab-content mt-6">
@@ -51,7 +51,21 @@
         </div>
     </div>
     <script>
-        function showTab(tabName) { document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden')); document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active')); document.getElementById(tabName).classList.remove('hidden'); document.querySelector(`button[onclick="showTab('${tabName}')"]`).classList.add('active'); }
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            
+            // Perbaikan: Hapus kelas aktif dari semua tombol dan tambahkan kelas warna non-aktif
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+                btn.classList.add('text-gray-400');
+            });
+            
+            const activeTabButton = document.querySelector(`button[onclick="showTab('${tabName}')"]`);
+            activeTabButton.classList.add('active');
+            activeTabButton.classList.remove('text-gray-400'); // Hapus kelas warna non-aktif dari tombol yang aktif
+            
+            document.getElementById(tabName).classList.remove('hidden');
+        }
         const timerHoursEl=document.getElementById('timerHours'), timerMinutesEl=document.getElementById('timerMinutes'), timerSecondsEl=document.getElementById('timerSeconds'), timerDisplayEl=document.getElementById('timerDisplay'), startTimerBtn=document.getElementById('startTimerBtn'), pauseTimerBtn=document.getElementById('pauseTimerBtn'), resetTimerBtn=document.getElementById('resetTimerBtn'); let timerInterval, totalTimerSeconds=0; function updateTimerDisplay(){const h=Math.floor(totalTimerSeconds/3600),m=Math.floor(totalTimerSeconds%3600/60),s=totalTimerSeconds%60;timerDisplayEl.textContent=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`} function setTimerFromInputs(){const h=parseInt(timerHoursEl.value)||0,m=parseInt(timerMinutesEl.value)||0,s=parseInt(timerSecondsEl.value)||0;totalTimerSeconds=h*3600+m*60+s;if(totalTimerSeconds<0)totalTimerSeconds=0;updateTimerDisplay()};[timerHoursEl,timerMinutesEl,timerSecondsEl].forEach(el=>el.addEventListener('input',setTimerFromInputs));startTimerBtn.addEventListener('click',()=>{if(totalTimerSeconds<=0){setTimerFromInputs();if(totalTimerSeconds<=0){alert("Atur waktu timer terlebih dahulu.");return}} clearInterval(timerInterval);timerInterval=setInterval(()=>{if(totalTimerSeconds>0){totalTimerSeconds--;updateTimerDisplay()}else{clearInterval(timerInterval);alert("Waktu habis!");startTimerBtn.disabled=!1;pauseTimerBtn.disabled=!0}},1e3);startTimerBtn.disabled=!0;pauseTimerBtn.disabled=!1});pauseTimerBtn.addEventListener('click',()=>{clearInterval(timerInterval);startTimerBtn.disabled=!1;pauseTimerBtn.disabled=!0});resetTimerBtn.addEventListener('click',()=>{clearInterval(timerInterval);timerHoursEl.value="0";timerMinutesEl.value="5";timerSecondsEl.value="0";setTimerFromInputs();startTimerBtn.disabled=!1;pauseTimerBtn.disabled=!0});
         const stopwatchDisplayEl=document.getElementById('stopwatchDisplay'),startStopwatchBtn=document.getElementById('startStopwatchBtn'),pauseStopwatchBtn=document.getElementById('pauseStopwatchBtn'),resetStopwatchBtn=document.getElementById('resetStopwatchBtn'),lapStopwatchBtn=document.getElementById('lapStopwatchBtn'),lapsListEl=document.getElementById('lapsList');let stopwatchInterval,stopwatchMilliseconds=0,lapCounter=1;function formatStopwatchTime(ms){const totalSeconds=Math.floor(ms/1e3),hours=Math.floor(totalSeconds/3600),minutes=Math.floor(totalSeconds%3600/60),seconds=totalSeconds%60,milliseconds=String(ms%1e3).padStart(3,'0');return`${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}.${milliseconds}`} startStopwatchBtn.addEventListener('click',()=>{clearInterval(stopwatchInterval);const startTime=Date.now()-stopwatchMilliseconds;stopwatchInterval=setInterval(()=>{stopwatchMilliseconds=Date.now()-startTime;stopwatchDisplayEl.textContent=formatStopwatchTime(stopwatchMilliseconds)},10);startStopwatchBtn.disabled=!0;pauseStopwatchBtn.disabled=!1;lapStopwatchBtn.disabled=!1});pauseStopwatchBtn.addEventListener('click',()=>{clearInterval(stopwatchInterval);startStopwatchBtn.disabled=!1;pauseStopwatchBtn.disabled=!0});resetStopwatchBtn.addEventListener('click',()=>{clearInterval(stopwatchInterval);stopwatchMilliseconds=0;stopwatchDisplayEl.textContent=formatStopwatchTime(0);lapsListEl.innerHTML='';lapCounter=1;startStopwatchBtn.disabled=!1;pauseStopwatchBtn.disabled=!0;lapStopwatchBtn.disabled=!0});lapStopwatchBtn.addEventListener('click',()=>{const lapTime=formatStopwatchTime(stopwatchMilliseconds),listItem=document.createElement('li');listItem.textContent=`Lap ${lapCounter}: ${lapTime}`;lapsListEl.appendChild(listItem);lapCounter++});setTimerFromInputs();stopwatchDisplayEl.textContent=formatStopwatchTime(0);
     </script>
